@@ -13,6 +13,7 @@ export default function AntdConfig({ children }: Props) {
       theme={{
         token: {
           colorPrimary: "#00a76f",
+          linkDecoration: "none",
         },
         components: {
           Menu: {
