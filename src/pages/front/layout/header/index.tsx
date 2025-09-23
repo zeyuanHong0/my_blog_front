@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Drawer } from "antd";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import classNames from "classnames";
 
+import { cn } from "@/lib/utils";
+
 import { Iconify } from "@/components/Icon";
-import Button from "../button";
+import Button from "@/components/button";
 
 const Header: React.FC = () => {
-  const [showLeftDrawer, setShowLeftDrawer] = useState(false);
+  const [showLeftSheet, setShowLeftSheet] = useState(false);
   const navigate = useNavigate();
   //   找到当前激活的链接
   const currentPath = window.location.pathname;
@@ -31,10 +39,14 @@ const Header: React.FC = () => {
       },
     );
   };
-
   return (
     <>
-      <header className="bg-white sticky top-0 z-10 w-full border-b border-[#E4E4E7]">
+      <header
+        className={cn(
+          "sticky top-0 z-10 w-full backdrop-blur transition-all",
+          "bg-background/50 border-b border-[#E4E4E7]",
+        )}
+      >
         <div className="mx-auto flex h-16 w-full items-center justify-between p-4 sm:p-8 md:max-w-screen-md 2xl:max-w-screen-xl">
           {/* logo */}
           <div className="flex items-center gap-4">
@@ -46,7 +58,7 @@ const Header: React.FC = () => {
             <div className="sm:hidden">
               <Button
                 icon={<Iconify icon="flowbite:bars-outline" size={20} />}
-                onClick={() => setShowLeftDrawer(true)}
+                onClick={() => setShowLeftSheet(true)}
               />
             </div>
           </div>
@@ -79,9 +91,11 @@ const Header: React.FC = () => {
             {/* 按钮 */}
             <div className="flex items-center gap-3">
               <Button
+                className="rounded-full px-2 py-2"
                 icon={<Iconify icon="tdesign:logo-github-filled" size={16} />}
               />
               <Button
+                className="rounded-full px-2 py-2"
                 icon={<Iconify icon="tdesign:user-setting" size={16} />}
               />
             </div>
@@ -89,51 +103,47 @@ const Header: React.FC = () => {
         </div>
       </header>
       {/* 侧边栏 */}
-      <Drawer
-        placement="left"
-        onClose={() => setShowLeftDrawer(false)}
-        open={showLeftDrawer}
-        closeIcon={false}
-        styles={{
-          header: {
-            display: "none",
-          },
-          body: {
-            padding: 0,
-            overflow: "hidden",
-          },
-        }}
-        width="auto"
-      >
-        <div className="w-[400px]">
-          <div className="px-4 py-4">
-            <div className="text-base font-semibold text-black">哲理源</div>
-            <div className="mt-1 text-sm text-gray-600">
+      <Sheet open={showLeftSheet} onOpenChange={setShowLeftSheet}>
+        <SheetContent side="left" className="w-[400px] p-0">
+          <SheetHeader className="px-4 py-4 text-left">
+            <SheetTitle className="text-base font-semibold text-black">
+              哲理源
+            </SheetTitle>
+            <SheetDescription className="mt-1 text-sm text-gray-600">
               努力做一个更好的程序员
-            </div>
-          </div>
-          <div className="mt-16 flex flex-col gap-4">
+            </SheetDescription>
+          </SheetHeader>
+          <div className="mt-14 flex flex-col gap-4">
             <div
               className={drawerNavClass("/home")}
-              onClick={() => navigate("/")}
+              onClick={() => {
+                navigate("/home");
+                setShowLeftSheet(false);
+              }}
             >
               首页
             </div>
             <div
               className={drawerNavClass("/blog")}
-              onClick={() => navigate("/blog")}
+              onClick={() => {
+                navigate("/blog");
+                setShowLeftSheet(false);
+              }}
             >
               博客
             </div>
             <div
               className={drawerNavClass("/about")}
-              onClick={() => navigate("/about")}
+              onClick={() => {
+                navigate("/about");
+                setShowLeftSheet(false);
+              }}
             >
               关于
             </div>
           </div>
-        </div>
-      </Drawer>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };

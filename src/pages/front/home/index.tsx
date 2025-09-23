@@ -1,5 +1,17 @@
 import React from "react";
-import { TypeAnimation } from "react-type-animation";
+
+import { cn } from "@/lib/utils";
+
+import Button from "@/components/button";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipArrow,
+} from "@/components/ui/tooltip";
+import TypeIntro from "./type-intro";
+import { socialMediaList } from "./social-media";
 
 const Home = () => {
   return (
@@ -13,27 +25,36 @@ const Home = () => {
       >
         哲理源
       </strong>
-      <TypeAnimation
-        className={`text-2xl tracking-widest md:text-5xl`}
-        sequence={[
-          500,
-          "一名前端开发工程师 。",
-          1000,
-          "A Web <Developer /> .",
-          1000,
-        ]}
-        speed={10}
-        repeat={Infinity}
-      />
-
+      <div>
+        <TypeIntro />
+      </div>
       <div className="text-2xl tracking-widest md:text-5xl">
         喜欢<span className="font-semibold text-[#00d8ff]">React</span>、
+        <span className="font-semibold text-[#3AAF78]">Vue</span>、
         <span className="font-semibold text-[#007acc]">TypeScript</span>
         <span className="ml-4">\owo/ ~</span>
       </div>
-      <div className="text-muted-foreground text-base tracking-widest md:text-2xl">
+      <div className="text-base tracking-widest text-[#71717B] md:text-2xl">
         我在这个网站记录我的成长，努力 💪 成为一个更好的程序员。
       </div>
+      <div className="flex items-center gap-3">
+        <Button text="我的博客" className="rounded-3xl px-3 py-2" />
+        <Button text="关于我" className="rounded-3xl px-3 py-2" />
+      </div>
+      <ul className={cn("flex space-x-4")}>
+        {socialMediaList.map((el) => (
+          <li key={el.link}>
+            <TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <Button icon={el.icon} className="rounded-full p-2" />
+                </TooltipTrigger>
+                <TooltipContent side="top">{el.label}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
