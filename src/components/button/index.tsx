@@ -7,7 +7,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button: React.FC<Props> = ({ icon, className, ...props }) => {
   return (
     <button
-      className={`bg-white flex h-9 w-9 items-center justify-center rounded-full border border-[#E8E8EB] hover:bg-gray-200 ${className}`}
+      className={`bg-white flex h-9 w-9 items-center justify-center border border-[#E8E8EB] hover:bg-gray-200 ${className}`}
       {...props}
     >
       {icon}
