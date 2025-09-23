@@ -1,18 +1,30 @@
-import React from "react";
+import React, { forwardRef } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
+  text?: string;
 }
 
-const Button: React.FC<Props> = ({ icon, className, ...props }) => {
-  return (
-    <button
-      className={`bg-white flex h-9 w-9 items-center justify-center border border-[#E8E8EB] hover:bg-gray-200 ${className}`}
-      {...props}
-    >
-      {icon}
-    </button>
-  );
-};
+const Button = forwardRef<HTMLButtonElement, Props>(
+  ({ icon, text, className, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          "flex items-center justify-center border border-[#E8E8EB] bg-white hover:bg-[#F2F2F3]",
+          className,
+        )}
+        {...props}
+      >
+        {icon && icon}
+        {text && <span className="text-[14px] font-medium">{text}</span>}
+      </button>
+    );
+  },
+);
+
+Button.displayName = "Button";
 
 export default Button;
