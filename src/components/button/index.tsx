@@ -3,12 +3,12 @@ import React, { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  icon?: React.ReactNode;
-  text?: string;
+  className?: string;
+  children?: React.ReactNode;
 }
 
 const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ icon, text, className, ...props }, ref) => {
+  ({ className, children, ...props }, ref) => {
     return (
       <button
         ref={ref}
@@ -18,8 +18,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
         )}
         {...props}
       >
-        {icon && icon}
-        {text && <span className="text-[14px] font-medium">{text}</span>}
+        {children}
       </button>
     );
   },

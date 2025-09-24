@@ -1,6 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
+import { NICKNAME } from "@/constants";
 
 import Button from "@/components/button";
 import {
@@ -8,7 +10,6 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  TooltipArrow,
 } from "@/components/ui/tooltip";
 import TypeIntro from "./type-intro";
 import { socialMediaList } from "./social-media";
@@ -23,7 +24,7 @@ const Home = () => {
         className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-5xl font-black tracking-widest md:text-8xl"
         style={{ WebkitTextFillColor: "transparent" }}
       >
-        哲理源
+        {NICKNAME}
       </strong>
       <div>
         <TypeIntro />
@@ -38,8 +39,12 @@ const Home = () => {
         我在这个网站记录我的成长，努力 💪 成为一个更好的程序员。
       </div>
       <div className="flex items-center gap-3">
-        <Button text="我的博客" className="rounded-3xl px-3 py-2" />
-        <Button text="关于我" className="rounded-3xl px-3 py-2" />
+        <Button className="rounded-3xl px-3 py-2">
+          <span className="text-[14px] font-medium">我的博客</span>
+        </Button>
+        <Button className="rounded-3xl px-3 py-2">
+          <span className="text-[14px] font-medium">关于我</span>
+        </Button>
       </div>
       <ul className={cn("flex space-x-4")}>
         {socialMediaList.map((el) => (
@@ -47,7 +52,11 @@ const Home = () => {
             <TooltipProvider>
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
-                  <Button icon={el.icon} className="rounded-full p-2" />
+                  <Link to={el.link} target="_blank">
+                    <Button className="rounded-full p-2">
+                      {el.icon}
+                    </Button>
+                  </Link>
                 </TooltipTrigger>
                 <TooltipContent side="top">{el.label}</TooltipContent>
               </Tooltip>
