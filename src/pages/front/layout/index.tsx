@@ -1,7 +1,9 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-import Header from "./header";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import BackToTop from "@/components/back-to-top";
 
 const Layout = () => {
   return (
@@ -11,6 +13,8 @@ const Layout = () => {
       <div className="relative grid h-[calc(100vh-64px)] place-content-center">
         <Outlet />
       </div>
+      <Footer />
+      <BackToTop />
     </div>
   );
 };
