@@ -65,6 +65,23 @@ body {
   scrollbar-color: hsl(var(--border)) transparent;
 }
 
+/* nprogress */
+/* 进度条整体容器 */
+#nprogress .bar {
+  background: #000 !important; /* 黑色进度条 */
+  height: 3px; /* 可以调粗细 */
+}
+
+/* 去掉默认的光晕效果 */
+#nprogress .peg {
+  box-shadow: none !important;
+}
+
+/* 完全隐藏右上角的小圈圈 */
+#nprogress .spinner {
+  display: none !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -76,9 +93,8 @@ body {
 
 @theme inline {
   --font-sans:
-    "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
-    Helvetica, Arial, sans-serif;
+    "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
