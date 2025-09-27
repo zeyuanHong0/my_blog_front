@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -11,20 +11,20 @@ import classNames from "classnames";
 
 import { cn } from "@/lib/utils";
 import { NICKNAME, SLOGAN } from "@/constants";
+import { useActiveNav } from "@/hooks/useActiveNav";
 
 import { Iconify } from "@/components/Icon";
 import Button from "@/components/button";
 
 const Header: React.FC = () => {
   const [showLeftSheet, setShowLeftSheet] = useState(false);
-  //   找到当前激活的链接
-  const currentPath = window.location.pathname;
-  const isActive = (path: string) => currentPath === path;
+
   const navList = [
     { label: "首页", path: "/home" },
     { label: "博客", path: "/blog" },
     { label: "关于", path: "/about" },
   ];
+  const { isActive } = useActiveNav(navList);
 
   const navClass = (path: string) => {
     return classNames(
