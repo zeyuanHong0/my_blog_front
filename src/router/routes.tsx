@@ -1,6 +1,6 @@
 import frontRoutes from "./front_routes";
-import managementRoutes from "./management_routes";
+import adminRoutes from "./admin_routes";
 
-const routes = [...managementRoutes, ...frontRoutes];
+const routes = [...adminRoutes, ...frontRoutes];
 
 export default routes;
