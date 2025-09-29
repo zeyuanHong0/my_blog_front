@@ -7,9 +7,16 @@ const Blog = () => {
   useEffect(() => {
     // 模拟获取博客数据
     setBlogs([
-      { id: 1, title: "First Blog Post" },
-      { id: 2, title: "Second Blog Post" },
-      { id: 3, title: "Third Blog Post" },
+      {
+        id: 1,
+        title: "在浏览器中使用 localStorage 和 sessionStorage",
+        tags: [
+          { id: 1, name: "react" },
+          { id: 2, name: "javascript" },
+        ],
+      },
+      { id: 2, title: "使用 CSS Grid 布局", tags: [{ id: 3, name: "css" }] },
+      { id: 3, title: "深入理解 HTML 语义化", tags: [{ id: 4, name: "html" }] },
     ]);
   }, []);
   return (
