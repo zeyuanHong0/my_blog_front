@@ -8,7 +8,7 @@ const Authorization = ({ children }: { children: React.ReactNode }) => {
   if (GET_TOKEN() && userInfo?.name) {
     return <>{children}</>;
   } else {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/auth/login" replace />;
   }
 };
 

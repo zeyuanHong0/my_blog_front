@@ -1,76 +1,58 @@
 import { useEffect, useState } from "react";
-import { Layout } from "antd";
-import Color from "color";
+import { useNavigate } from "react-router-dom";
 
-import LoginImg from "@/assets/images/bg_login.png";
-import Overlay2 from "@/assets/images/overlay_2.jpg";
-import { setSessionStorage } from "@/utils/storage";
-import { useThemeToken } from "@/theme/hooks";
+import { cn } from "@/lib/utils";
 
-import LoginForm from "./LoginForm";
-import MobileForm from "./MobileForm";
-import QRCodeForm from "./QRCodeForm";
-import RegisterForm from "./RegisterForm";
-
-type LoginProps = {
-  changeLoginWay: (way: string) => void;
-  goBack: () => void;
-};
-// 表单组件映射
-const FORM_COMPONENTS = {
-  login: (props: LoginProps) => <LoginForm {...props} />,
-  mobile: (props: LoginProps) => <MobileForm {...props} />,
-  QRCode: (props: LoginProps) => <QRCodeForm {...props} />,
-  register: (props: LoginProps) => <RegisterForm {...props} />,
-};
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import LoginForm from "./form";
 
 const Login = () => {
-  // 获取主题
-  const { colorBgElevated } = useThemeToken();
-  useEffect(() => {
-    setSessionStorage("hasShownWelcome", "false");
-  }, []);
-
-  const gradientBg = Color(colorBgElevated).alpha(0.9).toString();
-  const bg = `linear-gradient(${gradientBg}, ${gradientBg}) center center / cover no-repeat,url(${Overlay2})`;
-
-  const [formType, setFormType] = useState("login");
-
-  // 渲染表单组件
-  const renderForm = () => {
-    const formProps = {
-      changeLoginWay: (way: string) => setFormType(way),
-      goBack: () => setFormType("login"),
-    };
-
-    const FormComponent = FORM_COMPONENTS[formType] || FORM_COMPONENTS.login;
-    return FormComponent(formProps);
+  const navigate = useNavigate();
+  // 回首页
+  const handleGoHome = () => {
+    navigate("/");
   };
-
   return (
-    <>
-      <Layout className="relative flex !min-h-screen !w-full !flex-row">
-        <div
-          className="hidden grow flex-col items-center justify-center gap-[80px] bg-center bg-no-repeat md:flex"
-          style={{
-            background: bg,
-          }}
-        >
-          <div className="text-3xl font-bold leading-normal lg:text-4xl xl:text-5xl">
-            Alexander Smith
+    <div className="grid h-screen w-screen place-content-center">
+      <Card
+        className={cn(
+          "relative w-[320px] rounded-3xl py-4",
+          "sm:w-full sm:max-w-none sm:min-w-[360px]",
+        )}
+      >
+        <CardHeader>
+          <CardTitle>登录到您的帐户</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LoginForm />
+        </CardContent>
+        <CardFooter className="flex-col gap-2">
+          {/* 分割线 */}
+          <div className="my-2 flex w-full items-center">
+            <div className="flex-1 border-t border-gray-300" />
+            <span className="text-muted-foreground bg-background mx-2 px-2 text-sm">
+              或者
+            </span>
+            <div className="flex-1 border-t border-gray-300" />
           </div>
-          <img
-            className="max-w-[480px] xl:max-w-[560px]"
-            src={LoginImg}
-            alt=""
-          />
-        </div>
-
-        <div className="m-auto flex !h-screen w-full max-w-[480px] flex-col justify-center px-[16px] lg:px-[64px]">
-          {renderForm()}
-        </div>
-      </Layout>
-    </>
+          <Button
+            variant="secondary"
+            className="!w-full"
+            type="button"
+            onClick={handleGoHome}
+          >
+            回首页
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 

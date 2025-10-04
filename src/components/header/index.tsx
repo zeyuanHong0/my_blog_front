@@ -93,7 +93,7 @@ const Header: React.FC = () => {
                   <Iconify icon="tdesign:logo-github-filled" size={16} />
                 </Button>
               </Link>
-              <Link to={"https://github.com/your-username"}>
+              <Link to={"/admin"}>
                 <Button className="rounded-full p-2">
                   <Iconify icon="tdesign:user-setting" size={16} />
                 </Button>
