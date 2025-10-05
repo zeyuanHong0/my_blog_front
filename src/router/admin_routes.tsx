@@ -1,22 +1,34 @@
-import React, { lazy, Suspense } from "react";
-import { Navigate } from "react-router-dom";
+import React, { lazy } from "react";
+
 import Login from "@/pages/admin/login";
-import Layout from "@/pages/admin/layout";
+import AdminLayout from "@/pages/admin/layout";
 import Authorization from "@/components/Authorization";
+import SuspenseWrapper from "@/components/SuspenseWrapper";
+
+const AdminHome = lazy(() => import("@/pages/admin/home"));
 
 const adminRoutes = [
   {
-    path: "/admin/login",
+    path: "/auth/login",
     element: <Login />,
   },
   {
     path: "/admin",
     element: (
       <Authorization>
-        <Layout />
+        <AdminLayout />
       </Authorization>
     ),
-    children: [],
+    children: [
+      {
+        index: true,
+        element: SuspenseWrapper(AdminHome),
+      },
+      {
+        path: "home",
+        element: SuspenseWrapper(AdminHome),
+      },
+    ],
   },
 ];
 
