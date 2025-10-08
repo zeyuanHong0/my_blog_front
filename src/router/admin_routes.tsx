@@ -6,6 +6,7 @@ import Authorization from "@/components/Authorization";
 import SuspenseWrapper from "@/components/SuspenseWrapper";
 
 const AdminHome = lazy(() => import("@/pages/admin/home"));
+const AdminBlogList = lazy(() => import("@/pages/admin/blog/list/index"));
 
 const adminRoutes = [
   {
@@ -27,6 +28,10 @@ const adminRoutes = [
       {
         path: "home",
         element: SuspenseWrapper(AdminHome),
+      },
+      {
+        path: "blog",
+        element: SuspenseWrapper(AdminBlogList),
       },
     ],
   },
