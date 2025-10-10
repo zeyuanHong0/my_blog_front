@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 
 const SuspenseWrapper = (Component: React.FC) => (
-  <Suspense fallback={<div>Loading...</div>}>
+  <Suspense fallback={<div>加载中...</div>}>
     <Component />
   </Suspense>
 );
