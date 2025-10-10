@@ -16,7 +16,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppSidebar } from "./app-sidebar";
@@ -36,7 +35,7 @@ const AdminLayout = () => {
             <SidebarTrigger />
             <Separator
               orientation="vertical"
-              className={`mr-2 data-0[orientation=vertical]:h-4`}
+              className={`mr-2 data-[orientation=vertical]:h-4`}
             />
           </div>
           <div className="flex items-center gap-2">
