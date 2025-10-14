@@ -1,11 +1,9 @@
-"use client";
-
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { SET_TOKEN } from "@/utils/token";
+import useUserStore from "@/store/userStore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -38,18 +36,13 @@ const LoginForm = () => {
       password: "",
     },
   });
+  const { userLogin, getUserInfo } = useUserStore();
 
   // 提交事件
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("登录提交数据:", values);
-    // 模拟一下登录成功，设置token
-    SET_TOKEN("fake-token");
-    localStorage.setItem(
-      "userInfo",
-      JSON.stringify({
-        name: "test",
-      }),
-    );
+    await userLogin(values);
+    await getUserInfo();
     navigate("/admin");
   };
 
