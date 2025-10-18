@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Eye, Pen, Trash } from "lucide-react";
+import { Pen, Trash } from "lucide-react";
 
 import { formatDateTime } from "@/utils/getTime";
 
@@ -35,7 +34,7 @@ export type tag = {
   updateTime: string;
 };
 
-const columns: ColumnDef<tag>[] = [
+const createColumns = (showEditForm: (id: string) => void): ColumnDef<tag>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -110,7 +109,11 @@ const columns: ColumnDef<tag>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2">
-          <Button size={"icon"} variant="outline">
+          <Button 
+            size={"icon"} 
+            variant="outline"
+            onClick={() => showEditForm(row.original.id)}
+          >
             <Pen />
           </Button>
           <Button size={"icon"} variant="outline">
@@ -125,6 +128,7 @@ const columns: ColumnDef<tag>[] = [
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  showEditForm: (id: string) => void;
 }
 
 function DataTable<TData, TValue>({
@@ -205,7 +209,13 @@ function DataTable<TData, TValue>({
   );
 }
 
-export default function BlogTable() {
+interface TagTableProps {
+  showEditForm: (id: string) => void;
+}
+
+export default function TagTable({ showEditForm }: TagTableProps) {
+  const columns = createColumns(showEditForm);
+  
   const data = [
     {
       id: "1",
@@ -244,5 +254,5 @@ export default function BlogTable() {
     },
   ];
 
-  return <DataTable columns={columns} data={data} />;
+  return <DataTable columns={columns} data={data} showEditForm={showEditForm} />;
 }
