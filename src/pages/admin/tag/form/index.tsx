@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { fetchTagDetail } from "@/api/tag";
+
 import {
   Form,
   FormControl,
@@ -27,6 +29,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import {
+  showSuccessToast,
+  showErrorToast,
+  showWarningToast,
+} from "@/components/toast";
 
 const formSchema = z.object({
   name: z
@@ -81,8 +88,37 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
       setIsDialogOpen(false);
     };
 
+    // 获取标签数据
+    const handleGetTagInfo = useCallback(async () => {
+      if (!tagId) {
+        showWarningToast("标签ID不存在，无法获取标签信息");
+        return;
+      }
+      try {
+        // const res = await fetchTagDetail(tagId);
+        const res = {
+          data: {
+            name: "测试标签",
+            icon: '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><g fill="none"><rect width="256" height="256" fill="#f4f2ee" rx="60"/><path fill="#41b883" d="M182 50h36l-90 155.25L38 50h68.85L128 86l20.7-36z"/><path fill="#41b883" d="m38 50l90 155.25L218 50h-36l-54 93.15L73.55 50z"/><path fill="#35495e" d="M73.55 50L128 143.6L182 50h-33.3L128 86l-21.15-36z"/></g></svg>',
+          },
+        };
+        form.setValue("name", res.data.name);
+        form.setValue("icon", res.data.icon);
+        setPreviewSvg(res.data.icon);
+      } catch (error: any) {
+        showErrorToast(error.message || "获取标签信息失败");
+      }
+    }, [tagId, form]);
+
+    useEffect(() => {
+      if (isDialogOpen && formType === "edit") {
+        handleGetTagInfo();
+      }
+    }, [isDialogOpen, formType, handleGetTagInfo]);
+
     const onSubmit = (values: z.infer<typeof formSchema>) => {
       console.log("提交表单", values);
+      showSuccessToast("标签保存成功");
     };
 
     const previewIcon = () => {
@@ -98,7 +134,10 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
 
     return (
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-h-[90vh] max-w-[90%] overflow-y-auto sm:max-w-lg">
+        <DialogContent
+          aria-describedby={undefined}
+          className="max-h-[90vh] max-w-[90%] overflow-y-auto sm:max-w-lg"
+        >
           <DialogHeader>
             <DialogTitle>{dialogTitle}</DialogTitle>
           </DialogHeader>
@@ -132,6 +171,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
                     <FormLabel>图标</FormLabel>
                     <FormControl>
                       <Textarea
+                        className="h-32"
                         placeholder="请输入一个图标SVG字符串"
                         {...field}
                       />
@@ -149,7 +189,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
                     {previewSvg && (
                       <div className="mt-4 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-6">
                         <div
-                          className="flex items-center justify-center"
+                          className="flex h-20 w-20 items-center justify-center"
                           dangerouslySetInnerHTML={{ __html: previewSvg }}
                         />
                       </div>
