@@ -1,5 +1,6 @@
 import { RouterProvider } from "react-router-dom";
 import { Suspense } from "react";
+import { ToasterComponent } from "@/components/toast";
 
 import router from "@/router";
 
@@ -9,6 +10,7 @@ function App() {
       <Suspense>
         <RouterProvider router={router} />
       </Suspense>
+      <ToasterComponent />
     </>
   );
 }
