@@ -1,5 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Plus, CircleSmall } from "lucide-react";
+
+import { fetchTagsByPage } from "@/api/tag";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,10 +12,12 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { showErrorToast } from "@/components/toast";
 import Table from "./table";
 import TagForm from "../form";
 
 const AdminBlogList = () => {
+  // 表单相关
   const [formType, setFormType] = useState<"create" | "edit">("create");
   const [tagId, setTagId] = useState<string | null>(null);
   const formRef = useRef<any>(null);
@@ -22,11 +26,42 @@ const AdminBlogList = () => {
     formRef.current?.handleShowForm();
   };
   const showEditForm = (id: string) => {
-    console.log("🚀 ~ showEditForm ~ id:", id)
+    console.log("🚀 ~ showEditForm ~ id:", id);
     setFormType("edit");
     setTagId(id);
     formRef.current?.handleShowForm();
   };
+
+  // 列表数据
+  const [tagList, setTagList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
+
+  // 查询参数
+  const [searchName, setSearchName] = useState<string>("");
+  const [pageNum, setPageNum] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(5);
+  const handleGetTagList = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = {
+        name: searchName,
+        pageNum,
+        pageSize,
+      };
+      const res = await fetchTagsByPage(data);
+      setTagList(res.data.list);
+      setTotal(res.data.total);
+    } catch (error: any) {
+      showErrorToast(error.message || "获取标签列表失败");
+    } finally {
+      setLoading(false);
+    }
+  }, [searchName, pageNum, pageSize]);
+  // 初始加载
+  useEffect(() => {
+    handleGetTagList();
+  }, [handleGetTagList]);
   return (
     <>
       <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
