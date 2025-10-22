@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useDebounce } from "ahooks";
 import { Plus, CircleSmall } from "lucide-react";
 
-import { fetchTagsByPage } from "@/api/tag";
+import { fetchTagsByPage, fetchDeleteTag } from "@/api/tag";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,13 +40,15 @@ const AdminBlogList = () => {
 
   // 查询参数
   const [searchName, setSearchName] = useState<string>("");
+  const debouncedSearchName = useDebounce(searchName, { wait: 300 });
   const [pageNum, setPageNum] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
+
   const handleGetTagList = useCallback(async () => {
     setLoading(true);
     try {
       const data = {
-        name: searchName,
+        name: debouncedSearchName,
         pageNum,
         pageSize,
       };
@@ -57,11 +60,14 @@ const AdminBlogList = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchName, pageNum, pageSize]);
-  // 初始加载
+  }, [debouncedSearchName, pageNum, pageSize]);
+
   useEffect(() => {
     handleGetTagList();
   }, [handleGetTagList]);
+
+  // 删除标签
+
   return (
     <>
       <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
@@ -92,10 +98,28 @@ const AdminBlogList = () => {
         </div>
 
         <div className="w-full">
-          <Input placeholder="请输入名称" className="h-14" />
+          <Input
+            placeholder="请输入名称"
+            className="h-14"
+            value={searchName}
+            onChange={(e) => {
+              setSearchName(e.target.value);
+              if (pageNum !== 1) setPageNum(1);
+            }}
+          />
         </div>
         <div className="w-full">
-          <Table showEditForm={showEditForm} />
+          <Table
+            showEditForm={showEditForm}
+            list={tagList}
+            pageNum={pageNum}
+            pageSize={pageSize}
+            total={total}
+            onPageChange={setPageNum}
+            onPageSizeChange={setPageSize}
+            loading={loading}
+            onDeleteTag={handleDeleteTag}
+          />
         </div>
       </div>
 
