@@ -56,3 +56,11 @@ export const fetchTagsByPage = (params: TagPageListParams) => {
 export const fetchTagDetail = (id: string) => {
   return axios.get(`${API.TAG_INFO}/${id}`);
 };
+
+/** * 删除标签
+ * @param id 标签ID
+ * @returns 删除结果
+ */
+export const fetchDeleteTag = (id: string) => {
+  return axios.delete(`${API.TAG_DELETE}/${id}`);
+};
