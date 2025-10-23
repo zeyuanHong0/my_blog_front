@@ -22,17 +22,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import DataTableColumnHeader from "@/components/data-table-column-header";
 import DataTablePagination from "@/components/Pagination";
 
@@ -46,6 +35,7 @@ export type tag = {
 
 const createColumns = (
   showEditForm: (id: string) => void,
+  onDeleteTag: (id: string, name: string) => void,
 ): ColumnDef<tag>[] => [
   {
     id: "select",
@@ -132,6 +122,7 @@ const createColumns = (
             size={"icon"}
             variant="outline"
             className="text-red-500 hover:text-red-500"
+            onClick={() => onDeleteTag(row.original.id, row.original.name)}
           >
             <Trash />
           </Button>
@@ -262,6 +253,7 @@ interface TagTableProps {
   pageSize?: number;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
+  onDeleteTag?: (id: string, name: string) => void;
   loading?: boolean;
 }
 
@@ -273,9 +265,10 @@ export default function TagTable({
   pageSize = 10,
   onPageChange = () => {},
   onPageSizeChange = () => {},
+  onDeleteTag = () => {},
   loading = false,
 }: TagTableProps) {
-  const columns = createColumns(showEditForm);
+  const columns = createColumns(showEditForm, onDeleteTag);
 
   return (
     <DataTable

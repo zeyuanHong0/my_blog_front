@@ -13,21 +13,21 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { showErrorToast } from "@/components/toast";
+import { showErrorToast, showSuccessToast } from "@/components/toast";
+import ConfirmDialog from "@/components/confirm-dialog";
 import Table from "./table";
-import TagForm from "../form";
+import TagForm, { TagFormRef } from "../form";
 
 const AdminBlogList = () => {
   // 表单相关
   const [formType, setFormType] = useState<"create" | "edit">("create");
   const [tagId, setTagId] = useState<string | null>(null);
-  const formRef = useRef<any>(null);
+  const formRef = useRef<TagFormRef>(null);
   const showCreateForm = () => {
     setFormType("create");
     formRef.current?.handleShowForm();
   };
   const showEditForm = (id: string) => {
-    console.log("🚀 ~ showEditForm ~ id:", id);
     setFormType("edit");
     setTagId(id);
     formRef.current?.handleShowForm();
@@ -67,7 +67,26 @@ const AdminBlogList = () => {
   }, [handleGetTagList]);
 
   // 删除标签
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [deleteTagId, setDeleteTagId] = useState<string>("");
+  const [deleteTagName, setDeleteTagName] = useState<string>("");
 
+  const openDeleteConfirm = (id: string, name: string) => {
+    setDeleteTagId(id);
+    setDeleteTagName(name);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const handleDeleteTag = async () => {
+    try {
+      await fetchDeleteTag(deleteTagId);
+      showSuccessToast("删除成功");
+      setIsDeleteConfirmOpen(false);
+      await handleGetTagList();
+    } catch (error: any) {
+      showErrorToast(error.message || "删除失败");
+    }
+  };
   return (
     <>
       <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
@@ -118,13 +137,25 @@ const AdminBlogList = () => {
             onPageChange={setPageNum}
             onPageSizeChange={setPageSize}
             loading={loading}
-            onDeleteTag={handleDeleteTag}
+            onDeleteTag={openDeleteConfirm}
           />
         </div>
       </div>
 
       {/* 标签表单弹窗 */}
       <TagForm ref={formRef} formType={formType} tagId={tagId} />
+
+      {/* 删除确认弹窗 */}
+      <ConfirmDialog
+        cancelBtnText="取消"
+        confirmBtnText="确认"
+        title="删除标签"
+        description={`确定要删除此标签吗？（${deleteTagName}）`}
+        onCancel={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={handleDeleteTag}
+        isOpen={isDeleteConfirmOpen}
+        onOpenChange={setIsDeleteConfirmOpen}
+      />
     </>
   );
 };
