@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { fetchTagDetail } from "@/api/tag";
+import { fetchTagDetail, fetchCreateTag, fetchUpdateTag } from "@/api/tag";
 
 import {
   Form,
@@ -50,14 +50,16 @@ export interface TagFormRef {
 interface TagFormProps {
   formType: "create" | "edit";
   tagId?: string | null;
+  refreshList: () => void;
 }
 
 const TagForm = forwardRef<TagFormRef, TagFormProps>(
-  ({ formType, tagId }, ref) => {
+  ({ formType, tagId, refreshList }, ref) => {
     const [dialogTitle, setDialogTitle] = useState("创建标签");
     const [confirmBtnText, setConfirmBtnText] = useState("创建");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [previewSvg, setPreviewSvg] = useState<string>("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
       if (formType === "create") {
@@ -95,13 +97,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
         return;
       }
       try {
-        // const res = await fetchTagDetail(tagId);
-        const res = {
-          data: {
-            name: "测试标签",
-            icon: '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><g fill="none"><rect width="256" height="256" fill="#f4f2ee" rx="60"/><path fill="#41b883" d="M182 50h36l-90 155.25L38 50h68.85L128 86l20.7-36z"/><path fill="#41b883" d="m38 50l90 155.25L218 50h-36l-54 93.15L73.55 50z"/><path fill="#35495e" d="M73.55 50L128 143.6L182 50h-33.3L128 86l-21.15-36z"/></g></svg>',
-          },
-        };
+        const res = await fetchTagDetail(tagId);
         form.setValue("name", res.data.name);
         form.setValue("icon", res.data.icon);
         setPreviewSvg(res.data.icon);
@@ -116,9 +112,33 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
       }
     }, [isDialogOpen, formType, handleGetTagInfo]);
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-      console.log("提交表单", values);
-      showSuccessToast("标签保存成功");
+    // 提交表单
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+      if (isSubmitting) return;
+      setIsSubmitting(true);
+      try {
+        if (formType === "create") {
+          // 创建标签
+          await fetchCreateTag(values);
+          showSuccessToast("标签创建成功");
+        } else {
+          // 更新标签
+          if (!tagId) {
+            showWarningToast("标签ID不存在，无法更新标签");
+            return;
+          }
+          await fetchUpdateTag({ id: tagId, ...values });
+          showSuccessToast("标签更新成功");
+        }
+        setIsDialogOpen(false);
+        refreshList();
+      } catch (error: any) {
+        showErrorToast(
+          error.message || `${formType === "create" ? "创建" : "更新"}标签失败`,
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
     };
 
     const previewIcon = () => {
@@ -200,14 +220,19 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
             </form>
           </Form>
           <DialogFooter className="flex gap-2">
-            <Button variant="outline" onClick={handleCancel}>
+            <Button
+              variant="outline"
+              onClick={handleCancel}
+              disabled={isSubmitting}
+            >
               取消
             </Button>
             <Button
               className="bg-black text-white"
               onClick={form.handleSubmit(onSubmit)}
+              disabled={isSubmitting}
             >
-              {confirmBtnText}
+              {isSubmitting ? "提交中..." : confirmBtnText}
             </Button>
           </DialogFooter>
         </DialogContent>

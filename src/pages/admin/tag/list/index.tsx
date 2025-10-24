@@ -143,7 +143,7 @@ const AdminBlogList = () => {
       </div>
 
       {/* 标签表单弹窗 */}
-      <TagForm ref={formRef} formType={formType} tagId={tagId} />
+      <TagForm ref={formRef} formType={formType} tagId={tagId} refreshList={handleGetTagList} />
 
       {/* 删除确认弹窗 */}
       <ConfirmDialog
