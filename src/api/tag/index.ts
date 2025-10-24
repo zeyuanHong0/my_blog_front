@@ -9,7 +9,7 @@ enum API {
   TAG_UPDATE = "/tag/updateTag",
   TAG_ALL_LIST = "/tag/getAllTagList",
   TAG_LIST_BY_PAGE = "/tag/getTagListByPage",
-  TAG_INFO = "/tag/info",
+  TAG_INFO = "/tag/getTagInfo",
   TAG_DELETE = "/tag/deleteTag",
 }
 
