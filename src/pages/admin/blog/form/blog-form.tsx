@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { fetchAllTags } from "@/api/tag";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +18,8 @@ import {
 } from "@/components/ui/form";
 import MultiSelect from "@/components/multi-select";
 import { BytemdEditor } from "@/components/bytemd/editor";
+import { showErrorToast } from "@/components/toast";
+import { Tag } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "长度不能少于1个字符" }),
@@ -24,6 +28,11 @@ const formSchema = z.object({
   published: z.boolean().optional(),
   tags: z.string().array().min(1, { message: "至少选择一个标签" }).optional(),
 });
+
+type TagOption = {
+  label: string;
+  value: string;
+};
 
 const AdminBlogForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,6 +55,24 @@ const AdminBlogForm = () => {
     { label: "Angular", value: "angular" },
     { label: "Svelte", value: "svelte" },
   ];
+  const [tagList, setTagList] = useState<TagOption[]>([]);
+  // 获取所有标签
+  const handleGetAllTags = async () => {
+    try {
+      const res = await fetchAllTags();
+      const tags = res.data.map((tag: any) => ({
+        label: tag.name,
+        value: tag.id,
+      }));
+      setTagList(tags);
+    } catch (error: any) {
+      showErrorToast(error.message || "获取标签列表失败");
+    }
+  };
+  useEffect(() => {
+    handleGetAllTags();
+  }, []);
+
   return (
     <Form {...form}>
       <form
@@ -79,7 +106,7 @@ const AdminBlogForm = () => {
                 <MultiSelect
                   value={field.value || []}
                   onChange={field.onChange}
-                  options={options}
+                  options={tagList}
                   placeholder="请选择标签"
                 />
               </FormControl>
