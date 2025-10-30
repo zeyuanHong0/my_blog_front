@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Eye, Pen, Trash } from "lucide-react";
 
 import { formatDateTime } from "@/utils/getTime";
@@ -14,7 +13,6 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -28,23 +26,19 @@ import {
 import DataTableColumnHeader from "@/components/data-table-column-header";
 import DataTablePagination from "@/components/Pagination";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-
-export type blog = {
+export type Blog = {
   id: string;
   title: string;
   tags: string[];
-  published: boolean;
+  published: number;
   createTime: string;
   updateTime: string;
 };
 
-const columns: ColumnDef<blog>[] = [
+const createColumns = (
+  onDeleteBlog: (id: string, name: string) => void,
+  toEditForm: (id: string) => void,
+): ColumnDef<Blog>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -77,15 +71,15 @@ const columns: ColumnDef<blog>[] = [
     accessorKey: "tags",
     header: () => <DataTableColumnHeader title="标签" />,
     cell: ({ row }) => {
-      const tags = row.getValue("tags") as string[];
+      const tags = row.getValue("tags") as { id: string; name: string }[];
       return (
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <span
-              key={tag}
+              key={tag.id}
               className="rounded-full bg-black px-2 py-1 text-xs text-white"
             >
-              {tag}
+              {tag.name}
             </span>
           ))}
         </div>
@@ -96,7 +90,7 @@ const columns: ColumnDef<blog>[] = [
     accessorKey: "published",
     header: () => <DataTableColumnHeader title="发布状态" />,
     cell: ({ row }) => {
-      const published = row.getValue("published") as boolean;
+      const published = row.getValue("published") === 1 ? true : false;
       return <Switch checked={published} />;
     },
   },
@@ -129,15 +123,25 @@ const columns: ColumnDef<blog>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      const blog = row.original;
       return (
         <div className="flex items-center gap-2">
           <Button size={"icon"} variant="outline">
             <Eye />
           </Button>
-          <Button size={"icon"} variant="outline">
+          <Button
+            size={"icon"}
+            variant="outline"
+            onClick={() => toEditForm(blog.id)}
+          >
             <Pen />
           </Button>
-          <Button size={"icon"} variant="outline">
+          <Button
+            size={"icon"}
+            variant="outline"
+            className="text-red-500 hover:text-red-500"
+            onClick={() => onDeleteBlog(blog.id, blog.title)}
+          >
             <Trash />
           </Button>
         </div>
@@ -146,22 +150,37 @@ const columns: ColumnDef<blog>[] = [
   },
 ];
 
+interface PaginationProps {
+  pageNum: number;
+  pageSize: number;
+  total: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  paginationProps: PaginationProps;
+  loading?: boolean;
 }
 
 function DataTable<TData, TValue>({
   columns,
   data,
+  paginationProps,
+  loading = false,
 }: DataTableProps<TData, TValue>) {
+  const { total, pageNum, pageSize, onPageChange, onPageSizeChange } =
+    paginationProps;
   const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true, // 启用手动分页
+    pageCount: Math.ceil(total / pageSize), // 总页数
     onRowSelectionChange: setRowSelection,
     state: {
       rowSelection,
@@ -191,7 +210,16 @@ function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  加载中...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -223,56 +251,42 @@ function DataTable<TData, TValue>({
       </div>
 
       <div>
-        <DataTablePagination table={table} />
+        <DataTablePagination
+          table={table}
+          total={total}
+          pageNum={pageNum}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+          onPageSizeChange={onPageSizeChange}
+        />
       </div>
     </div>
   );
 }
 
-export default function BlogTable() {
-  const data = [
-    {
-      id: "1",
-      title: "使用 tailwindcss-debug-screens 实时显示屏幕断点",
-      tags: ["React", "JavaScript"],
-      published: true,
-      createTime: "2023-10-01 10:00:00",
-      updateTime: "2023-10-02 12:00:00",
-    },
-    {
-      id: "2",
-      title: "在浏览器中使用 js 获取视频和图片的信息",
-      tags: ["TypeScript", "Web Development"],
-      published: false,
-      createTime: "2023-10-03 14:30:00",
-      updateTime: "2023-10-04 16:45:00",
-    },
-    {
-      id: "3",
-      title:
-        "解决 Mac 上 Gin 服务每次 Build 后都会弹出【你要应用程序“main”接受传入网络连接吗？】",
-      tags: ["CSS", "Design"],
-      published: true,
-      createTime: "2023-10-05 09:15:00",
-      updateTime: "2023-10-06 11:20:00",
-    },
-    {
-      id: "4",
-      title: "Fourth Blog",
-      tags: ["HTML", "Frontend"],
-      published: false,
-      createTime: "2023-10-07 13:50:00",
-      updateTime: "2023-10-08 15:30:00",
-    },
-    {
-      id: "5",
-      title: "Fifth Blog",
-      tags: ["Node.js", "Backend"],
-      published: true,
-      createTime: "2023-10-09 08:40:00",
-      updateTime: "2023-10-10 10:55:00",
-    },
-  ];
+interface BlogTableProps {
+  list: Blog[];
+  paginationProps: PaginationProps;
+  onDeleteBlog?: (id: string, title: string) => void;
+  toEditForm?: (id: string) => void;
+  loading?: boolean;
+}
 
-  return <DataTable columns={columns} data={data} />;
+export default function BlogTable({
+  list,
+  paginationProps,
+  onDeleteBlog = () => {},
+  toEditForm = () => {},
+  loading = false,
+}: BlogTableProps) {
+  const columns = createColumns(onDeleteBlog, toEditForm);
+
+  return (
+    <DataTable
+      columns={columns}
+      data={list}
+      paginationProps={paginationProps}
+      loading={loading}
+    />
+  );
 }
