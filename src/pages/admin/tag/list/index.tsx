@@ -3,6 +3,7 @@ import { useDebounce } from "ahooks";
 import { Plus, CircleSmall } from "lucide-react";
 
 import { fetchTagsByPage, fetchDeleteTag } from "@/api/tag";
+import { usePagination } from "@/hooks/usePagination";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,13 +37,19 @@ const AdminBlogList = () => {
   // 列表数据
   const [tagList, setTagList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
+  // const [total, setTotal] = useState(0);
+
+  const { pageNum, pageSize, setTotal, resetPage, paginationProps } =
+    usePagination({
+      initialPageNum: 1,
+      initialPageSize: 5,
+    });
 
   // 查询参数
   const [searchName, setSearchName] = useState<string>("");
   const debouncedSearchName = useDebounce(searchName, { wait: 300 });
-  const [pageNum, setPageNum] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(5);
+  // const [pageNum, setPageNum] = useState<number>(1);
+  // const [pageSize, setPageSize] = useState<number>(5);
 
   const handleGetTagList = useCallback(async () => {
     setLoading(true);
@@ -60,7 +67,7 @@ const AdminBlogList = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearchName, pageNum, pageSize]);
+  }, [debouncedSearchName, pageNum, pageSize, setTotal]);
 
   useEffect(() => {
     handleGetTagList();
@@ -123,7 +130,7 @@ const AdminBlogList = () => {
             value={searchName}
             onChange={(e) => {
               setSearchName(e.target.value);
-              if (pageNum !== 1) setPageNum(1);
+              resetPage();
             }}
           />
         </div>
@@ -131,11 +138,7 @@ const AdminBlogList = () => {
           <Table
             showEditForm={showEditForm}
             list={tagList}
-            pageNum={pageNum}
-            pageSize={pageSize}
-            total={total}
-            onPageChange={setPageNum}
-            onPageSizeChange={setPageSize}
+            paginationProps={paginationProps}
             loading={loading}
             onDeleteTag={openDeleteConfirm}
           />
@@ -143,7 +146,12 @@ const AdminBlogList = () => {
       </div>
 
       {/* 标签表单弹窗 */}
-      <TagForm ref={formRef} formType={formType} tagId={tagId} refreshList={handleGetTagList} />
+      <TagForm
+        ref={formRef}
+        formType={formType}
+        tagId={tagId}
+        refreshList={handleGetTagList}
+      />
 
       {/* 删除确认弹窗 */}
       <ConfirmDialog

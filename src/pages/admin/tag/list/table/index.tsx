@@ -132,28 +132,31 @@ const createColumns = (
   },
 ];
 
+interface PaginationProps {
+  pageNum: number;
+  pageSize: number;
+  total: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   showEditForm: (id: string) => void;
-  total?: number;
-  pageNum?: number;
-  pageSize?: number;
-  onPageChange?: (page: number) => void;
-  onPageSizeChange?: (size: number) => void;
+  paginationProps: PaginationProps;
   loading?: boolean;
 }
 
 function DataTable<TData, TValue>({
   columns,
   data,
-  total = 0,
-  pageNum = 1,
-  pageSize = 10,
-  onPageChange = () => {},
-  onPageSizeChange = () => {},
+  paginationProps,
   loading = false,
 }: DataTableProps<TData, TValue>) {
+  const { total, pageNum, pageSize, onPageChange, onPageSizeChange } =
+    paginationProps;
+
   const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
@@ -248,11 +251,7 @@ function DataTable<TData, TValue>({
 interface TagTableProps {
   showEditForm: (id: string) => void;
   list: tag[];
-  total?: number;
-  pageNum?: number;
-  pageSize?: number;
-  onPageChange?: (page: number) => void;
-  onPageSizeChange?: (size: number) => void;
+  paginationProps: PaginationProps;
   onDeleteTag?: (id: string, name: string) => void;
   loading?: boolean;
 }
@@ -260,11 +259,7 @@ interface TagTableProps {
 export default function TagTable({
   showEditForm,
   list,
-  total = 0,
-  pageNum = 1,
-  pageSize = 10,
-  onPageChange = () => {},
-  onPageSizeChange = () => {},
+  paginationProps,
   onDeleteTag = () => {},
   loading = false,
 }: TagTableProps) {
@@ -274,11 +269,7 @@ export default function TagTable({
     <DataTable
       columns={columns}
       data={list}
-      total={total}
-      pageNum={pageNum}
-      pageSize={pageSize}
-      onPageChange={onPageChange}
-      onPageSizeChange={onPageSizeChange}
+      paginationProps={paginationProps}
       showEditForm={showEditForm}
       loading={loading}
     />
