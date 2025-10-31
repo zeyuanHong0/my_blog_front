@@ -1,7 +1,9 @@
+import { useRef, useState } from "react";
 import { CircleSmall } from "lucide-react";
 
+import { fetchCreateBlog } from "@/api/blog";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,9 +11,42 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import BlogForm from "./blog-form";
+import {
+  showErrorToast,
+  showInfoToast,
+  showSuccessToast,
+} from "@/components/toast";
+import BlogForm, { BlogFormRef } from "./blog-form";
 
 const AdminBlogCreateForm = () => {
+  const formRef = useRef<BlogFormRef>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (values: any) => {
+    console.log("提交的表单数据:", values);
+    const data = {
+      ...values,
+      published: values.published ? 1 : 0, // 处理 published 字段
+    };
+    handleCreateBlog(data);
+  };
+
+  const handleCreateBlog = async (values: any) => {
+    if (loading) return showInfoToast("请勿重复提交");
+    setLoading(true);
+    try {
+      await fetchCreateBlog(values);
+      showSuccessToast("创建博客成功");
+    } catch (error: any) {
+      showErrorToast(error.message || "创建博客失败");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateClick = () => {
+    formRef.current?.submit();
+  };
   return (
     <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
       <div className="flex items-center justify-between">
@@ -38,10 +73,16 @@ const AdminBlogCreateForm = () => {
         </BreadcrumbList>
       </Breadcrumb>
       {/* 表单 */}
-      <BlogForm />
+      <BlogForm ref={formRef} getFormValues={handleSubmit} />
       {/* 按钮 */}
       <div className="fixed inset-x-24 bottom-10 z-10 md:inset-x-[20vw]">
-        <Button type="button" variant={"outline"} className="!w-full">
+        <Button
+          type="button"
+          variant={"outline"}
+          className="!w-full"
+          onClick={handleCreateClick}
+          disabled={loading}
+        >
           创建
         </Button>
       </div>
