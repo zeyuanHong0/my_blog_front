@@ -23,6 +23,15 @@ const AdminBlogList = () => {
   const toBlogCreate = () => {
     navigate("/admin/blog/create");
   };
+  // 前往编辑页面
+  const toEditForm = (id: string) => {
+    console.log("🚀 ~ toEditForm ~ id:", id);
+    navigate(`/admin/blog/edit/${id}`);
+  };
+  // 前往博客详情页面
+  const toBlogInfo = (id: string) => {
+    navigate(`/blog/${id}`);
+  };
   // 列表数据
   const [blogList, setBlogList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,12 +68,6 @@ const AdminBlogList = () => {
   useEffect(() => {
     handleGetBlogList();
   }, [handleGetBlogList]);
-
-  // 前往编辑页面
-  const toEditForm = (id: string) => {
-    console.log("🚀 ~ toEditForm ~ id:", id);
-    navigate(`/admin/blog/edit/${id}`);
-  };
 
   // 删除博客
   // const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -127,6 +130,7 @@ const AdminBlogList = () => {
           loading={loading}
           onDeleteBlog={openDeleteConfirm}
           toEditForm={toEditForm}
+          toBlogInfo={toBlogInfo}
         />
       </div>
     </div>
