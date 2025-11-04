@@ -10,6 +10,7 @@ enum API {
   BLOG_ALL_LIST = "/blog/getAllBlogList",
   BLOG_LIST_BY_PAGE = "/blog/getBlogListByPage",
   BLOG_INFO = "/blog/getBlogInfo",
+  BLOG_CHANGE_STATUS = "/blog/changeBlogStatus",
   BLOG_DELETE = "/blog/deleteBlog",
 }
 
@@ -49,7 +50,18 @@ export const fetchBlogDetail = (id: string) => {
   return axios.get(`${API.BLOG_INFO}/${id}`);
 };
 
-/** * 删除博客
+/**
+ * 修改博客发布状态
+ * @param id 博客ID
+ * @param published 发布状态
+ * @returns 修改结果
+ */
+export const fetchChangeBlogStatus = (id: string, published: number) => {
+  return axios.post(`${API.BLOG_CHANGE_STATUS}/${id}`, { published });
+};
+
+/**
+ * 删除博客
  * @param id 博客ID
  * @returns 删除结果
  */
