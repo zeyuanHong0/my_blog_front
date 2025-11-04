@@ -37,7 +37,9 @@ export type Blog = {
 
 const createColumns = (
   onDeleteBlog: (id: string, name: string) => void,
+  onChangeBlogStatus: (id: string, published: boolean) => void,
   toEditForm: (id: string) => void,
+  toBlogInfo: (id: string) => void,
 ): ColumnDef<Blog>[] => [
   {
     id: "select",
@@ -91,7 +93,14 @@ const createColumns = (
     header: () => <DataTableColumnHeader title="发布状态" />,
     cell: ({ row }) => {
       const published = row.getValue("published") === 1 ? true : false;
-      return <Switch checked={published} />;
+      return (
+        <Switch
+          checked={published}
+          onCheckedChange={(value) =>
+            onChangeBlogStatus(row.original.id, value)
+          }
+        />
+      );
     },
   },
   {
@@ -126,7 +135,11 @@ const createColumns = (
       const blog = row.original;
       return (
         <div className="flex items-center gap-2">
-          <Button size={"icon"} variant="outline">
+          <Button
+            size={"icon"}
+            variant="outline"
+            onClick={() => toBlogInfo(blog.id)}
+          >
             <Eye />
           </Button>
           <Button
@@ -268,7 +281,9 @@ interface BlogTableProps {
   list: Blog[];
   paginationProps: PaginationProps;
   onDeleteBlog?: (id: string, title: string) => void;
+  onChangeBlogStatus?: (id: string, published: boolean) => void;
   toEditForm?: (id: string) => void;
+  toBlogInfo?: (id: string) => void;
   loading?: boolean;
 }
 
@@ -276,10 +291,17 @@ export default function BlogTable({
   list,
   paginationProps,
   onDeleteBlog = () => {},
+  onChangeBlogStatus = () => {},
   toEditForm = () => {},
+  toBlogInfo = () => {},
   loading = false,
 }: BlogTableProps) {
-  const columns = createColumns(onDeleteBlog, toEditForm);
+  const columns = createColumns(
+    onDeleteBlog,
+    onChangeBlogStatus,
+    toEditForm,
+    toBlogInfo,
+  );
 
   return (
     <DataTable

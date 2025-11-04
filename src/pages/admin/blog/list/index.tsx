@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDebounce } from "ahooks";
 import { Plus, CircleSmall } from "lucide-react";
 
-import { fetchBlogsByPage } from "@/api/blog";
+import { fetchBlogsByPage, fetchChangeBlogStatus } from "@/api/blog";
 import { usePagination } from "@/hooks/usePagination";
 
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { showErrorToast } from "@/components/toast";
+import { showErrorToast, showSuccessToast } from "@/components/toast";
 import Table from "./table";
 
 const AdminBlogList = () => {
@@ -25,7 +25,6 @@ const AdminBlogList = () => {
   };
   // 前往编辑页面
   const toEditForm = (id: string) => {
-    console.log("🚀 ~ toEditForm ~ id:", id);
     navigate(`/admin/blog/edit/${id}`);
   };
   // 前往博客详情页面
@@ -68,6 +67,27 @@ const AdminBlogList = () => {
   useEffect(() => {
     handleGetBlogList();
   }, [handleGetBlogList]);
+
+  // 修改博客发布状态
+  const handleChangeBlogStatus = async (id: string, published: boolean) => {
+    try {
+      setBlogList((prevList) =>
+        prevList.map((blog) =>
+          blog.id === id ? { ...blog, published: published ? 1 : 0 } : blog,
+        ),
+      );
+      await fetchChangeBlogStatus(id, published ? 1 : 0);
+      showSuccessToast("修改博客发布状态成功");
+    } catch (error: any) {
+      // 回滚状态
+      setBlogList((prevList) =>
+        prevList.map((blog) =>
+          blog.id === id ? { ...blog, published: published ? 0 : 1 } : blog,
+        ),
+      );
+      showErrorToast(error.message || "修改博客发布状态失败");
+    }
+  };
 
   // 删除博客
   // const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -129,6 +149,7 @@ const AdminBlogList = () => {
           paginationProps={paginationProps}
           loading={loading}
           onDeleteBlog={openDeleteConfirm}
+          onChangeBlogStatus={handleChangeBlogStatus}
           toEditForm={toEditForm}
           toBlogInfo={toBlogInfo}
         />
