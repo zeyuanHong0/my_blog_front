@@ -13,8 +13,8 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import ClosableBadge from "@/components/base/closable-badge";
 
 interface Option {
   label: string;
@@ -50,6 +50,20 @@ function MultiSelect({
     .filter((opt) => value.includes(opt.value))
     .map((opt) => opt.label);
 
+  // 移除某个已选标签
+  const handleRemoveBadge = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    label: string,
+  ) => {
+    e.stopPropagation();
+    if (!label) return;
+    const option = options.find((opt) => opt.label === label);
+    if (option) {
+      const valToRemove = option.value;
+      onChange(value.filter((v) => v !== valToRemove));
+    }
+  };
+
   // console.log("MultiSelect open state:", open); // 调试日志
 
   return (
@@ -67,9 +81,16 @@ function MultiSelect({
           <div className="flex max-w-full flex-wrap gap-1">
             {selectedLabels.length ? (
               selectedLabels.map((label) => (
-                <Badge key={label} variant="secondary" className="text-xs">
+                // <Badge key={label} variant="secondary" className="text-xs">
+                //   {label}
+                // </Badge>
+                <ClosableBadge
+                  key={label}
+                  onClose={(e) => handleRemoveBadge(e, label)}
+                  className="text-xs"
+                >
                   {label}
-                </Badge>
+                </ClosableBadge>
               ))
             ) : (
               <span className="text-muted-foreground">{placeholder}</span>
