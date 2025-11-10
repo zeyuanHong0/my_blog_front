@@ -1,38 +1,23 @@
-import { CSSProperties } from 'react';
+import parse from "html-react-parser";
+import { cn } from "@/lib/utils";
 
 interface SvgIconProps {
-  prefix?: string;
   icon: string;
-  color?: string;
-  size?: string | number;
+  size?: number | string;
   className?: string;
-  style?: CSSProperties;
 }
 
-export default function SvgIcon({
-  icon,
-  prefix = 'icon',
-  color = 'currentColor',
-  size = '1em',
-  className = '',
-  style = {},
-}: SvgIconProps) {
-  const symbolId = `#${prefix}-${icon}`;
-  const svgStyle: CSSProperties = {
-    verticalAlign: 'middle',
-    width: size,
-    height: size,
-    color,
-    ...style,
-  };
+export default function SvgIcon({ icon, size, className = "" }: SvgIconProps) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 100"
-      className={`anticon fill-current inline-block h-[1em] w-[1em] overflow-hidden outline-none ${className}`}
-      style={svgStyle}
+    <div
+      className={cn(
+        "flex items-center justify-center [&>svg]:h-full [&>svg]:w-full",
+        !size && "h-4 w-4",
+        className,
+      )}
+      style={size ? { width: size, height: size } : undefined}
     >
-      <use xlinkHref={symbolId} fill="currentColor" />
-    </svg>
+      {parse(icon)}
+    </div>
   );
 }
