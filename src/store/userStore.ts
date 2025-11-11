@@ -1,11 +1,6 @@
 import { create } from "zustand";
 
-import {
-  type SignInData,
-  fetchLogin,
-  fetchUserInfo,
-  fetchLogout,
-} from "@/api/user";
+import { type SignInData, fetchLogin, fetchUserInfo } from "@/api/user";
 import {
   setSessionStorage,
   getSessionStorage,
@@ -18,7 +13,7 @@ export type UserState = {
   userInfo: User;
   userLogin: (data: SignInData) => Promise<any>;
   getUserInfo: () => Promise<any>;
-  userLogout: () => Promise<any>;
+  userLogout: () => string;
 };
 
 const useUserStore = create((set: any): UserState => {
@@ -37,11 +32,11 @@ const useUserStore = create((set: any): UserState => {
       setSessionStorage("userInfo", JSON.stringify(res.data.userInfo));
       return res;
     },
-    userLogout: async () => {
-      await fetchLogout();
+    userLogout: () => {
       set({ token: null, userInfo: {} });
       removeSessionStorage("token");
       removeSessionStorage("userInfo");
+      return "success";
     },
   };
 });
