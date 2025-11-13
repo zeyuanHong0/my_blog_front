@@ -7,9 +7,10 @@ export * from "./types";
 enum API {
   BLOG_ADD = "/blog/createBlog",
   BLOG_UPDATE = "/blog/updateBlog",
-  BLOG_ALL_LIST = "/blog/getAllBlogList",
+  BLOG_ALL_LIST = "/front/blog/getAllBlogs",
   BLOG_LIST_BY_PAGE = "/blog/getBlogListByPage",
   BLOG_INFO = "/blog/getBlogInfo",
+  BLOG_FRONT_INFO = "/front/blog/getBlogInfo",
   BLOG_CHANGE_STATUS = "/blog/changeBlogStatus",
   BLOG_DELETE = "/blog/deleteBlog",
 }
@@ -42,12 +43,29 @@ export const fetchBlogsByPage = (params: BlogPageListParams) => {
 };
 
 /**
+ * 获取所有已发布的博客列表
+ * @returns 所有已发布的博客列表
+ */
+export const fetchAllBlogs = () => {
+  return axios.get(API.BLOG_ALL_LIST);
+};
+
+/**
  * 获取博客详情
  * @param id 博客ID
  * @returns 博客详情
  */
 export const fetchBlogDetail = (id: string) => {
   return axios.get(`${API.BLOG_INFO}/${id}`);
+};
+
+/**
+ * 获取前台博客详情
+ * @param id 博客ID
+ * @returns 博客详情
+ */
+export const fetchFrontBlogDetail = (id: string) => {
+  return axios.get(`${API.BLOG_FRONT_INFO}/${id}`);
 };
 
 /**
