@@ -10,22 +10,36 @@ enum API {
   USER_PROFILE = "/user/profile",
 }
 
-// 注册
+/**
+ * 注册用户
+ * @param data
+ * @returns
+ */
 export const fetchRegister = (data: SignUpData) => {
   return request.post<any>(API.SIGNUP, data);
 };
 
-// 登录接口
+/**
+ * 登录用户
+ * @param data
+ * @returns
+ */
 export const fetchLogin = (data: SignInData) => {
   return request.post<any>(API.SIGNIN, data);
 };
 
-// 获取用户信息
+/**
+ * 获取用户信息
+ * @returns 获取用户信息
+ */
 export const fetchUserInfo = () => {
   return request.get<any>(API.USER_PROFILE);
 };
 
-// 退出登录
+/**
+ * 退出登录
+ * @returns 用户登出
+ */
 export const fetchLogout = () => {
   return request.post<any>(API.LOGOUT);
 };
