@@ -1,10 +1,9 @@
 import axios from "axios";
-import { message } from "antd";
 import { GET_TOKEN } from "@/utils/token";
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API as string,
-  timeout: 5000,
+  timeout: 10000 * 3,
 });
 
 // 请求拦截器
@@ -27,21 +26,12 @@ request.interceptors.request.use(
 // 响应拦截器
 request.interceptors.response.use(
   (response) => {
+    // TODO 处理业务状态码
     return response.data;
   },
   (error) => {
-    // 处理网络错误
-    // http状态码
-    if (error.response && error.response.status) {
-      const statusMap: { [key: number]: string } = {
-        401: "token过期",
-        403: "无权访问",
-        404: "请求地址错误",
-        500: "服务器错误",
-      };
-      message.error(statusMap[error.response.status] || "网络错误");
-      return Promise.reject(error);
-    }
+    // TODO 处理 HTTP 层面的错误
+    return Promise.reject(error);
   },
 );
 
