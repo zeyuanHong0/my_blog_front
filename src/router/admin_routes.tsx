@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { lazy } from "react";
 
 import Login from "@/pages/admin/login";
@@ -9,6 +10,9 @@ const AdminHome = lazy(() => import("@/pages/admin/home"));
 const AdminBlogList = lazy(() => import("@/pages/admin/blog/list/index"));
 const AdminBlogCreate = lazy(
   () => import("@/pages/admin/blog/form/blog-create-page"),
+);
+const AdminBlogEdit = lazy(
+  () => import("@/pages/admin/blog/form/blog-edit-page"),
 );
 const AdminTagList = lazy(() => import("@/pages/admin/tag/list/index"));
 
@@ -38,6 +42,7 @@ const adminRoutes = [
         children: [
           { index: true, element: SuspenseWrapper(AdminBlogList) },
           { path: "create", element: SuspenseWrapper(AdminBlogCreate) },
+          { path: "edit/:id", element: SuspenseWrapper(AdminBlogEdit) },
         ],
       },
       {

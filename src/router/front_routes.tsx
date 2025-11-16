@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { lazy } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -6,6 +7,7 @@ import SuspenseWrapper from "@/components/SuspenseWrapper";
 
 const Home = lazy(() => import("@/pages/front/home"));
 const Blog = lazy(() => import("@/pages/front/blog"));
+const BlogViewPage = lazy(() => import("@/pages/blog-view"));
 
 const frontRoutes = [
   {
@@ -25,11 +27,11 @@ const frontRoutes = [
         path: "/blog",
         element: SuspenseWrapper(Blog),
       },
-      // {
-      //   path: "/blog/:id",
-      //   element: SuspenseWrapper(Home),
-      // },
     ],
+  },
+  {
+    path: "/blog/:id",
+    element: SuspenseWrapper(BlogViewPage),
   },
 ];
 
