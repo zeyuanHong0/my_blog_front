@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { CircleSmall } from "lucide-react";
 
 import { fetchBlogDetail, fetchUpdateBlog } from "@/api/blog";
@@ -21,6 +21,7 @@ import BlogForm, { BlogFormRef } from "./blog-form";
 
 const AdminBlogEditForm = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const formRef = useRef<BlogFormRef>(null);
   const [loading, setLoading] = useState(false);
 
@@ -66,6 +67,7 @@ const AdminBlogEditForm = () => {
     try {
       await fetchUpdateBlog(values);
       showSuccessToast("保存博客成功");
+      navigate("/admin/blog");
     } catch (error: any) {
       showErrorToast(error.message || "保存博客失败");
     } finally {
