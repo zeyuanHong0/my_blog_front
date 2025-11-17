@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 
-import { fetchBlogDetail } from "@/api/blog";
+import { fetchFrontBlogDetail } from "@/api/blog";
 
+import { SvgIcon } from "@/components/Icon";
 import { BytemdViewer } from "@/components/bytemd/viewer";
 import { showErrorToast } from "@/components/toast";
 
@@ -37,7 +38,7 @@ const BlogViewPage = () => {
   // 获取博客详情
   const handleGetBlogDetail = useCallback(async () => {
     try {
-      const res: any = await fetchBlogDetail(id as string);
+      const res: any = await fetchFrontBlogDetail(id as string);
       if (res.code === 200) {
         const { title, description, content, tags, createTime, updateTime } =
           res.data;
@@ -76,7 +77,7 @@ const BlogViewPage = () => {
 
       <div className="pt-14 pb-14">
         {blog.tags && blog.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             {blog.tags.map((tag) => (
               <div className="flex items-center gap-1" key={tag.id}>
                 {/* svg */}
