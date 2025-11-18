@@ -1,5 +1,6 @@
 import axios from "axios";
 import { GET_TOKEN } from "@/utils/token";
+import { showErrorToast } from "@/components/toast";
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API as string,
@@ -27,10 +28,39 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => {
     // TODO 处理业务状态码
-    return response.data;
+    console.log("response", response);
+    const res = response.data;
+    if (res.code !== 200) {
+      showErrorToast(res.message || "请求出错");
+      return Promise.reject(new Error(res.message || "请求出错"));
+    }
+    return res;
   },
   (error) => {
     // TODO 处理 HTTP 层面的错误
+    if (error.response) {
+      const status = error.response.status;
+      switch (status) {
+        case 401:
+          showErrorToast("登录已过期，请重新登录");
+          break;
+        case 403:
+          showErrorToast("没有权限访问");
+          break;
+        case 404:
+          showErrorToast("请求资源不存在");
+          break;
+        case 500:
+          showErrorToast("服务器内部错误");
+          break;
+        default:
+          showErrorToast(`请求错误：${status}`);
+      }
+    } else if (error.request) {
+      showErrorToast("请求超时或网络错误");
+    } else {
+      showErrorToast(error.message);
+    }
     return Promise.reject(error);
   },
 );
