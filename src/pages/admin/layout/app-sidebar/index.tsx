@@ -21,6 +21,8 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
+import { SvgIcon } from "@/components/Icon";
+import LogoIcon from "/blog.svg?raw";
 
 const items = [
   {
@@ -52,6 +54,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link to="/" className="flex items-center">
+                <SvgIcon icon={LogoIcon} size={24} className="mr-1" />
                 <span className="text-base font-semibold">后台管理</span>
               </Link>
             </SidebarMenuButton>
