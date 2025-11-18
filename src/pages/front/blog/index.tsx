@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
 
+import { fetchAllBlogs } from "@/api/blog";
+
 import BlogList from "./list";
+import { showErrorToast } from "@/components/toast";
 
 const Blog = () => {
   const [blogs, setBlogs] = useState<any[]>([]);
+
+  // 获取博客列表
+  const handleGetAllBlogs = async () => {
+    try {
+      const res: any = await fetchAllBlogs();
+      setBlogs(res.data);
+    } catch (error: any) {
+      showErrorToast(error.message || "获取博客列表失败");
+    }
+  };
   useEffect(() => {
-    // 模拟获取博客数据
-    setBlogs([
-      {
-        id: 1,
-        title: "在浏览器中使用 localStorage 和 sessionStorage",
-        tags: [
-          { id: 1, name: "react" },
-          { id: 2, name: "javascript" },
-        ],
-      },
-      { id: 2, title: "使用 CSS Grid 布局", tags: [{ id: 3, name: "css" }] },
-      { id: 3, title: "深入理解 HTML 语义化", tags: [{ id: 4, name: "html" }] },
-    ]);
+    handleGetAllBlogs();
   }, []);
   return (
     <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-8 pb-24">
