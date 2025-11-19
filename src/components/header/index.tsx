@@ -13,8 +13,9 @@ import { cn } from "@/lib/utils";
 import { NICKNAME, SLOGAN } from "@/constants";
 import { useActiveNav } from "@/hooks/useActiveNav";
 
-import { Iconify } from "@/components/Icon";
+import { Iconify, SvgIcon } from "@/components/Icon";
 import Button from "@/components/button";
+import LogoIcon from "/blog.svg?raw";
 
 const Header: React.FC = () => {
   const [showLeftSheet, setShowLeftSheet] = useState(false);
@@ -56,6 +57,7 @@ const Header: React.FC = () => {
           {/* logo */}
           <div className="flex items-center gap-4">
             <Link to="/" className="mr-4 hidden sm:flex sm:items-center">
+              <SvgIcon className="h-8 w-8" icon={LogoIcon} />
               <span className="ml-2 text-base font-semibold !text-black">
                 {NICKNAME}
               </span>
