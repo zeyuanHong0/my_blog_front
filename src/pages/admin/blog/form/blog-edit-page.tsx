@@ -29,19 +29,15 @@ const AdminBlogEditForm = () => {
   const handleGetBlogDetail = useCallback(async () => {
     try {
       const res: any = await fetchBlogDetail(id as string);
-      if (res.code === 200) {
-        const { title, description, content, tags, published } = res.data;
-        const values = {
-          title,
-          description,
-          content,
-          tags: tags.map((tag: any) => tag.id),
-          published: published === 1,
-        };
-        formRef.current?.setFieldsValue(values);
-      } else {
-        showErrorToast(res.message || "获取博客详情失败");
-      }
+      const { title, description, content, tags, published } = res.data;
+      const values = {
+        title,
+        description,
+        content,
+        tags: tags.map((tag: any) => tag.id),
+        published: published === 1,
+      };
+      formRef.current?.setFieldsValue(values);
     } catch (error: any) {
       showErrorToast(error.message || "获取博客详情失败");
     }

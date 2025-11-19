@@ -1,6 +1,6 @@
 import axios from "axios";
-import { GET_TOKEN } from "@/utils/token";
-import { showErrorToast } from "@/components/toast";
+import { GET_TOKEN, REMOVE_TOKEN } from "@/utils/token";
+import { showErrorToast, showInfoToast } from "@/components/toast";
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API as string,
@@ -42,7 +42,8 @@ request.interceptors.response.use(
       const status = error.response.status;
       switch (status) {
         case 401:
-          showErrorToast("登录已过期，请重新登录");
+          showInfoToast("登录已过期，请重新登录");
+          REMOVE_TOKEN();
           break;
         case 403:
           showErrorToast("没有权限访问");

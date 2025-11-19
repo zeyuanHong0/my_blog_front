@@ -39,20 +39,17 @@ const BlogViewPage = () => {
   const handleGetBlogDetail = useCallback(async () => {
     try {
       const res: any = await fetchFrontBlogDetail(id as string);
-      if (res.code === 200) {
-        const { title, description, content, tags, createTime, updateTime } =
-          res.data;
-        setBlog({
-          title,
-          description,
-          content,
-          createTime,
-          updateTime,
-          tags: tags || [],
-        });
-      } else {
-        showErrorToast(res.message || "获取博客详情失败");
-      }
+
+      const { title, description, content, tags, createTime, updateTime } =
+        res.data;
+      setBlog({
+        title,
+        description,
+        content,
+        createTime,
+        updateTime,
+        tags: tags || [],
+      });
     } catch (error: any) {
       showErrorToast(error.message || "获取博客详情失败");
     }
