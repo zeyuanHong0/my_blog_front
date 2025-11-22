@@ -8,6 +8,7 @@ enum API {
   TAG_ADD = "/tag/createTag",
   TAG_UPDATE = "/tag/updateTag",
   TAG_ALL_LIST = "/tag/getAllTagList",
+  TAG_FRONT_ALL_LIST = "/front/tag/getAllTags",
   TAG_LIST_BY_PAGE = "/tag/getTagListByPage",
   TAG_INFO = "/tag/getTagInfo",
   TAG_DELETE = "/tag/deleteTag",
@@ -37,6 +38,14 @@ export const fetchUpdateTag = (data: UpdateTag) => {
  */
 export const fetchAllTags = () => {
   return axios.get(API.TAG_ALL_LIST);
+};
+
+/**
+ * 获取所有标签列表(无需鉴权)
+ * @returns 标签列表
+ */
+export const fetchFrontAllTags = () => {
+  return axios.get(API.TAG_FRONT_ALL_LIST);
 };
 
 /**
