@@ -1,6 +1,6 @@
 export interface CreateTag {
   name: string;
-  icon: string;
+  icon?: string;
 }
 
 export interface UpdateTag extends CreateTag {

@@ -36,7 +36,7 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "名称至少需要 1 个字符" })
     .max(10, { message: "名称不能超过 10 个字符" }),
-  icon: z.string().min(1, { message: "图标至少需要 1 个字符" }),
+  icon: z.string().optional(),
 });
 
 export interface TagFormRef {
@@ -133,7 +133,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
 
     const previewIcon = () => {
       const svgString = form.getValues("icon");
-      if (svgString.trim()) {
+      if (svgString && svgString.trim()) {
         setPreviewSvg(svgString);
       }
     };
