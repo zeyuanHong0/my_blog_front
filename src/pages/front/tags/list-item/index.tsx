@@ -19,7 +19,7 @@ const TagItem = ({ tag }: TagItemProps) => {
         "aria-invalid:border-destructive aria-invalid:ring-destructive/20",
       )}
     >
-      <SvgIcon icon={tag.icon} size={18} />
+      {tag.icon && <SvgIcon icon={tag.icon} size={18} />}
       <span>{tag.name}</span>
       {Number(tag.blogCount) > 0 && (
         <div

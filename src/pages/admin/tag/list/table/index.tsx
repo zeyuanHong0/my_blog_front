@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Pen, Trash } from "lucide-react";
 
@@ -24,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import DataTableColumnHeader from "@/components/data-table-column-header";
 import DataTablePagination from "@/components/Pagination";
+import { SvgIcon } from "@/components/Icon";
 
 export type tag = {
   id: string;
@@ -72,10 +71,7 @@ const createColumns = (
       const icon = row.getValue("icon") as string;
       return (
         <div className="min-w-[120px] whitespace-nowrap">
-          <div
-            className="flex h-10 w-10 items-center justify-center [&>svg]:h-full [&>svg]:w-full"
-            dangerouslySetInnerHTML={{ __html: icon }}
-          />
+          <SvgIcon icon={icon} size={40} />
         </div>
       );
     },
