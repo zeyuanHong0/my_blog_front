@@ -29,11 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import {
-  showSuccessToast,
-  showErrorToast,
-  showWarningToast,
-} from "@/components/toast";
+import { showSuccessToast, showWarningToast } from "@/components/toast";
 
 const formSchema = z.object({
   name: z
@@ -96,14 +92,10 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
         showWarningToast("标签ID不存在，无法获取标签信息");
         return;
       }
-      try {
-        const res = await fetchTagDetail(tagId);
-        form.setValue("name", res.data.name);
-        form.setValue("icon", res.data.icon);
-        setPreviewSvg(res.data.icon);
-      } catch (error: any) {
-        showErrorToast(error.message || "获取标签信息失败");
-      }
+      const res = await fetchTagDetail(tagId);
+      form.setValue("name", res.data.name);
+      form.setValue("icon", res.data.icon);
+      setPreviewSvg(res.data.icon);
     }, [tagId, form]);
 
     useEffect(() => {
@@ -133,9 +125,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
         setIsDialogOpen(false);
         refreshList();
       } catch (error: any) {
-        showErrorToast(
-          error.message || `${formType === "create" ? "创建" : "更新"}标签失败`,
-        );
+        console.log("🚀 ~ onSubmit ~ error:", error);
       } finally {
         setIsSubmitting(false);
       }

@@ -3,18 +3,13 @@ import { useEffect, useState } from "react";
 import { fetchFrontAllTags } from "@/api/tag";
 
 import TagsList from "./list";
-import { showErrorToast } from "@/components/toast";
 
 const Tags = () => {
   const [tags, setTags] = useState<any[]>([]);
   // 获取标签列表
   const handleGetAllTags = async () => {
-    try {
-      const res: any = await fetchFrontAllTags();
-      setTags(res.data);
-    } catch (error: any) {
-      showErrorToast(error.message || "获取标签列表失败");
-    }
+    const res: any = await fetchFrontAllTags();
+    setTags(res.data);
   };
   useEffect(() => {
     handleGetAllTags();

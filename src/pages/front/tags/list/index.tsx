@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 
@@ -9,6 +10,7 @@ interface TagsListProps {
 }
 
 const TagsList = ({ tags }: TagsListProps) => {
+  const navigate = useNavigate();
   return (
     <>
       <div className={cn("flex flex-wrap items-center gap-4")}>

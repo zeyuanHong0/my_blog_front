@@ -2,8 +2,6 @@ import { Editor, type EditorProps } from "@bytemd/react";
 import zh_Hans from "bytemd/locales/zh_Hans.json";
 import { fetchUploadFile } from "@/api/file";
 
-import { showErrorToast } from "@/components/toast";
-
 import { plugins } from "./config";
 
 interface BytemdEditorProps {
@@ -27,7 +25,7 @@ export const BytemdEditor = ({
           title: res.data?.filename || file.name,
         };
       } catch (error: any) {
-        showErrorToast(error.message || `上传${file.name}图片失败`);
+        console.log("🚀 ~ handleUploadImages ~ error:", error);
         return {
           url: "",
           title: file.name,

@@ -11,11 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  showErrorToast,
-  showInfoToast,
-  showSuccessToast,
-} from "@/components/toast";
+import { showInfoToast, showSuccessToast } from "@/components/toast";
 import BlogForm, { BlogFormRef } from "./blog-form";
 
 const AdminBlogCreateForm = () => {
@@ -38,7 +34,7 @@ const AdminBlogCreateForm = () => {
       await fetchCreateBlog(values);
       showSuccessToast("创建博客成功");
     } catch (error: any) {
-      showErrorToast(error.message || "创建博客失败");
+      console.log("🚀 ~ handleCreateBlog ~ error:", error);
     } finally {
       setLoading(false);
     }

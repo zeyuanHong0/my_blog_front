@@ -12,11 +12,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  showErrorToast,
-  showInfoToast,
-  showSuccessToast,
-} from "@/components/toast";
+import { showInfoToast, showSuccessToast } from "@/components/toast";
 import BlogForm, { BlogFormRef } from "./blog-form";
 
 const AdminBlogEditForm = () => {
@@ -27,20 +23,16 @@ const AdminBlogEditForm = () => {
 
   // 获取博客详情
   const handleGetBlogDetail = useCallback(async () => {
-    try {
-      const res: any = await fetchBlogDetail(id as string);
-      const { title, description, content, tags, published } = res.data;
-      const values = {
-        title,
-        description,
-        content,
-        tags: tags.map((tag: any) => tag.id),
-        published: published === 1,
-      };
-      formRef.current?.setFieldsValue(values);
-    } catch (error: any) {
-      showErrorToast(error.message || "获取博客详情失败");
-    }
+    const res: any = await fetchBlogDetail(id as string);
+    const { title, description, content, tags, published } = res.data;
+    const values = {
+      title,
+      description,
+      content,
+      tags: tags.map((tag: any) => tag.id),
+      published: published === 1,
+    };
+    formRef.current?.setFieldsValue(values);
   }, [id]);
 
   useEffect(() => {
@@ -65,7 +57,7 @@ const AdminBlogEditForm = () => {
       showSuccessToast("保存博客成功");
       navigate("/admin/blog");
     } catch (error: any) {
-      showErrorToast(error.message || "保存博客失败");
+      console.log("🚀 ~ handleUpdateBlog ~ error:", error);
     } finally {
       setLoading(false);
     }

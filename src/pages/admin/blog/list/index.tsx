@@ -15,7 +15,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { showErrorToast, showSuccessToast } from "@/components/toast";
+import { showSuccessToast } from "@/components/toast";
 import Table from "./table";
 
 const AdminBlogList = () => {
@@ -58,7 +58,7 @@ const AdminBlogList = () => {
       setBlogList(res.data.list);
       setTotal(res.data.total);
     } catch (error: any) {
-      showErrorToast(error.message || "获取博客列表失败");
+      console.log("🚀 ~ handleGetBlogList ~ error:", error);
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ const AdminBlogList = () => {
           blog.id === id ? { ...blog, published: published ? 0 : 1 } : blog,
         ),
       );
-      showErrorToast(error.message || "修改博客发布状态失败");
+      console.log("🚀 ~ handleChangeBlogStatus ~ error:", error);
     }
   };
 

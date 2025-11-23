@@ -14,7 +14,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { showErrorToast, showSuccessToast } from "@/components/toast";
+import { showSuccessToast } from "@/components/toast";
 import ConfirmDialog from "@/components/confirm-dialog";
 import Table from "./table";
 import TagForm, { TagFormRef } from "../form";
@@ -63,7 +63,7 @@ const AdminBlogList = () => {
       setTagList(res.data.list);
       setTotal(res.data.total);
     } catch (error: any) {
-      showErrorToast(error.message || "获取标签列表失败");
+      console.log("🚀 ~ handleGetTagList ~ error:", error);
     } finally {
       setLoading(false);
     }
@@ -85,14 +85,10 @@ const AdminBlogList = () => {
   };
 
   const handleDeleteTag = async () => {
-    try {
-      await fetchDeleteTag(deleteTagId);
-      showSuccessToast("删除成功");
-      setIsDeleteConfirmOpen(false);
-      await handleGetTagList();
-    } catch (error: any) {
-      showErrorToast(error.message || "删除失败");
-    }
+    await fetchDeleteTag(deleteTagId);
+    showSuccessToast("删除成功");
+    setIsDeleteConfirmOpen(false);
+    await handleGetTagList();
   };
   return (
     <>

@@ -3,19 +3,14 @@ import { useEffect, useState } from "react";
 import { fetchAllBlogs } from "@/api/blog";
 
 import BlogList from "./list";
-import { showErrorToast } from "@/components/toast";
 
 const Blog = () => {
   const [blogs, setBlogs] = useState<any[]>([]);
 
   // 获取博客列表
   const handleGetAllBlogs = async () => {
-    try {
-      const res: any = await fetchAllBlogs();
-      setBlogs(res.data);
-    } catch (error: any) {
-      showErrorToast(error.message || "获取博客列表失败");
-    }
+    const res: any = await fetchAllBlogs();
+    setBlogs(res.data);
   };
   useEffect(() => {
     handleGetAllBlogs();

@@ -75,16 +75,12 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
     const [tagList, setTagList] = useState<TagOption[]>([]);
     // 获取所有标签
     const handleGetAllTags = async () => {
-      try {
-        const res = await fetchAllTags();
-        const tags = res.data.map((tag: any) => ({
-          label: tag.name,
-          value: tag.id,
-        }));
-        setTagList(tags);
-      } catch (error: any) {
-        showErrorToast(error.message || "获取标签列表失败");
-      }
+      const res = await fetchAllTags();
+      const tags = res.data.map((tag: any) => ({
+        label: tag.name,
+        value: tag.id,
+      }));
+      setTagList(tags);
     };
     useEffect(() => {
       handleGetAllTags();
