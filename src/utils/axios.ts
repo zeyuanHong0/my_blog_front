@@ -27,7 +27,7 @@ request.interceptors.request.use(
 // 响应拦截器
 request.interceptors.response.use(
   (response) => {
-    // TODO 处理业务状态码
+    // 处理业务状态码
     console.log("response", response);
     const res = response.data;
     if (res.code !== 200) {
@@ -37,10 +37,25 @@ request.interceptors.response.use(
     return res;
   },
   (error) => {
-    // TODO 处理 HTTP 层面的错误
+    // 处理 HTTP 层面的错误
     if (error.response) {
       const status = error.response.status;
+      const data = error.response.data;
+
+      // 优先使用后端返回的错误信息
+      if (data && data.message) {
+        const message = Array.isArray(data.message)
+          ? data.message.join(", ")
+          : data.message;
+        showErrorToast(message);
+        return Promise.reject(error);
+      }
+
+      // 如果后端没有返回 message，使用默认提示
       switch (status) {
+        case 400:
+          showErrorToast("请求参数错误");
+          break;
         case 401:
           showInfoToast("登录已过期，请重新登录");
           REMOVE_TOKEN();
