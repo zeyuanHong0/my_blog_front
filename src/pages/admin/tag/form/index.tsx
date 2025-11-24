@@ -35,7 +35,7 @@ const formSchema = z.object({
   name: z
     .string()
     .min(1, { message: "名称至少需要 1 个字符" })
-    .max(10, { message: "名称不能超过 10 个字符" }),
+    .max(15, { message: "名称不能超过 15 个字符" }),
   icon: z.string().optional(),
 });
 
