@@ -42,6 +42,13 @@ request.interceptors.response.use(
       const status = error.response.status;
       const data = error.response.data;
 
+      // 先判断是否登录过期
+      if (status === 401) {
+        showInfoToast("登录已过期，请重新登录");
+        REMOVE_TOKEN();
+        return Promise.reject(error);
+      }
+
       // 优先使用后端返回的错误信息
       if (data && data.message) {
         const message = Array.isArray(data.message)
