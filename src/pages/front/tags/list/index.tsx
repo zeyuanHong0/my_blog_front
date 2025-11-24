@@ -15,7 +15,9 @@ const TagsList = ({ tags }: TagsListProps) => {
     <>
       <div className={cn("flex flex-wrap items-center gap-4")}>
         {tags.map((tag) => (
-          <TagItem key={tag.id} tag={tag} />
+          <div onClick={() => navigate(`/tag/${tag.id}`)} key={tag.id}>
+            <TagItem tag={tag} />
+          </div>
         ))}
       </div>
     </>
