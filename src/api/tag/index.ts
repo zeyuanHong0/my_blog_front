@@ -11,6 +11,7 @@ enum API {
   TAG_FRONT_ALL_LIST = "/front/tag/getAllTags",
   TAG_LIST_BY_PAGE = "/tag/getTagListByPage",
   TAG_INFO = "/tag/getTagInfo",
+  TAG_FRONT_INFO = "/front/tag/getTagInfo",
   TAG_DELETE = "/tag/deleteTag",
 }
 
@@ -64,6 +65,15 @@ export const fetchTagsByPage = (params: TagPageListParams) => {
  */
 export const fetchTagDetail = (id: string) => {
   return axios.get(`${API.TAG_INFO}/${id}`);
+};
+
+/**
+ * 获取标签详情(无需鉴权)
+ * @param id 标签ID
+ * @returns 标签详情
+ */
+export const fetchFrontTagDetail = (id: string) => {
+  return axios.get(`${API.TAG_FRONT_INFO}/${id}`);
 };
 
 /** * 删除标签
