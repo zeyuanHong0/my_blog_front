@@ -42,7 +42,7 @@ const HeroSection = () => {
         <span className="ml-4">\owo/ ~</span>
       </div>
       <div className="text-base tracking-widest text-[#71717B] md:text-2xl">
-        我在这个网站记录我的成长，努力 💪 成为一个更好的程序员。
+        我在这里记录我的学习轨迹与思考，慢慢打磨自己，成为理想中的那位工程师。
       </div>
       <div className="flex items-center gap-3">
         <Button className="rounded-3xl px-3 py-2">
