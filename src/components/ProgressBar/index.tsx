@@ -4,9 +4,9 @@ import NProgress from "nprogress";
 
 NProgress.configure({
   showSpinner: false,
-  minimum: 0.1,
+  minimum: 0.3,
   easing: "ease",
-  speed: 500,
+  speed: 200,
 });
 
 export default function ProgressBar() {
