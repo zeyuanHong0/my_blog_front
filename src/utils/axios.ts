@@ -1,20 +1,15 @@
 import axios from "axios";
-import { GET_TOKEN, REMOVE_TOKEN } from "@/utils/token";
 import { showErrorToast, showInfoToast } from "@/components/toast";
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API as string,
   timeout: 10000 * 3,
+  withCredentials: true, // 允许携带 cookie
 });
 
 // 请求拦截器
 request.interceptors.request.use(
   (config) => {
-    const token = GET_TOKEN();
-    // 判断是否存在token，如果存在的话，则每个请求都带上token
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
     // 在发送请求之前做些什么
     return config;
   },
@@ -45,7 +40,6 @@ request.interceptors.response.use(
       // 先判断是否登录过期
       if (status === 401) {
         showInfoToast("登录已过期，请重新登录");
-        REMOVE_TOKEN();
         return Promise.reject(error);
       }
 
@@ -65,7 +59,6 @@ request.interceptors.response.use(
           break;
         case 401:
           showInfoToast("登录已过期，请重新登录");
-          REMOVE_TOKEN();
           break;
         case 403:
           showErrorToast("没有权限访问");

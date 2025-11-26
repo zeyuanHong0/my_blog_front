@@ -9,7 +9,6 @@ import {
 import { User } from "#/user.types";
 
 export type UserState = {
-  token: string | null;
   userInfo: User;
   userLogin: (data: SignInData) => Promise<any>;
   getUserInfo: () => Promise<any>;
@@ -18,12 +17,9 @@ export type UserState = {
 
 const useUserStore = create((set: any): UserState => {
   return {
-    token: getSessionStorage("token") || null,
     userInfo: JSON.parse(getSessionStorage("userInfo") || "{}"),
     userLogin: async (data: SignInData) => {
       const res: any = await fetchLogin(data);
-      set({ token: res.data.token });
-      setSessionStorage("token", res.data.token);
       return res;
     },
     getUserInfo: async () => {
@@ -33,8 +29,7 @@ const useUserStore = create((set: any): UserState => {
       return res;
     },
     userLogout: () => {
-      set({ token: null, userInfo: {} });
-      removeSessionStorage("token");
+      set({ userInfo: {} });
       removeSessionStorage("userInfo");
       return "success";
     },
