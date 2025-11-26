@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import { ArrowRight } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { NICKNAME } from "@/constants";
 
@@ -45,12 +47,12 @@ const HeroSection = () => {
         我在这里记录我的学习轨迹与思考，慢慢打磨自己，成为理想中的那位工程师。
       </div>
       <div className="flex items-center gap-3">
-        <Button className="rounded-3xl px-3 py-2">
-          <span className="text-[14px] font-medium">我的博客</span>
-        </Button>
-        <Button className="rounded-3xl px-3 py-2">
-          <span className="text-[14px] font-medium">关于我</span>
-        </Button>
+        <Link to="/blogs">
+          <Button className="group hover:shadow-primary/25 rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg active:scale-95">
+            <span>我的博客</span>
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
+          </Button>
+        </Link>
       </div>
       <ul className={cn("flex space-x-4")}>
         {socialMediaList.map((el) => (

@@ -10,7 +10,7 @@ import {
 import classNames from "classnames";
 
 import { cn } from "@/lib/utils";
-import { NICKNAME, SLOGAN } from "@/constants";
+import { NICKNAME, SLOGAN, SOURCE_CODE_GITHUB_PAGE } from "@/constants";
 import { useActiveNav } from "@/hooks/useActiveNav";
 
 import { Iconify, SvgIcon } from "@/components/Icon";
@@ -91,7 +91,11 @@ const Header: React.FC = () => {
             </div>
             {/* 按钮 */}
             <div className="flex items-center gap-3">
-              <Link to={"https://github.com/your-username"}>
+              <Link
+                to={SOURCE_CODE_GITHUB_PAGE}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Button className="rounded-full p-2">
                   <Iconify icon="tdesign:logo-github-filled" size={16} />
                 </Button>

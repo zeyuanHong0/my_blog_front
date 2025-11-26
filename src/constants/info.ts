@@ -12,7 +12,7 @@ export const SOURCE_CODE_GITHUB_PAGE =
   "https://github.com/zeyuanHong0/my_blog_front";
 
 /** Slogan */
-export const SLOGAN = "努力做一个更好的程序员";
+export const SLOGAN = "记录成长，追寻理想";
 
 /** 网站ICP备案号 */
 export const BEI_AN_NUMBER = "";
