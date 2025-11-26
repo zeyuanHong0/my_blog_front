@@ -1,6 +1,6 @@
 import { Editor, type EditorProps } from "@bytemd/react";
 import zh_Hans from "bytemd/locales/zh_Hans.json";
-import { fetchUploadFile } from "@/api/file";
+import { fetchUploadFileToCOS } from "@/api/file";
 
 import { plugins } from "./config";
 
@@ -19,7 +19,7 @@ export const BytemdEditor = ({
   const handleUploadImages = async (files: File[]) => {
     const uploadPromises = files.map(async (file) => {
       try {
-        const res: any = await fetchUploadFile(file);
+        const res: any = await fetchUploadFileToCOS(file);
         return {
           url: res.data?.fileUrl || "",
           title: res.data?.filename || file.name,
