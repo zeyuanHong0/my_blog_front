@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { fetchFrontBlogDetail } from "@/api/blog";
 
 import { SvgIcon } from "@/components/Icon";
 import { BytemdViewer } from "@/components/bytemd/viewer";
-import { showErrorToast } from "@/components/toast";
 
 type Tag = {
   id: string;
@@ -24,6 +23,7 @@ type BlogType = {
 };
 
 const BlogViewPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const [blog, setBlog] = useState<BlogType>({
@@ -71,13 +71,16 @@ const BlogViewPage = () => {
         {blog.tags && blog.tags.length > 0 && (
           <div className="flex flex-wrap gap-3">
             {blog.tags.map((tag) => (
-              <div className="flex items-center gap-1" key={tag.id}>
-                {/* svg */}
-                <div
-                  className="flex h-4 w-4 items-center justify-center [&>svg]:h-full [&>svg]:w-full"
-                  dangerouslySetInnerHTML={{ __html: tag.icon }}
-                />
-                <span key={tag.id} className="text-sm text-[#727272]">
+              <div
+                className="flex items-center gap-1"
+                key={tag.id}
+                onClick={() => navigate(`/tag/${tag.id}`)}
+              >
+                <SvgIcon icon={tag.icon} size={14} />
+                <span
+                  key={tag.id}
+                  className="cursor-pointer text-sm text-[#717171] hover:text-[#787878]"
+                >
                   {tag.name}
                 </span>
               </div>
