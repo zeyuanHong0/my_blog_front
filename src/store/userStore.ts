@@ -7,9 +7,9 @@ import {
   fetchUserInfo,
 } from "@/api/user";
 import {
-  setSessionStorage,
-  getSessionStorage,
-  removeSessionStorage,
+  setLocalStorage,
+  getLocalStorage,
+  removeLocalStorage,
 } from "@/utils/storage";
 import { User } from "#/user.types";
 
@@ -25,7 +25,7 @@ export type UserState = {
 const useUserStore = create((set: any): UserState => {
   return {
     isLoginExpired: false, // 登录是否过期
-    userInfo: JSON.parse(getSessionStorage("userInfo") || "{}"),
+    userInfo: JSON.parse(getLocalStorage("userInfo") || "{}"),
     setLoginExpired: (expired: boolean) => {
       set({ isLoginExpired: expired });
     },
@@ -36,13 +36,13 @@ const useUserStore = create((set: any): UserState => {
     getUserInfo: async () => {
       const res: any = await fetchUserInfo();
       set({ userInfo: res.data.userInfo });
-      setSessionStorage("userInfo", JSON.stringify(res.data.userInfo));
+      setLocalStorage("userInfo", JSON.stringify(res.data.userInfo));
       return res;
     },
     userLogout: async () => {
       await fetchLogout();
       set({ userInfo: {} });
-      removeSessionStorage("userInfo");
+      removeLocalStorage("userInfo");
       return "success";
     },
   };

@@ -1,8 +1,7 @@
 import React from "react";
-
-// Token 现在由后端通过 Cookie 管理
-import useUserStore from "@/store/userStore";
 import { Navigate } from "react-router-dom";
+
+import useUserStore from "@/store/userStore";
 
 const Authorization: React.FC<{ children: React.ReactNode }> = ({
   children,
