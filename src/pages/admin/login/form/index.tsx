@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
 import useUserStore from "@/store/userStore";
@@ -41,9 +42,14 @@ const LoginForm = () => {
   // 提交事件
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("登录提交数据:", values);
-    await userLogin(values);
-    await getUserInfo();
-    navigate("/admin");
+    try {
+      await userLogin(values);
+      await getUserInfo();
+      navigate("/admin");
+    } catch (error) {
+      // 登录失败处理
+      console.error("登录失败:", error);
+    }
   };
 
   return (
@@ -83,8 +89,19 @@ const LoginForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          登录
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              登录中...
+            </>
+          ) : (
+            "登录"
+          )}
         </Button>
       </form>
     </Form>

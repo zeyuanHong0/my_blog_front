@@ -49,22 +49,24 @@ const Login = () => {
             </span>
             <div className="flex-1 border-t border-gray-300" />
           </div>
-          <Button
-            variant="secondary"
-            className="!w-full border border-gray-300 bg-white text-black hover:bg-gray-100"
-            type="button"
-            onClick={handleGoHome}
-          >
-            <Iconify icon="logos:github-icon" /> GitHub
-          </Button>
-          <Button
-            variant="secondary"
-            className="!w-full"
-            type="button"
-            onClick={handleGoHome}
-          >
-            回首页
-          </Button>
+          <div className="flex w-full flex-col gap-4">
+            <Button
+              variant="secondary"
+              className="!w-full border border-gray-300 bg-white text-black hover:bg-gray-100"
+              type="button"
+              onClick={handleGoHome}
+            >
+              <Iconify icon="logos:github-icon" /> GitHub
+            </Button>
+            <Button
+              variant="secondary"
+              className="!w-full"
+              type="button"
+              onClick={handleGoHome}
+            >
+              回首页
+            </Button>
+          </div>
         </CardFooter>
       </Card>
     </div>

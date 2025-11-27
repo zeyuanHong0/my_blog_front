@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
 import useUserStore from "@/store/userStore";
@@ -100,8 +101,19 @@ const LoginForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          注册
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              注册中...
+            </>
+          ) : (
+            "注册"
+          )}
         </Button>
       </form>
     </Form>
