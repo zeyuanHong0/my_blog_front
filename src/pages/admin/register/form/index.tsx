@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import useUserStore from "@/store/userStore";
+import { fetchRegister } from "@/api/user";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +22,7 @@ const formSchema = z.object({
     .string()
     .min(2, { message: "用户名至少需要 2 个字符" })
     .max(20, { message: "用户名不能超过 20 个字符" }),
+  email: z.email({ message: "请输入有效的邮箱地址" }),
   password: z
     .string()
     .min(6, { message: "密码至少需要 6 位" })
@@ -36,12 +38,12 @@ const LoginForm = () => {
       password: "",
     },
   });
-  const { userLogin, getUserInfo } = useUserStore();
+  const { getUserInfo } = useUserStore();
 
   // 提交事件
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("登录提交数据:", values);
-    await userLogin(values);
+    console.log("提交数据:", values);
+    await fetchRegister(values);
     await getUserInfo();
     navigate("/admin");
   };
@@ -68,6 +70,21 @@ const LoginForm = () => {
           )}
         />
 
+        {/* 邮箱 */}
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>邮箱</FormLabel>
+              <FormControl>
+                <Input placeholder="请输入邮箱" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/* 密码 */}
         <FormField
           control={form.control}
@@ -84,7 +101,7 @@ const LoginForm = () => {
         />
 
         <Button type="submit" className="w-full">
-          登录
+          注册
         </Button>
       </form>
     </Form>

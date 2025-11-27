@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Iconify } from "@/components/Icon";
 import LoginForm from "./form";
 
 const Login = () => {
@@ -23,7 +24,7 @@ const Login = () => {
     <div className="grid h-screen w-screen place-content-center">
       <Card
         className={cn(
-          "relative w-[320px] rounded-3xl py-4",
+          "relative w-[320px] rounded-3xl py-3",
           "sm:w-full sm:max-w-none sm:min-w-[360px]",
         )}
       >
@@ -32,16 +33,30 @@ const Login = () => {
         </CardHeader>
         <CardContent>
           <LoginForm />
+          <div className="text-muted-foreground mt-4 text-center text-sm">
+            还没有账号？
+            <Link to="/auth/register" className="underline">
+              去注册
+            </Link>
+          </div>
         </CardContent>
-        <CardFooter className="flex-col gap-2">
+        <CardFooter className="flex-col gap-3">
           {/* 分割线 */}
           <div className="my-2 flex w-full items-center">
             <div className="flex-1 border-t border-gray-300" />
             <span className="text-muted-foreground bg-background mx-2 px-2 text-sm">
-              或者
+              或者通过社交账号登录
             </span>
             <div className="flex-1 border-t border-gray-300" />
           </div>
+          <Button
+            variant="secondary"
+            className="!w-full border border-gray-300 bg-white text-black hover:bg-gray-100"
+            type="button"
+            onClick={handleGoHome}
+          >
+            <Iconify icon="logos:github-icon" /> GitHub
+          </Button>
           <Button
             variant="secondary"
             className="!w-full"
