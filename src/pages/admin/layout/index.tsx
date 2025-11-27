@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { LogOut, User } from "lucide-react";
@@ -27,16 +27,27 @@ import { AppSidebar } from "./app-sidebar";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
-  const { userInfo, userLogout } = useUserStore();
+  const { userInfo, userLogout, isLoginExpired, setLoginExpired } =
+    useUserStore();
 
   // 退出登录相关
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const handleLogout = () => {
-    const res = userLogout();
+  const handleLogout = async () => {
+    const res = await userLogout();
     if (res === "success") {
       navigate("/auth/login");
     }
   };
+
+  // 登录过期相关
+  const [isExpiredConfirmOpen, setIsExpiredConfirmOpen] = useState(false);
+  useEffect(() => {
+    console.log("isLoginExpired", isLoginExpired);
+    if (isLoginExpired) {
+      setIsExpiredConfirmOpen(true);
+    }
+  }, [isLoginExpired]);
+
   return (
     <>
       <SidebarProvider>
@@ -113,6 +124,26 @@ const AdminLayout = () => {
         onConfirm={handleLogout}
         isOpen={isDeleteConfirmOpen}
         onOpenChange={setIsDeleteConfirmOpen}
+      />
+      {/* 登录过期提示弹窗 */}
+      <ConfirmDialog
+        cancelBtnText="取消"
+        confirmBtnText="重新登录"
+        title="提示"
+        description={`登录状态已过期，您可以停留在该页面或者重新登录`}
+        onCancel={() => {
+          setIsExpiredConfirmOpen(false);
+          setLoginExpired(false);
+        }}
+        onConfirm={() => {
+          setLoginExpired(false);
+          navigate("/auth/login");
+        }}
+        isOpen={isExpiredConfirmOpen}
+        onOpenChange={(open) => {
+          setIsExpiredConfirmOpen(open);
+          if (!open) setLoginExpired(false);
+        }}
       />
     </>
   );

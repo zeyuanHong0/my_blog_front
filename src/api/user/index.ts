@@ -6,7 +6,7 @@ export * from "./types";
 enum API {
   SIGNUP = "/auth/signup",
   SIGNIN = "/auth/signin",
-  LOGOUT = "/auth/logout",
+  LOGOUT = "/auth/signout",
   USER_PROFILE = "/user/profile",
 }
 

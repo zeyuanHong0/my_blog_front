@@ -1,5 +1,6 @@
 import axios from "axios";
 import { showErrorToast, showInfoToast } from "@/components/toast";
+import useUserStore from "@/store/userStore";
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API as string,
@@ -32,6 +33,7 @@ request.interceptors.response.use(
     return res;
   },
   (error) => {
+    const { setLoginExpired } = useUserStore.getState();
     // 处理 HTTP 层面的错误
     if (error.response) {
       const status = error.response.status;
@@ -40,6 +42,7 @@ request.interceptors.response.use(
       // 先判断是否登录过期
       if (status === 401) {
         showInfoToast("登录已过期，请重新登录");
+        setLoginExpired(true);
         return Promise.reject(error);
       }
 
@@ -56,9 +59,6 @@ request.interceptors.response.use(
       switch (status) {
         case 400:
           showErrorToast("请求参数错误");
-          break;
-        case 401:
-          showInfoToast("登录已过期，请重新登录");
           break;
         case 403:
           showErrorToast("没有权限访问");

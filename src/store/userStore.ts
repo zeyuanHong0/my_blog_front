@@ -1,6 +1,11 @@
 import { create } from "zustand";
 
-import { type SignInData, fetchLogin, fetchUserInfo } from "@/api/user";
+import {
+  type SignInData,
+  fetchLogin,
+  fetchLogout,
+  fetchUserInfo,
+} from "@/api/user";
 import {
   setSessionStorage,
   getSessionStorage,
@@ -9,15 +14,21 @@ import {
 import { User } from "#/user.types";
 
 export type UserState = {
+  isLoginExpired: boolean;
   userInfo: User;
+  setLoginExpired: (expired: boolean) => void;
   userLogin: (data: SignInData) => Promise<any>;
   getUserInfo: () => Promise<any>;
-  userLogout: () => string;
+  userLogout: () => Promise<string>;
 };
 
 const useUserStore = create((set: any): UserState => {
   return {
+    isLoginExpired: false, // 登录是否过期
     userInfo: JSON.parse(getSessionStorage("userInfo") || "{}"),
+    setLoginExpired: (expired: boolean) => {
+      set({ isLoginExpired: expired });
+    },
     userLogin: async (data: SignInData) => {
       const res: any = await fetchLogin(data);
       return res;
@@ -28,7 +39,8 @@ const useUserStore = create((set: any): UserState => {
       setSessionStorage("userInfo", JSON.stringify(res.data.userInfo));
       return res;
     },
-    userLogout: () => {
+    userLogout: async () => {
+      await fetchLogout();
       set({ userInfo: {} });
       removeSessionStorage("userInfo");
       return "success";
