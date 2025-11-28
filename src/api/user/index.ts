@@ -8,6 +8,7 @@ enum API {
   SIGNIN = "/auth/signin",
   LOGOUT = "/auth/signout",
   USER_PROFILE = "/user/profile",
+  SEND_EMAIL_CODE = "/auth/sendCode",
 }
 
 /**
@@ -42,4 +43,13 @@ export const fetchUserInfo = () => {
  */
 export const fetchLogout = () => {
   return request.post<any>(API.LOGOUT);
+};
+
+/**
+ * 发送邮箱验证码
+ * @param email 邮箱地址
+ * @returns
+ */
+export const fetchSendEmailCode = (email: string) => {
+  return request.post<any>(API.SEND_EMAIL_CODE, { email });
 };

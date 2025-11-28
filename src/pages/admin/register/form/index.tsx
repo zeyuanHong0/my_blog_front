@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
 import useUserStore from "@/store/userStore";
-import { fetchRegister } from "@/api/user";
+import { fetchRegister, fetchSendEmailCode } from "@/api/user";
 import { showSuccessToast } from "@/components/toast";
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ const formSchema = z.object({
     .string()
     .min(6, { message: "密码至少需要 6 位" })
     .max(30, { message: "密码不能超过 30 位" }),
-  verificationCode: z.string().length(6, { message: "验证码必须是 6 位数字" }),
+  emailCode: z.string().length(6, { message: "验证码必须是 6 位数字" }),
 });
 
 const LoginForm = () => {
@@ -51,7 +51,7 @@ const LoginForm = () => {
       username: "",
       email: "",
       password: "",
-      verificationCode: "",
+      emailCode: "",
     },
   });
   const { getUserInfo } = useUserStore();
@@ -68,8 +68,7 @@ const LoginForm = () => {
 
     setIsSending(true);
     try {
-      // TODO: 调用发送验证码的 API
-
+      await fetchSendEmailCode(email);
       showSuccessToast("验证码已发送到您的邮箱");
       setCodeSent(true);
       setCountdown(60);
@@ -179,7 +178,7 @@ const LoginForm = () => {
         {codeSent && (
           <FormField
             control={form.control}
-            name="verificationCode"
+            name="emailCode"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>邮箱验证码</FormLabel>
