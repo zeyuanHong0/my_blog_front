@@ -17,8 +17,8 @@ const BlogListItem = ({ blog }: { blog: any }) => {
       <ul className="mb-1 flex space-x-4 text-xs font-medium">
         {blog.tags.map((tag) => (
           <li key={tag.id} className="flex items-center gap-1">
-            <SvgIcon icon={tag.icon} className="h-4 w-4" />
-            <span className="mr-1">{tag.name}</span>
+            <SvgIcon icon={tag.icon} size={13} />
+            <span className="mr-1 text-[#525252]">{tag.name}</span>
           </li>
         ))}
       </ul>
