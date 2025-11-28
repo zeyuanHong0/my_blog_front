@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { fetchFrontBlogDetail } from "@/api/blog";
+import ScrollToTop from "@/components/ScrollToTop";
 
 import { SvgIcon } from "@/components/Icon";
 import { BytemdViewer } from "@/components/bytemd/viewer";
@@ -55,6 +56,7 @@ const BlogViewPage = () => {
 
   return (
     <div className={`max-w-prose-wrapper mx-auto flex flex-col pt-8 md:!px-0`}>
+      <ScrollToTop />
       <h1 className="mb-6 text-4xl font-semibold break-all">{blog.title}</h1>
 
       <p className="text-muted-foreground mb-6">{blog.description}</p>

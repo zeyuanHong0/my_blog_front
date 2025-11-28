@@ -5,6 +5,7 @@ import { LogOut, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import useUserStore from "@/store/userStore";
+import ScrollToTop from "@/components/ScrollToTop";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -50,6 +51,7 @@ const AdminLayout = () => {
 
   return (
     <>
+      <ScrollToTop />
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
