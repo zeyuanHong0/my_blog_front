@@ -3,8 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useDebounce } from "ahooks";
 import { Plus, CircleSmall } from "lucide-react";
 
-import { fetchBlogsByPage, fetchChangeBlogStatus } from "@/api/blog";
+import {
+  fetchBlogsByPage,
+  fetchChangeBlogStatus,
+  fetchDeleteBlog,
+} from "@/api/blog";
 import { usePagination } from "@/hooks/usePagination";
+import { truncateString } from "@/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +21,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { showSuccessToast } from "@/components/toast";
+import ConfirmDialog from "@/components/confirm-dialog";
 import Table from "./table";
 
 const AdminBlogList = () => {
@@ -90,71 +96,88 @@ const AdminBlogList = () => {
   };
 
   // 删除博客
-  // const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  // const [deleteBlogId, setDeleteBlogId] = useState<string>("");
-  // const [deleteBlogName, setDeleteBlogName] = useState<string>("");
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [deleteBlogId, setDeleteBlogId] = useState<string>("");
+  const [deleteBlogName, setDeleteBlogName] = useState<string>("");
 
   const openDeleteConfirm = (id: string, name: string) => {
-    // setDeleteBlogId(id);
-    // setDeleteBlogName(name);
-    // setIsDeleteConfirmOpen(true);
+    setDeleteBlogId(id);
+    setDeleteBlogName(name);
+    setIsDeleteConfirmOpen(true);
     console.log("删除博客", id, name);
   };
 
-  // const handleDeleteBlog = async () => {
-  //   console.log("删除博客");
-  // };
+  const handleDeleteBlog = async () => {
+    console.log("删除博客");
+    await fetchDeleteBlog(deleteBlogId);
+    showSuccessToast("删除成功");
+    setIsDeleteConfirmOpen(false);
+    await handleGetBlogList();
+  };
 
   return (
-    <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">博客列表</h2>
-        <Button
-          className="border-black bg-black text-white"
-          onClick={toBlogCreate}
-        >
-          <Plus />
-          创建博客
-        </Button>
-      </div>
-      <div>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/admin">首页</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <CircleSmall />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/admin/blog">博客</BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+    <>
+      <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">博客列表</h2>
+          <Button
+            className="border-black bg-black text-white"
+            onClick={toBlogCreate}
+          >
+            <Plus />
+            创建博客
+          </Button>
+        </div>
+        <div>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/admin">首页</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator>
+                <CircleSmall />
+              </BreadcrumbSeparator>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/admin/blog">博客</BreadcrumbLink>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
 
-      <div className="w-full">
-        <Input
-          placeholder="请输入标题"
-          className="h-14"
-          onChange={(e) => {
-            setSearchName(e.target.value);
-            resetPage();
-          }}
-        />
+        <div className="w-full">
+          <Input
+            placeholder="请输入标题"
+            className="h-14"
+            onChange={(e) => {
+              setSearchName(e.target.value);
+              resetPage();
+            }}
+          />
+        </div>
+        <div className="w-full">
+          <Table
+            list={blogList}
+            paginationProps={paginationProps}
+            loading={loading}
+            onDeleteBlog={openDeleteConfirm}
+            onChangeBlogStatus={handleChangeBlogStatus}
+            toEditForm={toEditForm}
+            toBlogInfo={toBlogInfo}
+          />
+        </div>
       </div>
-      <div className="w-full">
-        <Table
-          list={blogList}
-          paginationProps={paginationProps}
-          loading={loading}
-          onDeleteBlog={openDeleteConfirm}
-          onChangeBlogStatus={handleChangeBlogStatus}
-          toEditForm={toEditForm}
-          toBlogInfo={toBlogInfo}
-        />
-      </div>
-    </div>
+      {/* 删除确认弹窗 */}
+      <ConfirmDialog
+        cancelBtnText="取消"
+        confirmBtnText="确认"
+        title="删除博客"
+        description={`确定要删除这篇博客吗？(${truncateString(deleteBlogName, 50)})`}
+        onCancel={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={handleDeleteBlog}
+        isOpen={isDeleteConfirmOpen}
+        onOpenChange={setIsDeleteConfirmOpen}
+      />
+    </>
   );
 };
 export default AdminBlogList;
