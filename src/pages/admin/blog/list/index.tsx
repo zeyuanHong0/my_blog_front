@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDebounce } from "ahooks";
-import { Plus, CircleSmall } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import {
   fetchBlogsByPage,
@@ -13,19 +13,17 @@ import { truncateString } from "@/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import BreadCrumb from "@/components/base/bread-crumb";
 import { showSuccessToast } from "@/components/toast";
 import ConfirmDialog from "@/components/confirm-dialog";
 import Table from "./table";
 
 const AdminBlogList = () => {
   const navigate = useNavigate();
+  const navList = [
+    { name: "首页", href: "/admin" },
+    { name: "博客", href: "/admin/blog" },
+  ];
   const toBlogCreate = () => {
     navigate("/admin/blog/create");
   };
@@ -128,21 +126,8 @@ const AdminBlogList = () => {
             创建博客
           </Button>
         </div>
-        <div>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/admin">首页</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator>
-                <CircleSmall />
-              </BreadcrumbSeparator>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/admin/blog">博客</BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
+        {/* 面包屑导航 */}
+        <BreadCrumb list={navList} />
 
         <div className="w-full">
           <Input

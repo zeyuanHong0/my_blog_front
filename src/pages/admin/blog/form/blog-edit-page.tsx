@@ -1,17 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { CircleSmall } from "lucide-react";
 
 import { fetchBlogDetail, fetchUpdateBlog } from "@/api/blog";
 
 import { Button } from "@/components/ui/button";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import BreadCrumb from "@/components/base/bread-crumb";
 import { showInfoToast, showSuccessToast } from "@/components/toast";
 import BlogForm, { BlogFormRef } from "./blog-form";
 
@@ -20,6 +13,12 @@ const AdminBlogEditForm = () => {
   const navigate = useNavigate();
   const formRef = useRef<BlogFormRef>(null);
   const [loading, setLoading] = useState(false);
+
+  const navList = [
+    { name: "首页", href: "/admin" },
+    { name: "博客", href: "/admin/blog" },
+    { name: "编辑", href: `/admin/blog/edit/${id}` },
+  ];
 
   // 获取博客详情
   const handleGetBlogDetail = useCallback(async () => {
@@ -72,25 +71,7 @@ const AdminBlogEditForm = () => {
         <h2 className="text-2xl font-bold">编辑博客</h2>
       </div>
       {/* 面包屑导航 */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/admin">首页</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <CircleSmall />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/admin/blog">博客</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <CircleSmall />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/admin/blog/create">编辑</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <BreadCrumb list={navList} />
       {/* 表单 */}
       <BlogForm ref={formRef} getFormValues={handleSubmit} />
       {/* 按钮 */}

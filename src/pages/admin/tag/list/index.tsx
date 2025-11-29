@@ -1,25 +1,23 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useDebounce } from "ahooks";
-import { Plus, CircleSmall } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { fetchTagsByPage, fetchDeleteTag } from "@/api/tag";
 import { usePagination } from "@/hooks/usePagination";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import BreadCrumb from "@/components/base/bread-crumb";
 import { showSuccessToast } from "@/components/toast";
 import ConfirmDialog from "@/components/confirm-dialog";
 import Table from "./table";
 import TagForm, { TagFormRef } from "../form";
 
 const AdminBlogList = () => {
+  const navList = [
+    { name: "首页", href: "/admin" },
+    { name: "标签", href: "/admin/tag" },
+  ];
   // 表单相关
   const [formType, setFormType] = useState<"create" | "edit">("create");
   const [tagId, setTagId] = useState<string | null>(null);
@@ -104,19 +102,8 @@ const AdminBlogList = () => {
           </Button>
         </div>
         <div>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/admin">首页</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator>
-                <CircleSmall />
-              </BreadcrumbSeparator>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/admin/tag">标签</BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          {/* 面包屑导航 */}
+          <BreadCrumb list={navList} />
         </div>
 
         <div className="w-full">
