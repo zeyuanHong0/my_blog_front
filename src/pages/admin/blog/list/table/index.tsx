@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/table";
 import DataTableColumnHeader from "@/components/data-table-column-header";
 import DataTablePagination from "@/components/Pagination";
+import EmptyBox from "@/components/empty";
 
 export type Blog = {
   id: string;
@@ -255,7 +256,9 @@ function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  <EmptyBox iconSize={200}>
+                    <p>暂无数据</p>
+                  </EmptyBox>
                 </TableCell>
               </TableRow>
             )}

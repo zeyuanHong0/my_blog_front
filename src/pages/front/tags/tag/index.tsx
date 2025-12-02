@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { fetchFrontTagDetail } from "@/api/tag";
 
 import BlogList from "@/pages/front/blogs/list";
+import EmptyBox from "@/components/empty";
 
 const Tag = () => {
   const { id } = useParams();
@@ -27,7 +28,11 @@ const Tag = () => {
         共计{tagInfo.blogs?.length ?? 0}篇博客
       </div>
       <div className="mt-3">
-        <BlogList blogs={tagInfo.blogs ?? []} />
+        {tagInfo.blogs?.length > 0 ? (
+          <BlogList blogs={tagInfo.blogs ?? []} />
+        ) : (
+          <EmptyBox />
+        )}
       </div>
     </div>
   );
