@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
+import { fetchGitHubAuthUrl } from "@/api/user";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,12 @@ const Login = () => {
   // 回首页
   const handleGoHome = () => {
     navigate("/");
+  };
+  // github 登录
+  const handleGithubLogin = async () => {
+    const res: any = await fetchGitHubAuthUrl();
+    const { url } = res.data;
+    window.location.href = url;
   };
   return (
     <div className="grid h-screen w-screen place-content-center">
@@ -54,7 +61,7 @@ const Login = () => {
               variant="secondary"
               className="!w-full border border-gray-300 bg-white text-black hover:bg-gray-100"
               type="button"
-              onClick={handleGoHome}
+              onClick={handleGithubLogin}
             >
               <Iconify icon="logos:github-icon" /> GitHub
             </Button>

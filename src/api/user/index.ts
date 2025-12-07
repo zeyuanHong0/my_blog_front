@@ -9,6 +9,7 @@ enum API {
   LOGOUT = "/auth/signout",
   USER_PROFILE = "/user/profile",
   SEND_EMAIL_CODE = "/auth/sendCode",
+  GITHUB_URL = "/auth/github/url",
 }
 
 /**
@@ -52,4 +53,12 @@ export const fetchLogout = () => {
  */
 export const fetchSendEmailCode = (email: string) => {
   return request.post<any>(API.SEND_EMAIL_CODE, { email });
+};
+
+/**
+ * 获取 GitHub 授权地址
+ * @returns GitHub 授权地址
+ */
+export const fetchGitHubAuthUrl = () => {
+  return request.get<any>(API.GITHUB_URL);
 };
