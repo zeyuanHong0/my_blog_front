@@ -6,14 +6,14 @@ const GitHubCallback = () => {
   const { getUserInfo } = useUserStore();
   const navigate = useNavigate();
   useEffect(() => {
-    handleGetUserInfo();
-  });
-  const handleGetUserInfo = async () => {
-    await getUserInfo();
-    navigate("/", { replace: true });
-  };
+    const fetchUserInfo = async () => {
+      await getUserInfo();
+      navigate("/", { replace: true });
+    };
+    fetchUserInfo();
+  }, [getUserInfo, navigate]);
 
-  return <div>GitHub Callback</div>;
+  return null;
 };
 
 export default GitHubCallback;
