@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fetchGitHubAuthUrl } from "@/api/user";
@@ -17,12 +18,14 @@ import LoginForm from "./form";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [isGithubLogin, setIsGithubLogin] = useState(false);
   // 回首页
   const handleGoHome = () => {
     navigate("/");
   };
   // github 登录
   const handleGithubLogin = async () => {
+    setIsGithubLogin(true);
     const res: any = await fetchGitHubAuthUrl();
     const { url } = res.data;
     window.location.href = url;
@@ -63,7 +66,16 @@ const Login = () => {
               type="button"
               onClick={handleGithubLogin}
             >
-              <Iconify icon="logos:github-icon" /> GitHub
+              {isGithubLogin ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <span>登录中...</span>
+                </>
+              ) : (
+                <>
+                  <Iconify icon="logos:github-icon" /> GitHub
+                </>
+              )}
             </Button>
             <Button
               variant="secondary"
