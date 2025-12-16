@@ -1,30 +1,43 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-// admin使用 store
-// import { useNavStore } from '@/store/nav';
+interface NavItem {
+  label: string;
+  path: string;
+  children?: NavItem[];
+  [key: string]: any;
+}
 
-// 用于front端导航高亮
-export function useActiveNav(navList: { label: string; path: string }[]) {
-  // 如果是admin，更新 store
-  // const navStore = useNavStore();
-  // navStore.setNav(match?.path || '');
-
+export function useActiveNav(navList: NavItem[]) {
   const location = useLocation();
   const [active, setActive] = useState("");
 
   useEffect(() => {
     const currentPath = location.pathname;
 
-    // 找到匹配的 nav
-    const match = navList.find(
-      (nav) =>
-        currentPath === nav.path || currentPath.startsWith(nav.path + "/"),
-    );
-    setActive(match?.path || "");
+    const findActivePath = () => {
+      for (const nav of navList) {
+        if (nav.children?.length) {
+          const matched = nav.children.some(
+            (child) => currentPath === child.path,
+          );
+          if (matched) return nav.path;
+        } else {
+          if (currentPath === nav.path) {
+            return nav.path;
+          }
+        }
+      }
+      return "";
+    };
+
+    setActive(findActivePath());
   }, [location.pathname, navList]);
 
-  const isActive = (path: string) => active === path;
+  const isActive = (path: string) => {
+    const currentPath = location.pathname;
+    return currentPath === path;
+  };
 
   return { active, isActive };
 }

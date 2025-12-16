@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Book, Home, Tag, ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useActiveNav } from "@/hooks/useActiveNav";
 
 import {
   Sidebar,
@@ -26,27 +27,28 @@ import LogoIcon from "/blog.svg?raw";
 
 const items = [
   {
-    title: "首页",
-    url: "/admin",
+    label: "首页",
+    path: "/admin",
     icon: Home,
   },
   {
-    title: "博客",
-    url: "/admin/blog",
+    label: "博客",
+    path: "/admin/blog",
     icon: Book,
     children: [
-      { title: "列表", url: "/admin/blog" },
-      { title: "创建", url: "/admin/blog/create" },
+      { label: "列表", path: "/admin/blog" },
+      { label: "创建", path: "/admin/blog/create" },
     ],
   },
   {
-    title: "标签",
-    url: "/admin/tag",
+    label: "标签",
+    path: "/admin/tag",
     icon: Tag,
   },
 ];
 
 export function AppSidebar() {
+  const { isActive } = useActiveNav(items);
   return (
     <Sidebar>
       <SidebarHeader>
@@ -66,14 +68,14 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.label}>
                   {item.children ? (
                     // 有子项的菜单项
                     <Collapsible defaultOpen className="group/collapsible">
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton>
                           <item.icon />
-                          <span>{item.title}</span>
+                          <span>{item.label}</span>
                           {/*  右侧箭头 */}
                           <ChevronRight
                             className={cn(
@@ -86,9 +88,12 @@ export function AppSidebar() {
                       <CollapsibleContent>
                         <SidebarMenuSub>
                           {item.children.map((subItem) => (
-                            <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton asChild>
-                                <a href={subItem.url}>{subItem.title}</a>
+                            <SidebarMenuSubItem key={subItem.label}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={isActive(subItem.path)}
+                              >
+                                <a href={subItem.path}>{subItem.label}</a>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           ))}
@@ -97,10 +102,13 @@ export function AppSidebar() {
                     </Collapsible>
                   ) : (
                     // 没有子项的菜单项
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive(item.path)}
+                    >
+                      <a href={item.path}>
                         <item.icon />
-                        <span>{item.title}</span>
+                        <span>{item.label}</span>
                       </a>
                     </SidebarMenuButton>
                   )}
