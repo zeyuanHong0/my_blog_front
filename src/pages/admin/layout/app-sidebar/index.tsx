@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Book, Home, Tag, ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -48,7 +48,16 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { isActive } = useActiveNav(items);
+
+  const handleChangeRoute = (path: string) => {
+    // 判断当前路由是否与目标路由相同
+    if (location.pathname !== path) {
+      navigate(path);
+    }
+  };
   return (
     <Sidebar>
       <SidebarHeader>
@@ -93,7 +102,14 @@ export function AppSidebar() {
                                 asChild
                                 isActive={isActive(subItem.path)}
                               >
-                                <a href={subItem.path}>{subItem.label}</a>
+                                <div
+                                  onClick={() =>
+                                    handleChangeRoute(subItem.path)
+                                  }
+                                  className="cursor-pointer"
+                                >
+                                  {subItem.label}
+                                </div>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           ))}
@@ -102,14 +118,14 @@ export function AppSidebar() {
                     </Collapsible>
                   ) : (
                     // 没有子项的菜单项
-                    <SidebarMenuButton
-                      asChild
-                      isActive={isActive(item.path)}
-                    >
-                      <a href={item.path}>
+                    <SidebarMenuButton asChild isActive={isActive(item.path)}>
+                      <div
+                        onClick={() => handleChangeRoute(item.path)}
+                        className="flex w-full cursor-pointer items-center"
+                      >
                         <item.icon />
                         <span>{item.label}</span>
-                      </a>
+                      </div>
                     </SidebarMenuButton>
                   )}
                 </SidebarMenuItem>
