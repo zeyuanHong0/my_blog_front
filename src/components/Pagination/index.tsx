@@ -46,12 +46,11 @@ function DataTablePagination<TData>({
   return (
     <div className="flex h-20 items-center justify-between px-2">
       <div className="text-muted-foreground flex-1 text-sm">
-        {table.getFilteredSelectedRowModel().rows.length} of {total} row(s)
-        selected.
+        {/* {table.getFilteredSelectedRowModel().rows.length} of {total} row(s)
+        selected. */}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
           <Select value={`${pageSize}`} onValueChange={handlePageSizeChange}>
             <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={pageSize} />
@@ -66,7 +65,7 @@ function DataTablePagination<TData>({
           </Select>
         </div>
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {pageNum} of {totalPages}
+          第{pageNum} 页，共 {totalPages} 页
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -76,7 +75,6 @@ function DataTablePagination<TData>({
             onClick={() => onPageChange(1)}
             disabled={!canPreviousPage}
           >
-            <span className="sr-only">Go to first page</span>
             <ChevronsLeft />
           </Button>
           <Button
@@ -86,7 +84,6 @@ function DataTablePagination<TData>({
             onClick={() => onPageChange(pageNum - 1)}
             disabled={!canPreviousPage}
           >
-            <span className="sr-only">Go to previous page</span>
             <ChevronLeft />
           </Button>
           <Button
@@ -96,7 +93,6 @@ function DataTablePagination<TData>({
             onClick={() => onPageChange(pageNum + 1)}
             disabled={!canNextPage}
           >
-            <span className="sr-only">Go to next page</span>
             <ChevronRight />
           </Button>
           <Button
@@ -106,7 +102,6 @@ function DataTablePagination<TData>({
             onClick={() => onPageChange(totalPages)}
             disabled={!canNextPage}
           >
-            <span className="sr-only">Go to last page</span>
             <ChevronsRight />
           </Button>
         </div>
