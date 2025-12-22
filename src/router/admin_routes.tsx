@@ -16,6 +16,9 @@ const AdminBlogEdit = lazy(
   () => import("@/pages/admin/blog/form/blog-edit-page"),
 );
 const AdminTagList = lazy(() => import("@/pages/admin/tag/list/index"));
+const AdminCategoryList = lazy(
+  () => import("@/pages/admin/category/list/index"),
+);
 
 const adminRoutes = [
   {
@@ -53,6 +56,10 @@ const adminRoutes = [
       {
         path: "tag",
         element: SuspenseWrapper(AdminTagList),
+      },
+      {
+        path: "category",
+        element: SuspenseWrapper(AdminCategoryList),
       },
     ],
   },
