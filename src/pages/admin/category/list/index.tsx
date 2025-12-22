@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useDebounce } from "ahooks";
 import { Plus } from "lucide-react";
 
-import { fetchTagsByPage, fetchDeleteTag } from "@/api/tag";
+import { fetchCategoriesByPage, fetchDeleteCategory } from "@/api/category";
 import { usePagination } from "@/hooks/usePagination";
 
 import { Button } from "@/components/ui/button";
@@ -11,29 +11,29 @@ import BreadCrumb from "@/components/base/bread-crumb";
 import { showSuccessToast } from "@/components/toast";
 import ConfirmDialog from "@/components/confirm-dialog";
 import Table from "./table";
-import TagForm, { TagFormRef } from "../form";
+import CategoryForm, { CategoryFormRef } from "../form";
 
 const AdminBlogList = () => {
   const navList = [
     { name: "首页", href: "/admin" },
-    { name: "标签", href: "/admin/tag" },
+    { name: "分类", href: "/admin/category" },
   ];
   // 表单相关
   const [formType, setFormType] = useState<"create" | "edit">("create");
-  const [tagId, setTagId] = useState<string | null>(null);
-  const formRef = useRef<TagFormRef>(null);
+  const [categoryId, setCategoryId] = useState<string | null>(null);
+  const formRef = useRef<CategoryFormRef>(null);
   const showCreateForm = () => {
     setFormType("create");
     formRef.current?.handleShowForm();
   };
   const showEditForm = (id: string) => {
     setFormType("edit");
-    setTagId(id);
+    setCategoryId(id);
     formRef.current?.handleShowForm();
   };
 
   // 列表数据
-  const [tagList, setTagList] = useState<any[]>([]);
+  const [categoryList, setCategoryList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   // const [total, setTotal] = useState(0);
 
@@ -46,10 +46,8 @@ const AdminBlogList = () => {
   // 查询参数
   const [searchName, setSearchName] = useState<string>("");
   const debouncedSearchName = useDebounce(searchName, { wait: 300 });
-  // const [pageNum, setPageNum] = useState<number>(1);
-  // const [pageSize, setPageSize] = useState<number>(5);
 
-  const handleGetTagList = useCallback(async () => {
+  const handleGetCategoryList = useCallback(async () => {
     setLoading(true);
     try {
       const data = {
@@ -57,48 +55,48 @@ const AdminBlogList = () => {
         pageNum,
         pageSize,
       };
-      const res = await fetchTagsByPage(data);
-      setTagList(res.data.list);
+      const res = await fetchCategoriesByPage(data);
+      setCategoryList(res.data.list);
       setTotal(res.data.total);
     } catch (error: any) {
-      console.log("🚀 ~ handleGetTagList ~ error:", error);
+      console.log("🚀 ~ handleGetCategoryList ~ error:", error);
     } finally {
       setLoading(false);
     }
   }, [debouncedSearchName, pageNum, pageSize, setTotal]);
 
   useEffect(() => {
-    handleGetTagList();
-  }, [handleGetTagList]);
+    handleGetCategoryList();
+  }, [handleGetCategoryList]);
 
   // 删除标签
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [deleteTagId, setDeleteTagId] = useState<string>("");
-  const [deleteTagName, setDeleteTagName] = useState<string>("");
+  const [deleteCategoryId, setDeleteCategoryId] = useState<string>("");
+  const [deleteCategoryName, setDeleteCategoryName] = useState<string>("");
 
   const openDeleteConfirm = (id: string, name: string) => {
-    setDeleteTagId(id);
-    setDeleteTagName(name);
+    setDeleteCategoryId(id);
+    setDeleteCategoryName(name);
     setIsDeleteConfirmOpen(true);
   };
 
-  const handleDeleteTag = async () => {
-    await fetchDeleteTag(deleteTagId);
+  const handleDeleteCategory = async () => {
+    await fetchDeleteCategory(deleteCategoryId);
     showSuccessToast("删除成功");
     setIsDeleteConfirmOpen(false);
-    await handleGetTagList();
+    await handleGetCategoryList();
   };
   return (
     <>
       <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">标签管理</h2>
+          <h2 className="text-2xl font-bold">分类管理</h2>
           <Button
             className="border-black bg-black text-white"
             onClick={showCreateForm}
           >
             <Plus />
-            创建标签
+            创建分类
           </Button>
         </div>
         <div>
@@ -120,30 +118,30 @@ const AdminBlogList = () => {
         <div className="w-full">
           <Table
             showEditForm={showEditForm}
-            list={tagList}
+            list={categoryList}
             paginationProps={paginationProps}
             loading={loading}
-            onDeleteTag={openDeleteConfirm}
+            onDeleteCategory={openDeleteConfirm}
           />
         </div>
       </div>
 
-      {/* 标签表单弹窗 */}
-      <TagForm
+      {/* 分类表单弹窗 */}
+      <CategoryForm
         ref={formRef}
         formType={formType}
-        tagId={tagId}
-        refreshList={handleGetTagList}
+        categoryId={categoryId}
+        refreshList={handleGetCategoryList}
       />
 
       {/* 删除确认弹窗 */}
       <ConfirmDialog
         cancelBtnText="取消"
         confirmBtnText="确认"
-        title="删除标签"
-        description={`确定要删除此标签吗？（${deleteTagName}）`}
+        title="删除分类"
+        description={`确定要删除此分类吗？（${deleteCategoryName}）`}
         onCancel={() => setIsDeleteConfirmOpen(false)}
-        onConfirm={handleDeleteTag}
+        onConfirm={handleDeleteCategory}
         isOpen={isDeleteConfirmOpen}
         onOpenChange={setIsDeleteConfirmOpen}
       />

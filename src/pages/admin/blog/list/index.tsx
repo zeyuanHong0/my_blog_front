@@ -117,7 +117,7 @@ const AdminBlogList = () => {
     <>
       <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">博客列表</h2>
+          <h2 className="text-2xl font-bold">博客管理</h2>
           <Button
             className="border-black bg-black text-white"
             onClick={toBlogCreate}
