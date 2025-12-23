@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { fetchAllTags } from "@/api/tag";
+import { fetchAllCategories } from "@/api/category";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import MultiSelect from "@/components/multi-select";
 import { BytemdEditor } from "@/components/bytemd/editor";
-import { showErrorToast } from "@/components/toast";
+import CustomSelect from "@/components/base/custom-select";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "长度不能少于1个字符" }),
@@ -26,9 +27,15 @@ const formSchema = z.object({
   content: z.string().min(1, { message: "长度不能少于1个字符" }),
   published: z.boolean().optional(),
   tags: z.string().array().min(1, { message: "至少选择一个标签" }).optional(),
+  category: z.string().min(1, { message: "请选择分类" }).optional(),
 });
 
 type TagOption = {
+  label: string;
+  value: string;
+};
+
+type CategoryOption = {
   label: string;
   value: string;
 };
@@ -52,6 +59,7 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
         content: "",
         published: true,
         tags: [],
+        category: "",
       },
     });
     const onSubmit = () => {
@@ -82,8 +90,19 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
       }));
       setTagList(tags);
     };
+    const [categoryList, setCategoryList] = useState<CategoryOption[]>([]);
+    // 获取所有分类
+    const handleGetAllCategories = async () => {
+      const res = await fetchAllCategories();
+      const categories = res.data.map((category: any) => ({
+        label: category.name,
+        value: category.id,
+      }));
+      setCategoryList(categories);
+    };
     useEffect(() => {
       handleGetAllTags();
+      handleGetAllCategories();
     }, []);
 
     return (
@@ -108,6 +127,44 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
             )}
           />
 
+          {/* 描述 */}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>描述</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="请输入描述"
+                    className="min-h-[60px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* 分类 */}
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>分类</FormLabel>
+                <FormControl>
+                  <CustomSelect
+                    list={categoryList}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           {/* 标签 */}
           <FormField
             control={form.control}
@@ -121,25 +178,6 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
                     onChange={field.onChange}
                     options={tagList}
                     placeholder="请选择标签"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* 描述 */}
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>描述</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="请输入描述"
-                    className="min-h-[60px]"
-                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
