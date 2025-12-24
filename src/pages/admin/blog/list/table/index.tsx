@@ -71,6 +71,21 @@ const createColumns = (
     ),
   },
   {
+    accessorKey: "category",
+    header: () => <DataTableColumnHeader title="分类" />,
+    cell: ({ row }) => {
+      const category = row.getValue("category") as {
+        id: string;
+        name: string;
+      } | null;
+      return (
+        <div className="min-w-[100px] whitespace-nowrap">
+          {category ? category.name : "未分类"}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "tags",
     header: () => <DataTableColumnHeader title="标签" />,
     cell: ({ row }) => {
@@ -105,33 +120,8 @@ const createColumns = (
     },
   },
   {
-    accessorKey: "createTime",
-    header: () => <DataTableColumnHeader title="创建时间" />,
-    cell: ({ row }) => {
-      const [date, time] = formatDateTime(row.getValue("createTime"));
-      return (
-        <div className="flex flex-col gap-1">
-          <div>{date}</div>
-          <div className="text-muted-foreground text-xs">{time}</div>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "updateTime",
-    header: () => <DataTableColumnHeader title="更新时间" />,
-    cell: ({ row }) => {
-      const [date, time] = formatDateTime(row.getValue("updateTime"));
-      return (
-        <div className="flex flex-col gap-1">
-          <div>{date}</div>
-          <div className="text-muted-foreground text-xs">{time}</div>
-        </div>
-      );
-    },
-  },
-  {
     id: "actions",
+    header: () => <DataTableColumnHeader title="操作" />,
     cell: ({ row }) => {
       const blog = row.original;
       return (
