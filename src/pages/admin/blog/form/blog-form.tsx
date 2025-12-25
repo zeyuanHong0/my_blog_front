@@ -155,6 +155,7 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
                 <FormLabel>分类</FormLabel>
                 <FormControl>
                   <CustomSelect
+                    className="w-48"
                     list={categoryList}
                     value={field.value || ""}
                     onChange={field.onChange}

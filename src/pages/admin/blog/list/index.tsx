@@ -8,6 +8,7 @@ import {
   fetchChangeBlogStatus,
   fetchDeleteBlog,
 } from "@/api/blog";
+import { fetchAllCategories } from "@/api/category";
 import { usePagination } from "@/hooks/usePagination";
 import { truncateString } from "@/utils";
 
@@ -17,6 +18,12 @@ import BreadCrumb from "@/components/base/bread-crumb";
 import { showSuccessToast } from "@/components/toast";
 import ConfirmDialog from "@/components/confirm-dialog";
 import Table from "./table";
+import CustomSelect from "@/components/base/custom-select";
+
+interface CategoryOption {
+  label: string;
+  value: string;
+}
 
 const AdminBlogList = () => {
   const navigate = useNavigate();
@@ -42,6 +49,7 @@ const AdminBlogList = () => {
   // 查询参数
   const [searchName, setSearchName] = useState<string>("");
   const debouncedSearchName = useDebounce(searchName, { wait: 300 });
+  const [searchCategory, setSearchCategory] = useState<string>("");
 
   // 分页
   const { pageNum, pageSize, setTotal, resetPage, paginationProps } =
@@ -55,6 +63,7 @@ const AdminBlogList = () => {
     try {
       const data = {
         title: debouncedSearchName,
+        categoryId: searchCategory,
         pageNum: pageNum,
         pageSize: pageSize,
       };
@@ -66,7 +75,21 @@ const AdminBlogList = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearchName, pageNum, pageSize, setTotal]);
+  }, [debouncedSearchName, pageNum, pageSize, searchCategory, setTotal]);
+
+  // 获取所有分类
+  const [categoryList, setCategoryList] = useState<CategoryOption[]>([]);
+  useEffect(() => {
+    const handleGetAllCategories = async () => {
+      const res = await fetchAllCategories();
+      const categories = res.data.map((category: any) => ({
+        label: category.name,
+        value: category.id,
+      }));
+      setCategoryList(categories);
+    };
+    handleGetAllCategories();
+  }, []);
 
   useEffect(() => {
     handleGetBlogList();
@@ -129,12 +152,22 @@ const AdminBlogList = () => {
         {/* 面包屑导航 */}
         <BreadCrumb list={navList} />
 
-        <div className="w-full">
+        <div className="flex w-full gap-3">
           <Input
             placeholder="请输入标题"
-            className="h-14"
+            className="h-10 w-64"
             onChange={(e) => {
               setSearchName(e.target.value);
+              resetPage();
+            }}
+          />
+          <CustomSelect
+            className="h-10 w-48"
+            list={categoryList}
+            value={searchCategory || ""}
+            onChange={(value) => {
+              console.log("选择的分类:", value);
+              setSearchCategory(value);
               resetPage();
             }}
           />
