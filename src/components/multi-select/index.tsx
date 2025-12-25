@@ -73,7 +73,7 @@ function MultiSelect({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "border-input ring-offset-background placeholder:text-muted-foreground min-h-9 w-full px-3 py-1 text-sm shadow-sm",
+            "border-input ring-offset-background placeholder:text-muted-foreground min-h-9 w-fit min-w-40 px-3 py-1 text-sm shadow-sm",
             "flex cursor-pointer items-center justify-between rounded-md border bg-transparent",
             "focus:ring-ring focus:ring-1 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           )}

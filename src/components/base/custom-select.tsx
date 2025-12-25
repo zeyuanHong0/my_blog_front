@@ -13,12 +13,18 @@ interface CustomSelectProps {
   value: string;
   onChange: (value: string) => void;
   list: { label: string; value: string }[];
+  className: string;
 }
 
-const CustomSelect = ({ list, value, onChange }: CustomSelectProps) => {
+const CustomSelect = ({
+  list,
+  value,
+  onChange,
+  className,
+}: CustomSelectProps) => {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className={className}>
         <SelectValue placeholder="请选择分类" />
       </SelectTrigger>
       <SelectContent>
