@@ -9,6 +9,7 @@ import {
   fetchDeleteBlog,
 } from "@/api/blog";
 import { fetchAllCategories } from "@/api/category";
+import { fetchAllTags } from "@/api/tag";
 import { usePagination } from "@/hooks/usePagination";
 import { truncateString } from "@/utils";
 
@@ -19,11 +20,17 @@ import { showSuccessToast } from "@/components/toast";
 import ConfirmDialog from "@/components/confirm-dialog";
 import Table from "./table";
 import CustomSelect from "@/components/base/custom-select";
+import MultiSelect from "@/components/multi-select";
 
-interface CategoryOption {
+type CategoryOption = {
   label: string;
   value: string;
-}
+};
+
+type TagOption = {
+  label: string;
+  value: string;
+};
 
 const AdminBlogList = () => {
   const navigate = useNavigate();
@@ -50,6 +57,7 @@ const AdminBlogList = () => {
   const [searchName, setSearchName] = useState<string>("");
   const debouncedSearchName = useDebounce(searchName, { wait: 300 });
   const [searchCategory, setSearchCategory] = useState<string>("");
+  const [searchTags, setSearchTags] = useState<string[]>([]);
 
   // 分页
   const { pageNum, pageSize, setTotal, resetPage, paginationProps } =
@@ -89,6 +97,20 @@ const AdminBlogList = () => {
       setCategoryList(categories);
     };
     handleGetAllCategories();
+  }, []);
+
+  // 获取所有标签
+  const [tagList, setTagList] = useState<TagOption[]>([]);
+  useEffect(() => {
+    const handleGetAllTags = async () => {
+      const res = await fetchAllTags();
+      const tags = res.data.map((tag: any) => ({
+        label: tag.name,
+        value: tag.id,
+      }));
+      setTagList(tags);
+    };
+    handleGetAllTags();
   }, []);
 
   useEffect(() => {
@@ -170,6 +192,16 @@ const AdminBlogList = () => {
               setSearchCategory(value);
               resetPage();
             }}
+          />
+          <MultiSelect
+            value={searchTags || []}
+            onChange={(value) => {
+              console.log("选择的标签:", value);
+              setSearchTags(value);
+              resetPage();
+            }}
+            options={tagList}
+            placeholder="标签"
           />
         </div>
         <div className="w-full">
