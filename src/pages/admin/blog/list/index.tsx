@@ -71,7 +71,8 @@ const AdminBlogList = () => {
     try {
       const data = {
         title: debouncedSearchName,
-        categoryId: searchCategory,
+        searchCategoryId: searchCategory,
+        searchTags: searchTags.join(","),
         pageNum: pageNum,
         pageSize: pageSize,
       };
@@ -83,7 +84,14 @@ const AdminBlogList = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearchName, pageNum, pageSize, searchCategory, setTotal]);
+  }, [
+    debouncedSearchName,
+    pageNum,
+    pageSize,
+    searchCategory,
+    searchTags,
+    setTotal,
+  ]);
 
   // 获取所有分类
   const [categoryList, setCategoryList] = useState<CategoryOption[]>([]);
