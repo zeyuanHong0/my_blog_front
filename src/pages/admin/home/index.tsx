@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 const AdminHome = () => {
   const navigate = useNavigate();
   const guestList = [
+    { name: "创建标签", action: () => navigate("/admin/tag") },
     { name: "创建博客", action: () => navigate("/admin/blog/create") },
-    { name: "管理标签", action: () => navigate("/admin/tag") },
+    { name: "创建分类", action: () => navigate("/admin/category") },
   ];
   return (
     <div className="relative h-[calc(100vh-64px)] w-full">
