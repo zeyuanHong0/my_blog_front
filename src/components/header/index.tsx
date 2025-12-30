@@ -23,6 +23,7 @@ const Header: React.FC = () => {
   const navList = [
     { label: "首页", path: "/" },
     { label: "博客", path: "/blogs" },
+    { label: "分类", path: "/categories" },
     { label: "标签", path: "/tags" },
     // { label: "关于", path: "/about" },
   ];

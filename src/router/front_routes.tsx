@@ -9,6 +9,7 @@ const Blog = lazy(() => import("@/pages/front/blogs"));
 const BlogViewPage = lazy(() => import("@/pages/blog-view"));
 const Tags = lazy(() => import("@/pages/front/tags"));
 const Tag = lazy(() => import("@/pages/front/tags/tag"));
+const Categories = lazy(() => import("@/pages/front/categories"));
 
 const frontRoutes = [
   {
@@ -31,6 +32,10 @@ const frontRoutes = [
       {
         path: "/tag/:id",
         element: SuspenseWrapper(Tag),
+      },
+      {
+        path: "/categories",
+        element: SuspenseWrapper(Categories),
       },
     ],
   },
