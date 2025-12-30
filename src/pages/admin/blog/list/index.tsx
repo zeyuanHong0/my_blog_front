@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDebounce } from "ahooks";
-import { Plus } from "lucide-react";
+import { Delete, Plus } from "lucide-react";
 
 import {
   fetchBlogsByPage,
@@ -125,6 +125,11 @@ const AdminBlogList = () => {
     handleGetBlogList();
   }, [handleGetBlogList]);
 
+  // 重置按钮的显示
+  const showResetBtn = Boolean(
+    searchName || searchCategory || searchTags.length > 0,
+  );
+
   // 修改博客发布状态
   const handleChangeBlogStatus = async (id: string, published: boolean) => {
     try {
@@ -155,15 +160,21 @@ const AdminBlogList = () => {
     setDeleteBlogId(id);
     setDeleteBlogName(name);
     setIsDeleteConfirmOpen(true);
-    console.log("删除博客", id, name);
   };
 
   const handleDeleteBlog = async () => {
-    console.log("删除博客");
     await fetchDeleteBlog(deleteBlogId);
     showSuccessToast("删除成功");
     setIsDeleteConfirmOpen(false);
     await handleGetBlogList();
+  };
+
+  // 重置搜索条件
+  const handleReset = () => {
+    setSearchName("");
+    setSearchCategory("");
+    setSearchTags([]);
+    resetPage();
   };
 
   return (
@@ -172,17 +183,17 @@ const AdminBlogList = () => {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">博客管理</h2>
           <Button
-            className="border-black bg-black text-white"
+            className="border-black bg-black text-white hover:bg-black/90"
             onClick={toBlogCreate}
           >
-            <Plus />
+            <Plus className="h-4 w-4" />
             创建博客
           </Button>
         </div>
         {/* 面包屑导航 */}
         <BreadCrumb list={navList} />
 
-        <div className="flex w-full gap-3">
+        <div className="flex w-full items-center gap-3">
           <Input
             placeholder="请输入标题"
             className="h-10 w-64"
@@ -190,6 +201,7 @@ const AdminBlogList = () => {
               setSearchName(e.target.value);
               resetPage();
             }}
+            value={searchName}
           />
           <CustomSelect
             className="h-10 w-48"
@@ -211,6 +223,15 @@ const AdminBlogList = () => {
             options={tagList}
             placeholder="标签"
           />
+          {showResetBtn && (
+            <Button
+              className="bg-[#ebebeb] text-gray-700 hover:bg-[#efefef] hover:text-gray-900"
+              onClick={handleReset}
+            >
+              重置
+              <Delete className="h-4 w-4" />
+            </Button>
+          )}
         </div>
         <div className="w-full">
           <Table
