@@ -12,11 +12,11 @@ enum API {
   CATEGORY_ADD = "/category/createCategory",
   CATEGORY_UPDATE = "/category/updateCategory",
   CATEGORY_ALL_LIST = "/category/getAllCategoryList",
-  CATEGORY_FRONT_ALL_LIST = "/front/category/getAllCategoryList",
   CATEGORY_LIST_BY_PAGE = "/category/getCategoryListByPage",
   CATEGORY_INFO = "/category/getCategoryInfo",
   CATEGORY_FRONT_INFO = "/front/category/getTagInfo",
   CATEGORY_DELETE = "/category/deleteCategory",
+  CATEGORY_FRONT_ALL_LIST = "/front/category/getAllCategoryList",
 }
 
 /**
@@ -72,9 +72,9 @@ export const fetchCategoryDetail = (id: string) => {
 };
 
 /**
- * 获取标签详情(无需鉴权)
- * @param id 标签ID
- * @returns 标签详情
+ * 获取分类详情(无需鉴权)
+ * @param id 分类ID
+ * @returns 分类详情
  */
 export const fetchFrontCategoryDetail = (id: string) => {
   return axios.get(`${API.CATEGORY_FRONT_INFO}/${id}`);
