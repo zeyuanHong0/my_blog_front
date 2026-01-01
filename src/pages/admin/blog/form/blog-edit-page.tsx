@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import BreadCrumb from "@/components/base/bread-crumb";
 import { showInfoToast, showSuccessToast } from "@/components/toast";
 import BlogForm, { BlogFormRef } from "./blog-form";
-import { ca } from "zod/v4/locales";
 
 const AdminBlogEditForm = () => {
   const { id } = useParams();
