@@ -14,9 +14,9 @@ enum API {
   CATEGORY_ALL_LIST = "/category/getAllCategoryList",
   CATEGORY_LIST_BY_PAGE = "/category/getCategoryListByPage",
   CATEGORY_INFO = "/category/getCategoryInfo",
-  CATEGORY_FRONT_INFO = "/front/category/getTagInfo",
   CATEGORY_DELETE = "/category/deleteCategory",
   CATEGORY_FRONT_ALL_LIST = "/front/category/getAllCategoryList",
+  CATEGORY_FRONT_INFO = "/front/category/getCategoryInfo",
 }
 
 /**
