@@ -19,6 +19,8 @@ const BlogListItem = ({ blog }: { blog: any }) => {
       </p>
       {/* 日期 */}
       <div className="text-muted-foreground flex items-center gap-1 text-xs">
+        {/* 分类 */}
+        <span className="mr-1">#{blog.category?.name || "未分类"}</span>
         {/* 图标 */}
         <Calendar className="h-4 w-4" />
         {dayjs(blog.createTime).format("MM月DD，YYYY")}
@@ -27,7 +29,7 @@ const BlogListItem = ({ blog }: { blog: any }) => {
           {blog.tags.map((tag) => (
             <li key={tag.id} className="flex items-center gap-1">
               <Tag size={14} />
-              <span className="mr-1 text-[#525252]">{tag.name}</span>
+              <span className="mr-1">{tag.name}</span>
             </li>
           ))}
         </ul>
