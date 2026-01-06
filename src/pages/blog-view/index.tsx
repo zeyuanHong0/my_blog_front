@@ -14,6 +14,11 @@ type Tag = {
   icon: string;
 };
 
+type Category = {
+  id: string;
+  name: string;
+};
+
 type BlogType = {
   title: string;
   description: string;
@@ -21,6 +26,7 @@ type BlogType = {
   createTime: string;
   updateTime: string;
   tags: Tag[];
+  category: Category;
 };
 
 const BlogViewPage = () => {
@@ -34,6 +40,10 @@ const BlogViewPage = () => {
     createTime: "",
     updateTime: "",
     tags: [],
+    category: {
+      id: "",
+      name: "",
+    },
   });
 
   // 获取博客详情
@@ -48,6 +58,7 @@ const BlogViewPage = () => {
       createTime,
       updateTime,
       tags: tags || [],
+      category: res.data.category || { id: "", name: "" },
     });
   }, [id]);
   useEffect(() => {
@@ -65,6 +76,17 @@ const BlogViewPage = () => {
           {dayjs(blog.createTime).format("YYYY/MM/DD")}
           （更新于{dayjs(blog.updateTime).format("YYYY/MM/DD")}）
         </p>
+        {blog.category && blog.category.name && (
+          <>
+            <span>/</span>
+            <span
+              className="cursor-pointer hover:underline underline-offset-4"
+              onClick={() => navigate(`/category/${blog.category.id}`)}
+            >
+              {blog.category.name}
+            </span>
+          </>
+        )}
       </div>
 
       <BytemdViewer body={blog.content || ""} />
