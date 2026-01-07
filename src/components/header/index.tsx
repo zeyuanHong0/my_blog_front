@@ -25,6 +25,7 @@ const Header: React.FC = () => {
     { label: "博客", path: "/blogs" },
     { label: "分类", path: "/categories" },
     { label: "标签", path: "/tags" },
+    { label: "归档", path: "/archives" },
     // { label: "关于", path: "/about" },
   ];
   const { isActive } = useActiveNav(navList);

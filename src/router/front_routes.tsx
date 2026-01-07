@@ -11,6 +11,7 @@ const Tags = lazy(() => import("@/pages/front/tags"));
 const Tag = lazy(() => import("@/pages/front/tags/tag"));
 const Categories = lazy(() => import("@/pages/front/categories"));
 const Category = lazy(() => import("@/pages/front/categories/category"));
+const Archives = lazy(() => import("@/pages/front/archives"));
 
 const frontRoutes = [
   {
@@ -41,6 +42,10 @@ const frontRoutes = [
       {
         path: "/category/:id",
         element: SuspenseWrapper(Category),
+      },
+      {
+        path: "/archives",
+        element: SuspenseWrapper(Archives),
       },
     ],
   },
