@@ -13,6 +13,7 @@ enum API {
   BLOG_FRONT_INFO = "/front/blog/getBlogInfo",
   BLOG_CHANGE_STATUS = "/blog/changeBlogStatus",
   BLOG_DELETE = "/blog/deleteBlog",
+  BLOG_ARCHIVE = "/front/blog/getArchives",
 }
 
 /**
@@ -66,6 +67,14 @@ export const fetchBlogDetail = (id: string) => {
  */
 export const fetchFrontBlogDetail = (id: string) => {
   return axios.get(`${API.BLOG_FRONT_INFO}/${id}`);
+};
+
+/**
+ * 获取博客归档
+ * @returns 博客归档
+ */
+export const fetchBlogArchives = () => {
+  return axios.get(API.BLOG_ARCHIVE);
 };
 
 /**
