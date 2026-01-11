@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 
 import { fetchTagsByPage, fetchDeleteTag } from "@/api/tag";
 import { usePagination } from "@/hooks/usePagination";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ import Table from "./table";
 import TagForm, { TagFormRef } from "../form";
 
 const AdminBlogList = () => {
+  useDocumentTitle("标签管理");
   const navList = [
     { name: "首页", href: "/admin" },
     { name: "标签", href: "/admin/tag" },

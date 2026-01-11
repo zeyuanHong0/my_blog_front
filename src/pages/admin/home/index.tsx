@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+
 import { Button } from "@/components/ui/button";
 
 const AdminHome = () => {
+  useDocumentTitle("后台首页");
   const navigate = useNavigate();
   const guestList = [
     { name: "创建标签", action: () => navigate("/admin/tag") },

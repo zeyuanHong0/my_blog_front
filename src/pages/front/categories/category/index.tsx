@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { fetchFrontCategoryDetail } from "@/api/category";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import BlogList from "@/pages/front/blogs/list";
 import EmptyBox from "@/components/empty";
@@ -16,6 +17,7 @@ const Category = () => {
     };
     loadData();
   }, [id]);
+  useDocumentTitle(categoryInfo.name || "分类详情");
   return (
     <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-8 pb-24">
       <div className="flex items-center">

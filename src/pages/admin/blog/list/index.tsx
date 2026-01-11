@@ -12,6 +12,7 @@ import { fetchAllCategories } from "@/api/category";
 import { fetchAllTags } from "@/api/tag";
 import { usePagination } from "@/hooks/usePagination";
 import { truncateString } from "@/utils";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +34,7 @@ type TagOption = {
 };
 
 const AdminBlogList = () => {
+  useDocumentTitle("博客管理");
   const navigate = useNavigate();
   const navList = [
     { name: "首页", href: "/admin" },

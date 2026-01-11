@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { fetchBlogDetail, fetchUpdateBlog } from "@/api/blog";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import { Button } from "@/components/ui/button";
 import BreadCrumb from "@/components/base/bread-crumb";
@@ -9,6 +10,7 @@ import { showInfoToast, showSuccessToast } from "@/components/toast";
 import BlogForm, { BlogFormRef } from "./blog-form";
 
 const AdminBlogEditForm = () => {
+  useDocumentTitle("编辑博客");
   const { id } = useParams();
   const navigate = useNavigate();
   const formRef = useRef<BlogFormRef>(null);

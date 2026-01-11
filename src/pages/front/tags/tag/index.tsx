@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { fetchFrontTagDetail } from "@/api/tag";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import BlogList from "@/pages/front/blogs/list";
 import EmptyBox from "@/components/empty";
@@ -16,6 +17,7 @@ const Tag = () => {
     };
     loadData();
   }, [id]);
+  useDocumentTitle(tagInfo.name || "标签详情");
   return (
     <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-8 pb-24">
       <div className="flex items-center">

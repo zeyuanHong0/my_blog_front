@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 
 import { fetchFrontAllTags } from "@/api/tag";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import TagsList from "./list";
 import EmptyBox from "@/components/empty";
 
 const Tags = () => {
+  useDocumentTitle("标签");
   const [tags, setTags] = useState<any[]>([]);
   // 获取标签列表
   const handleGetAllTags = async () => {

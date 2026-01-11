@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { fetchFrontAllCategories } from "@/api/category";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import CategoryList from "./list";
 import EmptyBox from "@/components/empty";
@@ -12,6 +13,7 @@ type Category = {
 };
 
 const Categories = () => {
+  useDocumentTitle("分类");
   const [categories, setCategories] = useState<Category[]>([]);
   useEffect(() => {
     const handleGetAllCategories = async () => {

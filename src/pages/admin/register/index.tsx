@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RegisterForm from "./form";
 
 const Register = () => {
+  useDocumentTitle("注册");
   return (
     <div className="grid h-screen w-screen place-content-center">
       <Card

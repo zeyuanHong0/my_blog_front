@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 
 import { fetchAllBlogs } from "@/api/blog";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import BlogList from "./list";
 import EmptyBox from "@/components/empty";
 
 const Blog = () => {
+  useDocumentTitle("博客");
   const [blogs, setBlogs] = useState<any[]>([]);
 
   // 获取博客列表

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { fetchFrontBlogDetail } from "@/api/blog";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import ScrollToTop from "@/components/ScrollToTop";
 
 import { SvgIcon } from "@/components/Icon";
@@ -64,7 +65,7 @@ const BlogViewPage = () => {
   useEffect(() => {
     handleGetBlogDetail();
   }, [handleGetBlogDetail]);
-
+  useDocumentTitle(blog.title || "博客详情");
   return (
     <div className={`max-w-prose-wrapper mx-auto flex flex-col pt-8 md:!px-0`}>
       <ScrollToTop />
@@ -80,7 +81,7 @@ const BlogViewPage = () => {
           <>
             <span>/</span>
             <span
-              className="cursor-pointer hover:underline underline-offset-4"
+              className="cursor-pointer underline-offset-4 hover:underline"
               onClick={() => navigate(`/category/${blog.category.id}`)}
             >
               {blog.category.name}

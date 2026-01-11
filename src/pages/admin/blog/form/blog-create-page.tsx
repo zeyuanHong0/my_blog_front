@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 
 import { fetchCreateBlog } from "@/api/blog";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import { Button } from "@/components/ui/button";
 import BreadCrumb from "@/components/base/bread-crumb";
@@ -8,6 +9,7 @@ import { showInfoToast, showSuccessToast } from "@/components/toast";
 import BlogForm, { BlogFormRef } from "./blog-form";
 
 const AdminBlogCreateForm = () => {
+  useDocumentTitle("创建博客");
   const formRef = useRef<BlogFormRef>(null);
   const [loading, setLoading] = useState(false);
 

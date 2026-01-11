@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fetchGitHubAuthUrl } from "@/api/user";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ import { Iconify } from "@/components/Icon";
 import LoginForm from "./form";
 
 const Login = () => {
+  useDocumentTitle("登录");
   const navigate = useNavigate();
   const [isGithubLogin, setIsGithubLogin] = useState(false);
   // 回首页
