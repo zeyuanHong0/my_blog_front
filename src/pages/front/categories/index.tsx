@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { fetchFrontAllCategories } from "@/api/category";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
 import CategoryList from "./list";
 import Skeleton from "./skeleton";
@@ -16,27 +17,14 @@ type Category = {
 const Categories = () => {
   useDocumentTitle("分类");
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showSkeleton, setShowSkeleton] = useState(false); // 控制骨架屏显示
+  const { loading, showSkeleton, executeRequest } = useDelayedSkeleton();
+
   useEffect(() => {
-    const handleGetAllCategories = async () => {
-      try {
-        setLoading(true);
-        const skeletonTimer = setTimeout(() => {
-          setShowSkeleton(true);
-        }, 300);
-        const res: any = await fetchFrontAllCategories();
-        setCategories(res.data?.list);
-        clearTimeout(skeletonTimer);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      } finally {
-        setLoading(false);
-        setShowSkeleton(false);
-      }
-    };
-    handleGetAllCategories();
-  }, []);
+    executeRequest(async () => {
+      const res: any = await fetchFrontAllCategories();
+      setCategories(res.data?.list);
+    });
+  }, [executeRequest]);
   const renderContent = () => {
     if (loading) {
       return showSkeleton ? <Skeleton /> : null;

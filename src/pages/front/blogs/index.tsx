@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { fetchAllBlogs } from "@/api/blog";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { Skeleton } from "@/components/ui/skeleton";
+import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
 import BlogList from "./list";
 import BlogListSkeleton from "./skeleton";
@@ -11,30 +11,17 @@ import EmptyBox from "@/components/empty";
 const Blog = () => {
   useDocumentTitle("博客");
   const [blogs, setBlogs] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showSkeleton, setShowSkeleton] = useState(false);
+  const { loading, showSkeleton, executeRequest } = useDelayedSkeleton();
 
-  // 获取博客列表
-  const handleGetAllBlogs = async () => {
-    try {
-      setLoading(true);
-      const skeletonTimer = setTimeout(() => {
-        setShowSkeleton(true);
-      }, 300);
+  useEffect(() => {
+    executeRequest(async () => {
       const res: any = await fetchAllBlogs();
       setBlogs(res.data);
-      clearTimeout(skeletonTimer);
-    } finally {
-      setLoading(false);
-      setShowSkeleton(false);
-    }
-  };
-  useEffect(() => {
-    handleGetAllBlogs();
-  }, []);
+    });
+  }, [executeRequest]);
   const renderContent = () => {
     if (loading) {
-      return showSkeleton ? <Skeleton /> : null;
+      return showSkeleton ? <BlogListSkeleton /> : null;
     }
     if (blogs.length > 0) {
       return <BlogList blogs={blogs} />;
