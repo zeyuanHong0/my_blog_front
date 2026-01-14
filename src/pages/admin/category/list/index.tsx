@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useDebounce } from "ahooks";
-import { Plus } from "lucide-react";
+import { Delete, Plus } from "lucide-react";
 
 import { fetchCategoriesByPage, fetchDeleteCategory } from "@/api/category";
 import { usePagination } from "@/hooks/usePagination";
@@ -106,16 +106,27 @@ const AdminBlogList = () => {
           <BreadCrumb list={navList} />
         </div>
 
-        <div className="w-full">
+        <div className="flex w-full items-center gap-3">
           <Input
             placeholder="请输入名称"
-            className="h-14"
-            value={searchName}
+            className="h-10 w-64"
             onChange={(e) => {
               setSearchName(e.target.value);
               resetPage();
             }}
+            value={searchName}
           />
+          {searchName && (
+            <Button
+              className="bg-[#ebebeb] text-gray-700 hover:bg-[#efefef] hover:text-gray-900"
+              onClick={() => {
+                setSearchName("");
+              }}
+            >
+              重置
+              <Delete className="h-4 w-4" />
+            </Button>
+          )}
         </div>
         <div className="w-full">
           <Table

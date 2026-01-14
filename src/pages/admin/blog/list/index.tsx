@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDebounce } from "ahooks";
 import { Delete, Plus } from "lucide-react";
 
 import {
@@ -13,6 +12,7 @@ import { fetchAllTags } from "@/api/tag";
 import { usePagination } from "@/hooks/usePagination";
 import { truncateString } from "@/utils";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import useDebounce from "@/hooks/useDebounce";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,7 +57,8 @@ const AdminBlogList = () => {
 
   // 查询参数
   const [searchName, setSearchName] = useState<string>("");
-  const debouncedSearchName = useDebounce(searchName, { wait: 300 });
+  const { debouncedValue: debouncedSearchName, setDebouncedValue } =
+    useDebounce<string>(searchName, 300);
   const [searchCategory, setSearchCategory] = useState<string>("");
   const [searchTags, setSearchTags] = useState<string[]>([]);
 
@@ -127,6 +128,10 @@ const AdminBlogList = () => {
     handleGetBlogList();
   }, [handleGetBlogList]);
 
+  useEffect(() => {
+    resetPage();
+  }, [debouncedSearchName, searchCategory, searchTags, resetPage]);
+
   // 重置按钮的显示
   const showResetBtn = Boolean(
     searchName || searchCategory || searchTags.length > 0,
@@ -174,9 +179,9 @@ const AdminBlogList = () => {
   // 重置搜索条件
   const handleReset = () => {
     setSearchName("");
+    setDebouncedValue("");
     setSearchCategory("");
     setSearchTags([]);
-    resetPage();
   };
 
   return (
@@ -201,7 +206,6 @@ const AdminBlogList = () => {
             className="h-10 w-64"
             onChange={(e) => {
               setSearchName(e.target.value);
-              resetPage();
             }}
             value={searchName}
           />
@@ -210,17 +214,13 @@ const AdminBlogList = () => {
             list={categoryList}
             value={searchCategory || ""}
             onChange={(value) => {
-              console.log("选择的分类:", value);
               setSearchCategory(value);
-              resetPage();
             }}
           />
           <MultiSelect
             value={searchTags || []}
             onChange={(value) => {
-              console.log("选择的标签:", value);
               setSearchTags(value);
-              resetPage();
             }}
             options={tagList}
             placeholder="标签"
