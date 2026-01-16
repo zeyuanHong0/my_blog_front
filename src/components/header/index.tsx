@@ -128,6 +128,7 @@ const Header: React.FC = () => {
                 key={item.path}
                 to={item.path}
                 className={drawerNavClass(item.path)}
+                onClick={() => setShowLeftSheet(false)}
               >
                 {item.label}
               </Link>
