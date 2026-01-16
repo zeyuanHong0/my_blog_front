@@ -23,6 +23,7 @@ type Category = {
 type BlogType = {
   title: string;
   description: string;
+  aiSummary?: string;
   content: string;
   createTime: string;
   updateTime: string;
@@ -50,11 +51,19 @@ const BlogViewPage = () => {
   // 获取博客详情
   const handleGetBlogDetail = useCallback(async () => {
     const res: any = await fetchFrontBlogDetail(id as string);
-    const { title, description, content, tags, createTime, updateTime } =
-      res.data;
+    const {
+      title,
+      description,
+      aiSummary,
+      content,
+      tags,
+      createTime,
+      updateTime,
+    } = res.data;
     setBlog({
       title,
       description,
+      aiSummary,
       content,
       createTime,
       updateTime,
@@ -67,7 +76,7 @@ const BlogViewPage = () => {
   }, [handleGetBlogDetail]);
   useDocumentTitle(blog.title || "博客详情");
   return (
-    <div className={`max-w-prose-wrapper mx-auto flex flex-col pt-8 md:!px-0`}>
+    <div className={`max-w-prose-wrapper mx-auto flex flex-col pt-8 px-4 md:px-0`}>
       <ScrollToTop />
       <h1 className="mb-6 text-4xl font-semibold break-all">{blog.title}</h1>
 
@@ -89,6 +98,17 @@ const BlogViewPage = () => {
           </>
         )}
       </div>
+
+      {blog.aiSummary && (
+        <div className="bg-card mb-6 rounded-xl border p-6 shadow-sm">
+          <div className="text-primary mb-4 flex items-center gap-2 font-semibold">
+            <span className="text-xl">✨</span> AI 总结
+          </div>
+          <div className="text-muted-foreground text-base leading-7">
+            {blog.aiSummary}
+          </div>
+        </div>
+      )}
 
       <BytemdViewer body={blog.content || ""} />
 
