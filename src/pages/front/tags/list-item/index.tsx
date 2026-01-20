@@ -14,7 +14,7 @@ const TagItem = ({ tag }: TagItemProps) => {
       className={cn(
         "inline-flex h-9 shrink-0 items-center justify-center gap-2",
         "px-4 py-2 text-sm font-medium whitespace-nowrap",
-        "bg-background border border-transparent text-gray-700 shadow-xs",
+        "bg-background text-foreground border border-transparent shadow-xs",
         "hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all outline-none",
         "aria-invalid:border-destructive aria-invalid:ring-destructive/20",
       )}

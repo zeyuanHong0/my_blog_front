@@ -65,7 +65,7 @@ const Header: React.FC = () => {
           <div className="flex items-center gap-4">
             <Link to="/" className="mr-4 hidden sm:flex sm:items-center">
               <SvgIcon className="h-8 w-8" icon={LogoIcon} />
-              <span className="ml-2 text-base font-semibold !text-black">
+              <span className="text-foreground ml-2 text-base font-semibold">
                 {NICKNAME}
               </span>
             </Link>
