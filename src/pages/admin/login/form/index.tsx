@@ -91,7 +91,7 @@ const LoginForm = () => {
 
         <Button
           type="submit"
-          className="w-full"
+          className="bg-foreground text-background hover:bg-accent/50 w-full"
           disabled={form.formState.isSubmitting}
         >
           {form.formState.isSubmitting ? (

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sun, Moon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fetchGitHubAuthUrl } from "@/api/user";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import useSettingStore from "@/store/settingStore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +22,7 @@ const Login = () => {
   useDocumentTitle("登录");
   const navigate = useNavigate();
   const [isGithubLogin, setIsGithubLogin] = useState(false);
+  const { changeThemeMode } = useSettingStore();
   // 回首页
   const handleGoHome = () => {
     navigate("/");
@@ -40,6 +42,16 @@ const Login = () => {
           "sm:w-full sm:max-w-none sm:min-w-[360px]",
         )}
       >
+        <div className="absolute top-4 right-4 flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => changeThemeMode(e)}
+          >
+            <Sun className="h-5 w-5 dark:hidden" />
+            <Moon className="hidden h-5 w-5 dark:block" />
+          </Button>
+        </div>
         <CardHeader>
           <CardTitle>登录到您的帐户</CardTitle>
         </CardHeader>
@@ -55,16 +67,16 @@ const Login = () => {
         <CardFooter className="flex-col gap-3">
           {/* 分割线 */}
           <div className="my-2 flex w-full items-center">
-            <div className="flex-1 border-t border-gray-300" />
-            <span className="text-muted-foreground bg-background mx-2 px-2 text-sm">
+            <div className="border-border flex-1 border-t" />
+            <span className="text-muted-foreground mx-2 px-2 text-sm">
               或者通过社交账号登录
             </span>
-            <div className="flex-1 border-t border-gray-300" />
+            <div className="border-border flex-1 border-t" />
           </div>
           <div className="flex w-full flex-col gap-4">
             <Button
               variant="secondary"
-              className="!w-full border border-gray-300 bg-white text-black hover:bg-gray-100"
+              className="bg-background text-foreground border-border !w-full border"
               type="button"
               onClick={handleGithubLogin}
             >
@@ -75,7 +87,11 @@ const Login = () => {
                 </>
               ) : (
                 <>
-                  <Iconify icon="logos:github-icon" /> GitHub
+                  <Iconify
+                    icon="logos:github-icon"
+                    className="mr-2 dark:brightness-0 dark:invert"
+                  />
+                  GitHub
                 </>
               )}
             </Button>

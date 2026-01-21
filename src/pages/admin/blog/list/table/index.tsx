@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Eye, Pen, Trash } from "lucide-react";
 
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
@@ -142,7 +141,7 @@ const createColumns = (
           <Button
             size={"icon"}
             variant="outline"
-            className="text-red-500 hover:text-red-500"
+            className="text-destructive hover:text-destructive/90"
             onClick={() => onDeleteBlog(blog.id, blog.title)}
           >
             <Trash />

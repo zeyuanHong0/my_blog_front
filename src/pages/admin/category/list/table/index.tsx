@@ -64,6 +64,7 @@ const createColumns = (
   },
   {
     id: "actions",
+    header: () => <DataTableColumnHeader title="操作" />,
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2">
@@ -77,7 +78,7 @@ const createColumns = (
           <Button
             size={"icon"}
             variant="outline"
-            className="text-red-500 hover:text-red-500"
+            className="text-destructive hover:text-destructive/90"
             onClick={() => onDeleteCategory(row.original.id, row.original.name)}
           >
             <Trash />

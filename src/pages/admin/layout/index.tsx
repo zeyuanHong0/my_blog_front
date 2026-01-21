@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, Sun, Moon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import useUserStore from "@/store/userStore";
 import ScrollToTop from "@/components/ScrollToTop";
+import useSettingStore from "@/store/settingStore";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -31,6 +32,8 @@ const AdminLayout = () => {
   const { userInfo, userLogout, isLoginExpired, setLoginExpired } =
     useUserStore();
 
+  const { themeMode, changeThemeMode } = useSettingStore();
+
   // 退出登录相关
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const handleLogout = async () => {
@@ -43,7 +46,7 @@ const AdminLayout = () => {
   // 登录过期相关
   const [isExpiredConfirmOpen, setIsExpiredConfirmOpen] = useState(false);
   useEffect(() => {
-    console.log("isLoginExpired", isLoginExpired);
+    // console.log("isLoginExpired", isLoginExpired);
     if (isLoginExpired) {
       setIsExpiredConfirmOpen(true);
     }
@@ -69,6 +72,17 @@ const AdminLayout = () => {
               />
             </div>
             <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => changeThemeMode(e)}
+              >
+                {themeMode === "light" ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
+              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <div>
