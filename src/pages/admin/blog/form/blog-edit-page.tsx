@@ -15,6 +15,7 @@ const AdminBlogEditForm = () => {
   const navigate = useNavigate();
   const formRef = useRef<BlogFormRef>(null);
   const [loading, setLoading] = useState(false);
+  const [initialValues, setInitialValues] = useState<any>(null);
 
   const navList = [
     { name: "首页", href: "/admin" },
@@ -25,16 +26,16 @@ const AdminBlogEditForm = () => {
   // 获取博客详情
   const handleGetBlogDetail = useCallback(async () => {
     const res: any = await fetchBlogDetail(id as string);
-    const { title, description, content, tags, published } = res.data;
+    const { title, description, content, tags, published, category } = res.data;
     const values = {
       title,
       description,
       content,
       tags: tags.map((tag: any) => tag.id),
       published: published === 1,
-      category: res.data.category?.id || "",
+      category: category?.id || "",
     };
-    formRef.current?.setFieldsValue(values);
+    setInitialValues(values);
   }, [id]);
 
   useEffect(() => {
@@ -76,7 +77,11 @@ const AdminBlogEditForm = () => {
       {/* 面包屑导航 */}
       <BreadCrumb list={navList} />
       {/* 表单 */}
-      <BlogForm ref={formRef} getFormValues={handleSubmit} />
+      <BlogForm
+        ref={formRef}
+        getFormValues={handleSubmit}
+        initialValues={initialValues}
+      />
       {/* 按钮 */}
       <div className="fixed inset-x-24 bottom-10 z-10 md:inset-x-[20vw]">
         <Button

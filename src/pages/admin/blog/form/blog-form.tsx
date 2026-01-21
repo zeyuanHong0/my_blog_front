@@ -42,15 +42,16 @@ type CategoryOption = {
 
 export type BlogFormRef = {
   submit: () => void;
-  setFieldsValue: (values: Partial<z.infer<typeof formSchema>>) => void;
 };
 
 interface BlogFormProps {
   getFormValues: (values: z.infer<typeof formSchema>) => void;
+  initialValues?: Partial<z.infer<typeof formSchema>>;
 }
 
 const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
-  ({ getFormValues }, ref) => {
+  ({ getFormValues, initialValues }, ref) => {
+    const [isReady, setIsReady] = useState(false);
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -71,12 +72,6 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
     useImperativeHandle(ref, () => ({
       submit: () => {
         form.handleSubmit(onSubmit)();
-      },
-      setFieldsValue: (values: Partial<z.infer<typeof formSchema>>) => {
-        form.reset({
-          ...form.getValues(),
-          ...values,
-        });
       },
     }));
 
@@ -100,10 +95,20 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
       }));
       setCategoryList(categories);
     };
+
     useEffect(() => {
-      handleGetAllTags();
-      handleGetAllCategories();
+      Promise.all([handleGetAllTags(), handleGetAllCategories()]).then(() => {
+        setIsReady(true);
+      });
     }, []);
+
+    useEffect(() => {
+      if (isReady && initialValues) {
+        form.reset({ ...form.getValues(), ...initialValues });
+      }
+      // form对象在生命周期内是稳定的
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isReady, initialValues]);
 
     return (
       <Form {...form}>
