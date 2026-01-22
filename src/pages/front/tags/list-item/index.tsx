@@ -1,6 +1,7 @@
 import React from "react";
 
 import { cn } from "@/lib/utils";
+import useSettingStore from "@/store/settingStore";
 
 import { SvgIcon } from "@/components/Icon";
 
@@ -9,6 +10,7 @@ interface TagItemProps {
 }
 
 const TagItem = ({ tag }: TagItemProps) => {
+  const { themeMode } = useSettingStore();
   return (
     <div
       className={cn(
@@ -19,7 +21,14 @@ const TagItem = ({ tag }: TagItemProps) => {
         "aria-invalid:border-destructive aria-invalid:ring-destructive/20",
       )}
     >
-      {tag.icon && <SvgIcon icon={tag.icon} size={18} />}
+      {tag.icon && (
+        <SvgIcon
+          icon={
+            themeMode === "dark" && tag.icon_dark ? tag.icon_dark : tag.icon
+          }
+          size={18}
+        />
+      )}
       <span>{tag.name}</span>
       {Number(tag.blogCount) > 0 && (
         <div

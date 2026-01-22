@@ -37,6 +37,7 @@ const formSchema = z.object({
     .min(1, { message: "名称至少需要 1 个字符" })
     .max(15, { message: "名称不能超过 15 个字符" }),
   icon: z.string().optional(),
+  icon_dark: z.string().optional(),
 });
 
 export interface TagFormRef {
@@ -55,6 +56,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
     const [confirmBtnText, setConfirmBtnText] = useState("创建");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [previewSvg, setPreviewSvg] = useState<string>("");
+    const [previewDarkSvg, setPreviewDarkSvg] = useState<string>("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
@@ -72,6 +74,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
       defaultValues: {
         name: "",
         icon: "",
+        icon_dark: "",
       },
     });
 
@@ -79,6 +82,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
       // 重置校验
       form.reset();
       setPreviewSvg(""); // 清空预览
+      setPreviewDarkSvg("");
       setIsDialogOpen(true);
     };
 
@@ -96,6 +100,8 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
       form.setValue("name", res.data.name);
       form.setValue("icon", res.data.icon);
       setPreviewSvg(res.data.icon);
+      form.setValue("icon_dark", res.data.icon_dark);
+      setPreviewDarkSvg(res.data.icon_dark);
     }, [tagId, form]);
 
     useEffect(() => {
@@ -135,6 +141,13 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
       const svgString = form.getValues("icon");
       if (svgString && svgString.trim()) {
         setPreviewSvg(svgString);
+      }
+    };
+
+    const previewDarkIcon = () => {
+      const svgString = form.getValues("icon_dark");
+      if (svgString && svgString.trim()) {
+        setPreviewDarkSvg(svgString);
       }
     };
 
@@ -181,7 +194,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
                     <FormLabel>图标</FormLabel>
                     <FormControl>
                       <Textarea
-                        className="h-32"
+                        className="h-26"
                         placeholder="请输入一个图标SVG字符串"
                         {...field}
                       />
@@ -207,6 +220,42 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
                   </FormItem>
                 )}
               />
+
+              {/* 深色图标 */}
+              <FormField
+                control={form.control}
+                name="icon_dark"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>深色图标</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        className="h-26"
+                        placeholder="请输入一个深色模式下的图标SVG字符串"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                    {/* 预览按钮 */}
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={previewDarkIcon}
+                    >
+                      预览
+                    </Button>
+                    {/* SVG预览区域 */}
+                    {previewDarkSvg && (
+                      <div className="mt-4 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-slate-900 p-6">
+                        <div
+                          className="flex h-20 w-20 items-center justify-center text-white"
+                          dangerouslySetInnerHTML={{ __html: previewDarkSvg }}
+                        />
+                      </div>
+                    )}
+                  </FormItem>
+                )}
+              />
             </form>
           </Form>
           <DialogFooter className="flex gap-2">
@@ -218,7 +267,7 @@ const TagForm = forwardRef<TagFormRef, TagFormProps>(
               取消
             </Button>
             <Button
-              className="bg-black text-white"
+              className="bg-primary text-background hover:bg-primary/90"
               onClick={form.handleSubmit(onSubmit)}
               disabled={isSubmitting}
             >
