@@ -15,7 +15,7 @@ export const SOURCE_CODE_GITHUB_PAGE =
 export const SLOGAN = "记录成长，追寻理想";
 
 /** 网站ICP备案号 */
-export const BEI_AN_NUMBER = "";
+export const BEI_AN_NUMBER = "浙ICP备2026003425号-1";
 
 /** 工信部网站链接 */
 export const BEI_AN_LINK = "https://beian.miit.gov.cn";

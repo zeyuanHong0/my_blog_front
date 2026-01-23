@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 import { cn } from "@/lib/utils";
-import { NICKNAME, SLOGAN } from "@/constants";
+import { NICKNAME, SLOGAN, BEI_AN_NUMBER, BEI_AN_LINK } from "@/constants";
 
 const Footer = () => {
   return (
@@ -15,6 +15,15 @@ const Footer = () => {
         <p className="text-sm text-gray-600">
           {`© ${dayjs().year()} ${NICKNAME}. ${SLOGAN}`}
         </p>
+        <span className="hidden md:inline">·</span>
+        <a
+          href={BEI_AN_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-gray-600 hover:text-gray-900 dark:hover:text-gray-300"
+        >
+          {BEI_AN_NUMBER}
+        </a>
       </div>
     </footer>
   );
