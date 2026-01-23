@@ -78,6 +78,17 @@ const BlogViewPage = () => {
     handleGetBlogDetail();
   }, [handleGetBlogDetail]);
   useDocumentTitle(blog.title || "博客详情");
+
+  const iconShow = (tag: Tag) => {
+    if (!tag.icon && !tag.icon_dark)
+      return <span className="text-sm text-[#717171]">#</span>;
+    return (
+      <SvgIcon
+        icon={themeMode === "dark" && tag.icon_dark ? tag.icon_dark : tag.icon}
+        size={14}
+      />
+    );
+  };
   return (
     <div
       className={`max-w-prose-wrapper mx-auto flex flex-col px-4 pt-8 md:px-0`}
@@ -126,14 +137,7 @@ const BlogViewPage = () => {
                 key={tag.id}
                 onClick={() => navigate(`/tag/${tag.id}`)}
               >
-                <SvgIcon
-                  icon={
-                    themeMode === "dark" && tag.icon_dark
-                      ? tag.icon_dark
-                      : tag.icon
-                  }
-                  size={14}
-                />
+                {iconShow(tag)}
                 <span
                   key={tag.id}
                   className="cursor-pointer text-sm text-[#717171] hover:text-[#787878]"
