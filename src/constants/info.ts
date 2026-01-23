@@ -21,7 +21,7 @@ export const BEI_AN_NUMBER = "浙ICP备2026003425号-1";
 export const BEI_AN_LINK = "https://beian.miit.gov.cn";
 
 /** 公安备案号 */
-export const GONG_AN_NUMBER = "";
+export const GONG_AN_NUMBER = "浙公网安备33020302002038号";
 
 /** 公安网站链接 */
-export const GONG_AN_LINK = "";
+export const GONG_AN_LINK = "https://beian.mps.gov.cn/#/query/webSearch?code=33020302002038";

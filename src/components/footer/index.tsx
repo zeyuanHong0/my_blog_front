@@ -1,7 +1,14 @@
 import dayjs from "dayjs";
 
 import { cn } from "@/lib/utils";
-import { NICKNAME, SLOGAN, BEI_AN_NUMBER, BEI_AN_LINK } from "@/constants";
+import {
+  NICKNAME,
+  SLOGAN,
+  BEI_AN_NUMBER,
+  BEI_AN_LINK,
+  GONG_AN_NUMBER,
+  GONG_AN_LINK,
+} from "@/constants";
 
 const Footer = () => {
   return (
@@ -23,6 +30,16 @@ const Footer = () => {
           className="text-sm text-gray-600 hover:text-gray-900 dark:hover:text-gray-300"
         >
           {BEI_AN_NUMBER}
+        </a>
+        <span className="hidden md:inline">·</span>
+        <a
+          href={GONG_AN_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:hover:text-gray-300"
+        >
+          <img src="/gongan.png" alt="公安备案" className="h-4 w-4" />
+          {GONG_AN_NUMBER}
         </a>
       </div>
     </footer>
