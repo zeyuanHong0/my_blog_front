@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 
 import { fetchFrontBlogDetail } from "@/api/blog";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import useSettingStore from "@/store/settingStore";
 import ScrollToTop from "@/components/ScrollToTop";
 
 import { SvgIcon } from "@/components/Icon";
@@ -13,6 +14,7 @@ type Tag = {
   id: string;
   name: string;
   icon: string;
+  icon_dark: string | null;
 };
 
 type Category = {
@@ -34,6 +36,7 @@ type BlogType = {
 const BlogViewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const { themeMode } = useSettingStore();
 
   const [blog, setBlog] = useState<BlogType>({
     title: "",
@@ -76,7 +79,9 @@ const BlogViewPage = () => {
   }, [handleGetBlogDetail]);
   useDocumentTitle(blog.title || "博客详情");
   return (
-    <div className={`max-w-prose-wrapper mx-auto flex flex-col pt-8 px-4 md:px-0`}>
+    <div
+      className={`max-w-prose-wrapper mx-auto flex flex-col px-4 pt-8 md:px-0`}
+    >
       <ScrollToTop />
       <h1 className="mb-6 text-4xl font-semibold break-all">{blog.title}</h1>
 
@@ -121,7 +126,14 @@ const BlogViewPage = () => {
                 key={tag.id}
                 onClick={() => navigate(`/tag/${tag.id}`)}
               >
-                <SvgIcon icon={tag.icon} size={14} />
+                <SvgIcon
+                  icon={
+                    themeMode === "dark" && tag.icon_dark
+                      ? tag.icon_dark
+                      : tag.icon
+                  }
+                  size={14}
+                />
                 <span
                   key={tag.id}
                   className="cursor-pointer text-sm text-[#717171] hover:text-[#787878]"

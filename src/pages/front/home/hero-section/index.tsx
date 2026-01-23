@@ -14,9 +14,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import TypeIntro from "../type-intro";
-import { socialMediaList } from "../social-media";
+import { useSocialMediaList } from "../social-media";
 
 const HeroSection = () => {
+  const socialMediaList = useSocialMediaList();
   return (
     <div
       className={cn(
@@ -48,7 +49,12 @@ const HeroSection = () => {
       </div>
       <div className="flex items-center gap-3">
         <Link to="/blogs">
-          <Button className="group hover:shadow-primary/25 rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg active:scale-95">
+          <Button
+            className={cn(
+              "bg-background hover:bg-accent/50 rounded-full px-4 py-2 text-sm font-medium",
+              "transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg active:scale-95",
+            )}
+          >
             <span>我的博客</span>
             <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
           </Button>
@@ -61,7 +67,9 @@ const HeroSection = () => {
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
                   <Link to={el.link} target="_blank">
-                    <Button className="rounded-full p-2">{el.icon}</Button>
+                    <Button className="bg-background hover:bg-accent/50 rounded-full p-2">
+                      {el.icon}
+                    </Button>
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent side="top">{el.label}</TooltipContent>

@@ -21,7 +21,7 @@ const AdminHome = () => {
           {guestList.map((guest) => (
             <Button
               key={guest.name}
-              className="h-8 border-black bg-black text-white"
+              className="bg-primary text-background h-8 border-black"
               onClick={guest.action}
             >
               {guest.name}

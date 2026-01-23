@@ -13,7 +13,7 @@ function DataTableColumnHeader<TData, TValue>({
   className,
 }: Omit<DataTableColumnHeaderProps<TData, TValue>, "column">) {
   return (
-    <div className={cn("flex items-center font-bold text-black", className)}>
+    <div className={cn("text-primary flex items-center font-bold", className)}>
       {title}
     </div>
   );

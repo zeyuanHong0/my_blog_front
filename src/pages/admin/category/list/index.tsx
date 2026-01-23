@@ -94,7 +94,7 @@ const AdminBlogList = () => {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">分类管理</h2>
           <Button
-            className="border-black bg-black text-white"
+            className="border-border bg-primary text-background hover:bg-primary/90"
             onClick={showCreateForm}
           >
             <Plus />
@@ -118,7 +118,7 @@ const AdminBlogList = () => {
           />
           {searchName && (
             <Button
-              className="bg-[#ebebeb] text-gray-700 hover:bg-[#efefef] hover:text-gray-900"
+              className="bg-secondary text-secondary-foreground hover:bg-muted"
               onClick={() => {
                 setSearchName("");
               }}

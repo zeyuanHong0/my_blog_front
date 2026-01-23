@@ -29,6 +29,7 @@ export type tag = {
   id: string;
   name: string;
   icon: string;
+  icon_dark: string;
   createTime: string;
   updateTime: string;
 };
@@ -67,13 +68,29 @@ const createColumns = (
   },
   {
     accessorKey: "icon",
-    header: () => <DataTableColumnHeader title="图标" />,
+    header: () => <DataTableColumnHeader title="浅色图标" />,
     cell: ({ row }) => {
       const icon = row.getValue("icon") as string;
-      return (
+      return icon ? (
         <div className="min-w-[120px] whitespace-nowrap">
           <SvgIcon icon={icon} size={40} />
         </div>
+      ) : (
+        <span className="text-muted-foreground text-center text-sm">-</span>
+      );
+    },
+  },
+  {
+    accessorKey: "icon_dark",
+    header: () => <DataTableColumnHeader title="深色图标" />,
+    cell: ({ row }) => {
+      const icon = row.getValue("icon_dark") as string;
+      return icon ? (
+        <div className="min-w-[120px] whitespace-nowrap">
+          <SvgIcon icon={icon} size={40} />
+        </div>
+      ) : (
+        <span className="text-muted-foreground text-center text-sm">-</span>
       );
     },
   },
@@ -105,6 +122,7 @@ const createColumns = (
   },
   {
     id: "actions",
+    header: () => <DataTableColumnHeader title="操作" />,
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2">
@@ -118,7 +136,7 @@ const createColumns = (
           <Button
             size={"icon"}
             variant="outline"
-            className="text-red-500 hover:text-red-500"
+            className="text-destructive hover:text-destructive/90"
             onClick={() => onDeleteTag(row.original.id, row.original.name)}
           >
             <Trash />

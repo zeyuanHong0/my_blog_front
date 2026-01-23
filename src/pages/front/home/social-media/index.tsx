@@ -1,24 +1,37 @@
 import { EMAIL, GITHUB_PAGE } from "@/constants";
+import useSettingStore from "@/store/settingStore";
 
 import { Iconify } from "@/components/Icon";
+import { Github, Mail } from "lucide-react";
 
-export const socialMediaList: {
+type SocialMedia = {
   icon: React.ReactNode;
   label: string;
   link: string;
-}[] = [
-  {
-    icon: <Iconify icon="akar-icons:github-fill" size={20} />,
-    label: "Github",
-    link: GITHUB_PAGE,
-  },
-  {
-    icon: (
-      <>
-        <Iconify icon="logos:google-gmail" size={20} />
-      </>
-    ),
-    label: "Gmail",
-    link: `mailto:${EMAIL}`,
-  },
-];
+};
+
+export const useSocialMediaList = (): SocialMedia[] => {
+  const { themeMode } = useSettingStore();
+  return [
+    {
+      icon:
+        themeMode === "light" ? (
+          <Iconify icon="skill-icons:github-light" size={20} />
+        ) : (
+          <Iconify icon="skill-icons:github-dark" size={20} />
+        ),
+      label: "Github",
+      link: GITHUB_PAGE,
+    },
+    {
+      icon:
+        themeMode === "light" ? (
+          <Iconify icon="skill-icons:gmail-light" size={20} />
+        ) : (
+          <Iconify icon="skill-icons:gmail-dark" size={20} />
+        ),
+      label: "Gmail",
+      link: `mailto:${EMAIL}`,
+    },
+  ];
+};

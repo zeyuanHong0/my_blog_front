@@ -8,10 +8,12 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import classNames from "classnames";
+import { Sun, Moon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { NICKNAME, SLOGAN, SOURCE_CODE_GITHUB_PAGE } from "@/constants";
+import { NICKNAME, SLOGAN } from "@/constants";
 import { useActiveNav } from "@/hooks/useActiveNav";
+import useSettingStore from "@/store/settingStore";
 
 import { Iconify, SvgIcon } from "@/components/Icon";
 import Button from "@/components/button";
@@ -19,6 +21,7 @@ import LogoIcon from "/blog.svg?raw";
 
 const Header: React.FC = () => {
   const [showLeftSheet, setShowLeftSheet] = useState(false);
+  const { themeMode, changeThemeMode } = useSettingStore();
 
   const navList = [
     { label: "首页", path: "/" },
@@ -32,10 +35,10 @@ const Header: React.FC = () => {
 
   const navClass = (path: string) => {
     return classNames(
-      "cursor-pointer px-4 py-2 text-sm transition-colors hover:font-semibold hover:text-black",
+      "cursor-pointer px-4 py-2 text-sm transition-colors hover:font-semibold hover:text-foreground",
       {
-        "text-black font-semibold": isActive(path),
-        "text-gray-600": !isActive(path),
+        "text-foreground font-semibold": isActive(path),
+        "text-muted-foreground": !isActive(path),
       },
     );
   };
@@ -43,8 +46,9 @@ const Header: React.FC = () => {
     return classNames(
       "cursor-pointer rounded-xl px-4 py-2 text-sm transition-colors",
       {
-        "bg-black text-[#fff] hover:bg-[#333]": isActive(path),
-        "hover:bg-[#F2F2F3]": !isActive(path),
+        "bg-primary text-primary-foreground hover:bg-primary/90":
+          isActive(path),
+        "text-foreground hover:bg-accent": !isActive(path),
       },
     );
   };
@@ -53,7 +57,7 @@ const Header: React.FC = () => {
       <header
         className={cn(
           "sticky top-0 z-10 w-full backdrop-blur transition-all",
-          "bg-background/50 border-b border-[#E4E4E7]",
+          "bg-background/50 border-border border-b",
         )}
       >
         <div className="mx-auto flex h-16 w-full items-center justify-between p-4 sm:p-8 md:max-w-screen-md 2xl:max-w-screen-xl">
@@ -61,13 +65,13 @@ const Header: React.FC = () => {
           <div className="flex items-center gap-4">
             <Link to="/" className="mr-4 hidden sm:flex sm:items-center">
               <SvgIcon className="h-8 w-8" icon={LogoIcon} />
-              <span className="ml-2 text-base font-semibold !text-black">
+              <span className="text-foreground ml-2 text-base font-semibold">
                 {NICKNAME}
               </span>
             </Link>
             <div className="sm:hidden">
               <Button
-                className="rounded-full p-2"
+                className="bg-background hover:bg-accent/50 rounded-full p-2"
                 onClick={() => setShowLeftSheet(true)}
               >
                 <Iconify icon="flowbite:bars-outline" size={20} />
@@ -75,6 +79,7 @@ const Header: React.FC = () => {
             </div>
           </div>
 
+          {/* 导航 */}
           <div className="flex items-center">
             {/* nav */}
             <div
@@ -91,23 +96,20 @@ const Header: React.FC = () => {
                 </Link>
               ))}
             </div>
-            {/* 按钮 */}
-            <div className="flex items-center gap-3">
-              <Link
-                to={SOURCE_CODE_GITHUB_PAGE}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button className="rounded-full p-2">
-                  <Iconify icon="tdesign:logo-github-filled" size={16} />
-                </Button>
-              </Link>
-              <Link to={"/admin"} target="_blank" rel="noopener noreferrer">
-                <Button className="rounded-full p-2">
-                  <Iconify icon="tdesign:user-setting" size={16} />
-                </Button>
-              </Link>
-            </div>
+          </div>
+          {/* 右侧按钮 */}
+          <div className="flex items-center gap-3">
+            <Button
+              className="bg-background hover:bg-accent/50 rounded-full p-2"
+              onClick={changeThemeMode}
+            >
+              {themeMode === "light" ? <Sun size={16} /> : <Moon size={16} />}
+            </Button>
+            <Link to={"/admin"} target="_blank" rel="noopener noreferrer">
+              <Button className="bg-background hover:bg-accent rounded-full p-2">
+                <Iconify icon="tdesign:user-setting" size={16} />
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -115,10 +117,10 @@ const Header: React.FC = () => {
       <Sheet open={showLeftSheet} onOpenChange={setShowLeftSheet}>
         <SheetContent side="left" className="w-[80vw] p-0">
           <SheetHeader className="px-4 py-4 text-left">
-            <SheetTitle className="text-base font-semibold text-black">
+            <SheetTitle className="text-foreground text-base font-semibold">
               {NICKNAME}
             </SheetTitle>
-            <SheetDescription className="mt-1 text-sm text-gray-600">
+            <SheetDescription className="text-muted-foreground mt-1 text-sm">
               {SLOGAN}
             </SheetDescription>
           </SheetHeader>

@@ -1,6 +1,7 @@
 export interface CreateTag {
   name: string;
   icon?: string;
+  dark_icon?: string;
 }
 
 export interface UpdateTag extends CreateTag {

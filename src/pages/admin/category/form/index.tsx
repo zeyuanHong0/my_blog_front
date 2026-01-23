@@ -172,7 +172,7 @@ const CategoryForm = forwardRef<CategoryFormRef, CategoryFormProps>(
               取消
             </Button>
             <Button
-              className="bg-black text-white"
+              className="bg-primary text-background hover:bg-primary/90"
               onClick={form.handleSubmit(onSubmit)}
               disabled={isSubmitting}
             >

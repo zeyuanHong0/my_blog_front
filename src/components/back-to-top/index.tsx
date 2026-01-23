@@ -13,9 +13,12 @@ const BackToTop = () => {
   };
   return (
     <Button
-      className={cn("fixed right-8 bottom-8 rounded-full p-[6px]", {
-        hidden: (position?.top ?? 0) < 100,
-      })}
+      className={cn(
+        "bg-background hover:bg-accent/80 fixed right-8 bottom-8 rounded-full p-[6px]",
+        {
+          hidden: (position?.top ?? 0) < 100,
+        },
+      )}
       onClick={scrollToTop}
     >
       <Iconify icon="material-symbols-light:keyboard-arrow-up" size={22} />
