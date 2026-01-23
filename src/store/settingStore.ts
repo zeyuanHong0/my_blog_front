@@ -37,21 +37,11 @@ const useSettingStore = create((set: any): settingState => {
       const y = event?.clientY ?? window.innerHeight / 2;
 
       // 设置起点
-      // dark => light: 从左下角开始
-      // light => dark: 从点击位置开始
-      if (newMode === "dark") {
-        document.documentElement.style.setProperty("--x", `${x}px`);
-        document.documentElement.style.setProperty("--y", `${y}px`);
-      } else {
-        document.documentElement.style.setProperty("--x", "0px");
-        document.documentElement.style.setProperty(
-          "--y",
-          `${window.innerHeight}px`,
-        );
-      }
-
-      // 执行
-      document.startViewTransition(() => {
+      document.documentElement.style.setProperty("--x", `${x}px`);
+      document.documentElement.style.setProperty("--y", `${y}px`);
+      
+      // 执行过渡动画
+      const transition = document.startViewTransition(() => {
         document.documentElement.classList.toggle("dark", newMode === "dark");
         setLocalStorage("themeMode", newMode);
         set({ themeMode: newMode });
