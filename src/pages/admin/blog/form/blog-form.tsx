@@ -28,6 +28,7 @@ const formSchema = z.object({
   published: z.boolean().optional(),
   tags: z.string().array().min(1, { message: "至少选择一个标签" }).optional(),
   category: z.string().min(1, { message: "请选择分类" }).optional(),
+  aiSummary: z.string().optional(),
 });
 
 type TagOption = {
@@ -46,7 +47,7 @@ export type BlogFormRef = {
 
 interface BlogFormProps {
   getFormValues: (values: z.infer<typeof formSchema>) => void;
-  initialValues?: Partial<z.infer<typeof formSchema>>;
+  initialValues?: Partial<z.infer<typeof formSchema>> & { id?: string };
 }
 
 const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
@@ -61,6 +62,7 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
         published: true,
         tags: [],
         category: "",
+        aiSummary: "",
       },
     });
     const onSubmit = () => {
@@ -208,6 +210,27 @@ const AdminBlogForm = forwardRef<BlogFormRef, BlogFormProps>(
               </FormItem>
             )}
           />
+
+          {/* AI总结 */}
+          {initialValues?.id && (
+            <FormField
+              control={form.control}
+              name="aiSummary"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>AI总结</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="如需重新生成AI总结，可先清空此内容"
+                      className="min-h-[80px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           {/* 内容 */}
           <FormField

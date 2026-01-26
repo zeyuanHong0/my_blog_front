@@ -26,14 +26,24 @@ const AdminBlogEditForm = () => {
   // 获取博客详情
   const handleGetBlogDetail = useCallback(async () => {
     const res: any = await fetchBlogDetail(id as string);
-    const { title, description, content, tags, published, category } = res.data;
+    const {
+      title,
+      description,
+      content,
+      tags,
+      published,
+      category,
+      aiSummary,
+    } = res.data;
     const values = {
+      id,
       title,
       description,
       content,
       tags: tags.map((tag: any) => tag.id),
       published: published === 1,
       category: category?.id || "",
+      aiSummary: aiSummary || "",
     };
     setInitialValues(values);
   }, [id]);
