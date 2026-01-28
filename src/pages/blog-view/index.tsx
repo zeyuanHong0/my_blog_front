@@ -11,6 +11,7 @@ import { tocPlugin, type TocItem } from "@/plugins/toc";
 
 import { SvgIcon } from "@/components/Icon";
 import { BytemdViewer } from "@/components/bytemd/viewer";
+import { set } from "zod";
 
 type Tag = {
   id: string;
@@ -46,9 +47,16 @@ const BlogViewPage = () => {
   useEffect(() => {
     const intersectionObserver = new IntersectionObserver((entries) => {
       // 如果 intersectionRatio 为 0，则目标在视野外，
-      if (entries[0].intersectionRatio <= 0) return;
-      if (entries[0].isIntersecting) {
-        setTocItemId(entries[0].target.id);
+      // if (entries[0].intersectionRatio <= 0) return;
+      // if (entries[0].isIntersecting) {
+      //   setTocItemId(entries[0].target.id);
+      // }
+      // 优化一下(处理多个标题同时进入视野的情况)，取离顶部最近的那个
+      const visibleEntries = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visibleEntries.length > 0) {
+        setTocItemId(visibleEntries[0].target.id);
       }
     });
     // 开始监听
@@ -143,7 +151,7 @@ const BlogViewPage = () => {
       <div className="flex items-start gap-8">
         <div className="min-w-0 flex-1">
           {blog.aiSummary && (
-            <div className="bg-card border-l-primary mb-6 border-l-2 p-6 italic">
+            <div className="border-l-primary mb-6 border-l-4 px-6 py-2 italic">
               <div className="text-primary mb-4 flex items-center gap-2 font-semibold">
                 <span className="text-xl">✨</span> AI 总结
               </div>
