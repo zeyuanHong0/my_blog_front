@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import styled from "styled-components";
 
 import { cn } from "@/lib/utils";
 import { fetchFrontBlogDetail } from "@/api/blog";
@@ -11,7 +12,9 @@ import { tocPlugin, type TocItem } from "@/plugins/toc";
 
 import { SvgIcon } from "@/components/Icon";
 import { BytemdViewer } from "@/components/bytemd/viewer";
-import { set } from "zod";
+import BackToTop from "@/components/back-to-top";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
 
 type Tag = {
   id: string;
@@ -60,9 +63,32 @@ const BlogViewPage = () => {
       }
     });
     // 开始监听
-    document.querySelectorAll("h1,h2,h3,h4,h5,h6").forEach((el) => {
+    const headings = document.querySelectorAll(
+      ".markdown-body :where(h1, h2, h3, h4, h5, h6)",
+    );
+    headings.forEach((el) => {
       intersectionObserver.observe(el);
     });
+    // 初始化时手动检查哪个标题在视口中
+    const checkInitialVisibility = () => {
+      const visibleHeadings = Array.from(headings)
+        .filter((el) => {
+          const rect = el.getBoundingClientRect();
+          return rect.top >= 0 && rect.top <= window.innerHeight * 0.4;
+        })
+        .sort(
+          (a, b) =>
+            a.getBoundingClientRect().top - b.getBoundingClientRect().top,
+        );
+      console.log("visibleHeadings", visibleHeadings);
+
+      if (visibleHeadings.length > 0) {
+        setTocItemId(visibleHeadings[0].id);
+      }
+    };
+
+    checkInitialVisibility();
+
     return () => {
       intersectionObserver.disconnect();
     };
@@ -115,6 +141,21 @@ const BlogViewPage = () => {
     [setToc],
   );
 
+  useEffect(() => {
+    const activeEl = document.querySelector(
+      `.toc-item[data-id="${tocItemId}"]`,
+    ) as HTMLElement | null;
+
+    const indicator = document.querySelector(
+      ".toc-indicator",
+    ) as HTMLElement | null;
+
+    if (!activeEl || !indicator) return;
+
+    indicator.style.transform = `translateY(${activeEl.offsetTop}px)`;
+    indicator.style.height = `${activeEl.offsetHeight}px`;
+  }, [tocItemId]);
+
   const iconShow = (tag: Tag) => {
     if (!tag.icon && !tag.icon_dark)
       return <span className="text-sm text-[#717171]">#</span>;
@@ -126,101 +167,135 @@ const BlogViewPage = () => {
     );
   };
   return (
-    <div className={cn("flex flex-1 flex-col px-4 pt-8 md:px-12")}>
-      <ScrollToTop />
-      <h1 className="mb-6 text-4xl font-semibold break-all">{blog.title}</h1>
-      <p className="text-muted-foreground mb-6">{blog.description}</p>
-      <div className="text-muted-foreground mb-6 flex items-center space-x-4 text-sm">
-        <p>
-          {dayjs(blog.createTime).format("YYYY/MM/DD")}
-          （更新于{dayjs(blog.updateTime).format("YYYY/MM/DD")}）
-        </p>
-        {blog.category && blog.category.name && (
-          <>
-            <span>/</span>
-            <span
-              className="cursor-pointer underline-offset-4 hover:underline"
-              onClick={() => navigate(`/category/${blog.category.id}`)}
-            >
-              {blog.category.name}
-            </span>
-          </>
-        )}
-      </div>
-
-      <div className="flex items-start gap-8">
-        <div className="min-w-0 flex-1">
-          {blog.aiSummary && (
-            <div className="border-l-primary mb-6 border-l-4 px-6 py-2 italic">
-              <div className="text-primary mb-4 flex items-center gap-2 font-semibold">
-                <span className="text-xl">✨</span> AI 总结
-              </div>
-              <div className="text-muted-foreground text-base leading-7">
-                {blog.aiSummary}
-              </div>
-            </div>
+    <>
+      <div className={cn("flex flex-1 flex-col px-4 pt-8 md:px-12")}>
+        <ScrollToTop />
+        <div className="mb-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 gap-1 text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              if (window.history.length > 1) {
+                navigate(-1);
+              } else {
+                navigate("/");
+              }
+            }}
+          >
+            <ChevronLeft className="size-4" />
+            返回
+          </Button>
+        </div>
+        <h1 className="mb-6 text-4xl font-semibold break-all">{blog.title}</h1>
+        <p className="text-muted-foreground mb-6">{blog.description}</p>
+        <div className="text-muted-foreground mb-6 flex items-center space-x-4 text-sm">
+          <p>
+            {dayjs(blog.createTime).format("YYYY/MM/DD")}
+            （更新于{dayjs(blog.updateTime).format("YYYY/MM/DD")}）
+          </p>
+          {blog.category && blog.category.name && (
+            <>
+              <span>/</span>
+              <span
+                className="cursor-pointer underline-offset-4 hover:underline"
+                onClick={() => navigate(`/category/${blog.category.id}`)}
+              >
+                {blog.category.name}
+              </span>
+            </>
           )}
+        </div>
 
-          <BytemdViewer
-            body={blog.content || ""}
-            otherPlugins={[tocPluginInstance]}
-          />
-
-          <div className="pt-14 pb-14">
-            {blog.tags && blog.tags.length > 0 && (
-              <div className="flex flex-wrap gap-3">
-                {blog.tags.map((tag) => (
-                  <div
-                    className="flex items-center gap-1"
-                    key={tag.id}
-                    onClick={() => navigate(`/tag/${tag.id}`)}
-                  >
-                    {iconShow(tag)}
-                    <span
-                      key={tag.id}
-                      className="cursor-pointer text-sm text-[#717171] hover:text-[#787878]"
-                    >
-                      {tag.name}
-                    </span>
-                  </div>
-                ))}
+        <div className="flex items-start gap-8">
+          <div className="min-w-0 flex-1">
+            {blog.aiSummary && (
+              <div className="border-l-primary mb-6 border-l-4 px-6 py-2 italic">
+                <div className="text-primary mb-4 flex items-center gap-2 font-semibold">
+                  <span className="text-xl">✨</span> AI 总结
+                </div>
+                <div className="text-muted-foreground text-base leading-7">
+                  {blog.aiSummary}
+                </div>
               </div>
             )}
+
+            <BytemdViewer
+              body={blog.content || ""}
+              otherPlugins={[tocPluginInstance]}
+            />
+
+            <div className="pt-6 pb-10">
+              {blog.tags && blog.tags.length > 0 && (
+                <div className="flex flex-wrap gap-3">
+                  {blog.tags.map((tag) => (
+                    <div
+                      className="flex items-center gap-1"
+                      key={tag.id}
+                      onClick={() => navigate(`/tag/${tag.id}`)}
+                    >
+                      {iconShow(tag)}
+                      <span
+                        key={tag.id}
+                        className="cursor-pointer text-sm text-[#717171] hover:text-[#787878]"
+                      >
+                        {tag.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        {/* 目录 */}
-        <aside className="sticky top-20 hidden w-80 shrink-0 lg:block">
-          <h3 className="mb-4 text-base font-semibold">目录</h3>
-          <nav className="max-h-[calc(100vh-10rem)] overflow-y-auto pr-1">
-            <ul className="space-y-1">
-              {toc.map((item) => (
-                <li
-                  key={item.id}
-                  className="text-sm"
-                  style={{ paddingLeft: `${(item.level - 1) * 12}px` }}
-                >
-                  <a
-                    href={`#${item.id}`}
-                    // className="text-muted-foreground hover:text-primary block truncate py-1 transition-colors"
-                    className={cn(
-                      "hover:text-primary block truncate py-1 transition-colors",
-                      tocItemId === item.id
-                        ? "text-primary font-medium"
-                        : "text-muted-foreground",
-                    )}
-                    onClick={() => setTocItemId(item.id)}
-                    title={item.text}
+          {/* 目录 */}
+          <aside className="sticky top-20 hidden w-80 shrink-0 lg:block">
+            <h3 className="mb-4 text-base font-semibold">目录</h3>
+            <nav className="max-h-[calc(100vh-10rem)] overflow-y-auto pr-1">
+              <ul className="border-border relative space-y-1 border-l-2">
+                {/* 指示光标 */}
+                <TocIndicator className="toc-indicator" />
+                {toc.map((item) => (
+                  <li
+                    key={item.id}
+                    className="text-sm"
+                    style={{ paddingLeft: `${(item.level - 1) * 12}px` }}
                   >
-                    {item.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </aside>
+                    <a
+                      href={`#${item.id}`}
+                      data-id={item.id}
+                      className={cn(
+                        "toc-item",
+                        "hover:text-primary block truncate py-1 transition-colors",
+                        tocItemId === item.id
+                          ? "text-primary font-medium"
+                          : "text-muted-foreground",
+                      )}
+                      onClick={() => setTocItemId(item.id)}
+                      title={item.text}
+                    >
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+        </div>
       </div>
-    </div>
+      <BackToTop />
+    </>
   );
 };
 
 export default BlogViewPage;
+
+const TocIndicator = styled.div`
+  position: absolute;
+  left: -2px;
+  width: 2px;
+  background: var(--primary);
+  border-radius: 1px;
+  transition:
+    transform 0.2s ease,
+    height 0.2s ease;
+`;
