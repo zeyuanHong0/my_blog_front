@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import styled from "styled-components";
+import { ChevronLeft, Sun, Moon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fetchFrontBlogDetail } from "@/api/blog";
@@ -14,7 +15,7 @@ import { SvgIcon } from "@/components/Icon";
 import { BytemdViewer } from "@/components/bytemd/viewer";
 import BackToTop from "@/components/back-to-top";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import CustomButton from "@/components/button";
 
 type Tag = {
   id: string;
@@ -42,7 +43,7 @@ type BlogType = {
 const BlogViewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { themeMode } = useSettingStore();
+  const { themeMode, changeThemeMode } = useSettingStore();
   const [toc, setToc] = useState<TocItem[]>([]); // 目录
 
   // 当前高亮的目录
@@ -80,7 +81,7 @@ const BlogViewPage = () => {
           (a, b) =>
             a.getBoundingClientRect().top - b.getBoundingClientRect().top,
         );
-      console.log("visibleHeadings", visibleHeadings);
+      // console.log("visibleHeadings", visibleHeadings);
 
       if (visibleHeadings.length > 0) {
         setTocItemId(visibleHeadings[0].id);
@@ -168,13 +169,20 @@ const BlogViewPage = () => {
   };
   return (
     <>
+      {/* 主题切换 */}
+      <CustomButton
+        className="bg-background hover:bg-accent/50 fixed top-6 right-6 rounded-full p-2"
+        onClick={changeThemeMode}
+      >
+        {themeMode === "light" ? <Sun size={16} /> : <Moon size={16} />}
+      </CustomButton>
       <div className={cn("flex flex-1 flex-col px-4 pt-8 md:px-12")}>
         <ScrollToTop />
         <div className="mb-4">
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 gap-1 text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground -ml-3 gap-1"
             onClick={() => {
               if (window.history.length > 1) {
                 navigate(-1);
@@ -248,38 +256,47 @@ const BlogViewPage = () => {
             </div>
           </div>
           {/* 目录 */}
-          <aside className="sticky top-20 hidden w-80 shrink-0 lg:block">
-            <h3 className="mb-4 text-base font-semibold">目录</h3>
-            <nav className="max-h-[calc(100vh-10rem)] overflow-y-auto pr-1">
-              <ul className="border-border relative space-y-1 border-l-2">
-                {/* 指示光标 */}
-                <TocIndicator className="toc-indicator" />
-                {toc.map((item) => (
-                  <li
-                    key={item.id}
-                    className="text-sm"
-                    style={{ paddingLeft: `${(item.level - 1) * 12}px` }}
-                  >
-                    <a
-                      href={`#${item.id}`}
-                      data-id={item.id}
-                      className={cn(
-                        "toc-item",
-                        "hover:text-primary block truncate py-1 transition-colors",
-                        tocItemId === item.id
-                          ? "text-primary font-medium"
-                          : "text-muted-foreground",
-                      )}
-                      onClick={() => setTocItemId(item.id)}
-                      title={item.text}
+          {toc.length > 0 && (
+            <aside className="sticky top-20 hidden w-80 shrink-0 lg:block">
+              <h3 className="mb-4 text-base font-semibold">目录</h3>
+              <nav className="max-h-[calc(100vh-10rem)] overflow-y-auto pr-1">
+                <ul className="border-border relative space-y-1 border-l-2">
+                  {/* 指示光标 */}
+                  <TocIndicator className="toc-indicator" />
+                  {toc.map((item) => (
+                    <li
+                      key={item.id}
+                      className="text-sm"
+                      style={{ paddingLeft: `${(item.level - 1) * 12}px` }}
                     >
-                      {item.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </aside>
+                      <a
+                        href={`#${item.id}`}
+                        data-id={item.id}
+                        className={cn(
+                          "toc-item",
+                          "hover:text-primary block truncate py-1 transition-colors",
+                          tocItemId === item.id
+                            ? "text-primary font-medium"
+                            : "text-muted-foreground",
+                        )}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setTocItemId(item.id);
+                          // 使用 scrollIntoView 替代 hash 导航,避免 url 拼接#
+                          document
+                            .getElementById(item.id)
+                            ?.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        title={item.text}
+                      >
+                        {item.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </aside>
+          )}
         </div>
       </div>
       <BackToTop />
