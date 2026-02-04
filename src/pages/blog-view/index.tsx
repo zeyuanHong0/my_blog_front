@@ -173,7 +173,10 @@ const BlogViewPage = () => {
 
   const isShowToc = useMemo(() => toc.length > 1, [toc]);
 
-  const BlogContent = () => {
+   const renderContent = () => {
+    if (loading) {
+      return showSkeleton ? <BlogViewSkeleton /> : null;
+    }
     return (
       <div className={cn("flex flex-1 flex-col px-4 pt-8 md:px-12")}>
         <ScrollToTop />
@@ -309,13 +312,6 @@ const BlogViewPage = () => {
         </div>
       </div>
     );
-  };
-
-  const renderContent = () => {
-    if (loading) {
-      return showSkeleton ? <BlogViewSkeleton /> : null;
-    }
-    return <BlogContent />;
   };
 
   return (
