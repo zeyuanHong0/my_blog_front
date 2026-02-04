@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import styled from "styled-components";
@@ -10,12 +10,14 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import useSettingStore from "@/store/settingStore";
 import ScrollToTop from "@/components/ScrollToTop";
 import { tocPlugin, type TocItem } from "@/plugins/toc";
+import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
 import { SvgIcon } from "@/components/Icon";
 import { BytemdViewer } from "@/components/bytemd/viewer";
 import BackToTop from "@/components/back-to-top";
 import { Button } from "@/components/ui/button";
 import CustomButton from "@/components/button";
+import BlogViewSkeleton from "./skeleton";
 
 type Tag = {
   id: string;
@@ -44,6 +46,7 @@ const BlogViewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { themeMode, changeThemeMode } = useSettingStore();
+  const { loading, showSkeleton, executeRequest } = useDelayedSkeleton();
   const [toc, setToc] = useState<TocItem[]>([]); // 目录
 
   // 当前高亮的目录
@@ -109,31 +112,31 @@ const BlogViewPage = () => {
   });
 
   // 获取博客详情
-  const handleGetBlogDetail = useCallback(async () => {
-    const res: any = await fetchFrontBlogDetail(id as string);
-    const {
-      title,
-      description,
-      aiSummary,
-      content,
-      tags,
-      createTime,
-      updateTime,
-    } = res.data;
-    setBlog({
-      title,
-      description,
-      aiSummary,
-      content,
-      createTime,
-      updateTime,
-      tags: tags || [],
-      category: res.data.category || { id: "", name: "" },
-    });
-  }, [id]);
   useEffect(() => {
-    handleGetBlogDetail();
-  }, [handleGetBlogDetail]);
+    executeRequest(async () => {
+      const res: any = await fetchFrontBlogDetail(id as string);
+      const {
+        title,
+        description,
+        aiSummary,
+        content,
+        tags,
+        createTime,
+        updateTime,
+      } = res.data;
+      setBlog({
+        title,
+        description,
+        aiSummary,
+        content,
+        createTime,
+        updateTime,
+        tags: tags || [],
+        category: res.data.category || { id: "", name: "" },
+      });
+    });
+  }, [executeRequest, id]);
+
   useDocumentTitle(blog.title || "博客详情");
 
   // 缓存tocPlugin,避免无限渲染
@@ -169,15 +172,9 @@ const BlogViewPage = () => {
   };
 
   const isShowToc = useMemo(() => toc.length > 1, [toc]);
-  return (
-    <>
-      {/* 主题切换 */}
-      <CustomButton
-        className="bg-background hover:bg-accent/50 fixed top-6 right-6 rounded-full p-2"
-        onClick={changeThemeMode}
-      >
-        {themeMode === "light" ? <Sun size={16} /> : <Moon size={16} />}
-      </CustomButton>
+
+  const BlogContent = () => {
+    return (
       <div className={cn("flex flex-1 flex-col px-4 pt-8 md:px-12")}>
         <ScrollToTop />
         <div className="mb-4">
@@ -311,6 +308,26 @@ const BlogViewPage = () => {
           </div>
         </div>
       </div>
+    );
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return showSkeleton ? <BlogViewSkeleton /> : null;
+    }
+    return <BlogContent />;
+  };
+
+  return (
+    <>
+      {/* 主题切换 */}
+      <CustomButton
+        className="bg-background hover:bg-accent/50 fixed top-6 right-6 rounded-full p-2"
+        onClick={changeThemeMode}
+      >
+        {themeMode === "light" ? <Sun size={16} /> : <Moon size={16} />}
+      </CustomButton>
+      {renderContent()}
       <BackToTop />
     </>
   );
