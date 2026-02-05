@@ -1,14 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import styled from "styled-components";
+import { ChevronLeft, Sun, Moon } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { fetchFrontBlogDetail } from "@/api/blog";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import useSettingStore from "@/store/settingStore";
 import ScrollToTop from "@/components/ScrollToTop";
+import { tocPlugin, type TocItem } from "@/plugins/toc";
+import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
 import { SvgIcon } from "@/components/Icon";
 import { BytemdViewer } from "@/components/bytemd/viewer";
+import BackToTop from "@/components/back-to-top";
+import { Button } from "@/components/ui/button";
+import CustomButton from "@/components/button";
+import BlogViewSkeleton from "./skeleton";
 
 type Tag = {
   id: string;
@@ -36,7 +45,58 @@ type BlogType = {
 const BlogViewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { themeMode } = useSettingStore();
+  const { themeMode, changeThemeMode } = useSettingStore();
+  const { loading, showSkeleton, executeRequest } = useDelayedSkeleton();
+  const [toc, setToc] = useState<TocItem[]>([]); // 目录
+
+  // 当前高亮的目录
+  const [tocItemId, setTocItemId] = useState<string>("");
+  useEffect(() => {
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      // 如果 intersectionRatio 为 0，则目标在视野外，
+      // if (entries[0].intersectionRatio <= 0) return;
+      // if (entries[0].isIntersecting) {
+      //   setTocItemId(entries[0].target.id);
+      // }
+      // 优化一下(处理多个标题同时进入视野的情况)，取离顶部最近的那个
+      const visibleEntries = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visibleEntries.length > 0) {
+        setTocItemId(visibleEntries[0].target.id);
+      }
+    });
+    // 开始监听
+    const headings = document.querySelectorAll(
+      ".markdown-body :where(h1, h2, h3, h4, h5, h6)",
+    );
+    headings.forEach((el) => {
+      intersectionObserver.observe(el);
+    });
+    // 初始化时手动检查哪个标题在视口中
+    const checkInitialVisibility = () => {
+      const visibleHeadings = Array.from(headings)
+        .filter((el) => {
+          const rect = el.getBoundingClientRect();
+          return rect.top >= 0 && rect.top <= window.innerHeight * 0.4;
+        })
+        .sort(
+          (a, b) =>
+            a.getBoundingClientRect().top - b.getBoundingClientRect().top,
+        );
+      // console.log("visibleHeadings", visibleHeadings);
+
+      if (visibleHeadings.length > 0) {
+        setTocItemId(visibleHeadings[0].id);
+      }
+    };
+
+    checkInitialVisibility();
+
+    return () => {
+      intersectionObserver.disconnect();
+    };
+  }, [toc]);
 
   const [blog, setBlog] = useState<BlogType>({
     title: "",
@@ -52,32 +112,53 @@ const BlogViewPage = () => {
   });
 
   // 获取博客详情
-  const handleGetBlogDetail = useCallback(async () => {
-    const res: any = await fetchFrontBlogDetail(id as string);
-    const {
-      title,
-      description,
-      aiSummary,
-      content,
-      tags,
-      createTime,
-      updateTime,
-    } = res.data;
-    setBlog({
-      title,
-      description,
-      aiSummary,
-      content,
-      createTime,
-      updateTime,
-      tags: tags || [],
-      category: res.data.category || { id: "", name: "" },
-    });
-  }, [id]);
   useEffect(() => {
-    handleGetBlogDetail();
-  }, [handleGetBlogDetail]);
+    executeRequest(async () => {
+      const res: any = await fetchFrontBlogDetail(id as string);
+      const {
+        title,
+        description,
+        aiSummary,
+        content,
+        tags,
+        createTime,
+        updateTime,
+      } = res.data;
+      setBlog({
+        title,
+        description,
+        aiSummary,
+        content,
+        createTime,
+        updateTime,
+        tags: tags || [],
+        category: res.data.category || { id: "", name: "" },
+      });
+    });
+  }, [executeRequest, id]);
+
   useDocumentTitle(blog.title || "博客详情");
+
+  // 缓存tocPlugin,避免无限渲染
+  const tocPluginInstance = useMemo(
+    () => tocPlugin({ onChange: setToc }),
+    [setToc],
+  );
+
+  useEffect(() => {
+    const activeEl = document.querySelector(
+      `.toc-item[data-id="${tocItemId}"]`,
+    ) as HTMLElement | null;
+
+    const indicator = document.querySelector(
+      ".toc-indicator",
+    ) as HTMLElement | null;
+
+    if (!activeEl || !indicator) return;
+
+    indicator.style.transform = `translateY(${activeEl.offsetTop}px)`;
+    indicator.style.height = `${activeEl.offsetHeight}px`;
+  }, [tocItemId]);
 
   const iconShow = (tag: Tag) => {
     if (!tag.icon && !tag.icon_dark)
@@ -89,68 +170,174 @@ const BlogViewPage = () => {
       />
     );
   };
-  return (
-    <div
-      className={`max-w-prose-wrapper mx-auto flex flex-col px-4 pt-8 md:px-0`}
-    >
-      <ScrollToTop />
-      <h1 className="mb-6 text-4xl font-semibold break-all">{blog.title}</h1>
 
-      <p className="text-muted-foreground mb-6">{blog.description}</p>
-      <div className="text-muted-foreground mb-6 flex items-center space-x-4 text-sm">
-        <p>
-          {dayjs(blog.createTime).format("YYYY/MM/DD")}
-          （更新于{dayjs(blog.updateTime).format("YYYY/MM/DD")}）
-        </p>
-        {blog.category && blog.category.name && (
-          <>
-            <span>/</span>
-            <span
-              className="cursor-pointer underline-offset-4 hover:underline"
-              onClick={() => navigate(`/category/${blog.category.id}`)}
-            >
-              {blog.category.name}
-            </span>
-          </>
-        )}
-      </div>
+  const isShowToc = useMemo(() => toc.length > 1, [toc]);
 
-      {blog.aiSummary && (
-        <div className="bg-card mb-6 rounded-xl border p-6 shadow-sm">
-          <div className="text-primary mb-4 flex items-center gap-2 font-semibold">
-            <span className="text-xl">✨</span> AI 总结
+   const renderContent = () => {
+    if (loading) {
+      return showSkeleton ? <BlogViewSkeleton /> : null;
+    }
+    return (
+      <div className={cn("flex flex-1 flex-col px-4 pt-8 md:px-12")}>
+        <ScrollToTop />
+        <div className="mb-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground -ml-3 gap-1"
+            onClick={() => {
+              if (window.history.length > 1) {
+                navigate(-1);
+              } else {
+                navigate("/");
+              }
+            }}
+          >
+            <ChevronLeft className="size-4" />
+            返回
+          </Button>
+        </div>
+        {/* 目录不显示的时候的布局（文章显示在中间） */}
+        <div
+          className={cn({
+            "max-w-prose-wrapper mx-auto flex flex-col px-4 pt-8 md:px-6":
+              !isShowToc,
+          })}
+        >
+          <h1 className="mb-6 text-4xl font-semibold break-all">
+            {blog.title}
+          </h1>
+          <p className="text-muted-foreground mb-6">{blog.description}</p>
+          <div className="text-muted-foreground mb-6 flex items-center space-x-4 text-sm">
+            <p>
+              {dayjs(blog.createTime).format("YYYY/MM/DD")}
+              （更新于{dayjs(blog.updateTime).format("YYYY/MM/DD")}）
+            </p>
+            {blog.category && blog.category.name && (
+              <>
+                <span>/</span>
+                <span
+                  className="cursor-pointer underline-offset-4 hover:underline"
+                  onClick={() => navigate(`/category/${blog.category.id}`)}
+                >
+                  {blog.category.name}
+                </span>
+              </>
+            )}
           </div>
-          <div className="text-muted-foreground text-base leading-7">
-            {blog.aiSummary}
+
+          <div className="flex items-start gap-8">
+            <div className="min-w-0 flex-1">
+              {blog.aiSummary && (
+                <div className="border-l-primary mb-6 border-l-4 px-6 py-2 italic">
+                  <div className="text-primary mb-4 flex items-center gap-2 font-semibold">
+                    <span className="text-xl">✨</span> AI 总结
+                  </div>
+                  <div className="text-muted-foreground text-base leading-7">
+                    {blog.aiSummary}
+                  </div>
+                </div>
+              )}
+
+              <BytemdViewer
+                body={blog.content || ""}
+                otherPlugins={[tocPluginInstance]}
+              />
+
+              <div className="pt-6 pb-10">
+                {blog.tags && blog.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-3">
+                    {blog.tags.map((tag) => (
+                      <div
+                        className="flex items-center gap-1"
+                        key={tag.id}
+                        onClick={() => navigate(`/tag/${tag.id}`)}
+                      >
+                        {iconShow(tag)}
+                        <span
+                          key={tag.id}
+                          className="cursor-pointer text-sm text-[#717171] hover:text-[#787878]"
+                        >
+                          {tag.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* 目录 */}
+            {isShowToc && (
+              <aside className="sticky top-20 hidden w-80 shrink-0 lg:block">
+                <h3 className="mb-4 text-base font-semibold">目录</h3>
+                <nav className="max-h-[calc(100vh-10rem)] overflow-y-auto pr-1">
+                  <ul className="border-border relative space-y-1 border-l-2">
+                    {/* 指示光标 */}
+                    <TocIndicator className="toc-indicator" />
+                    {toc.map((item) => (
+                      <li
+                        key={item.id}
+                        className="text-sm"
+                        style={{ paddingLeft: `${(item.level - 1) * 12}px` }}
+                      >
+                        <a
+                          href={`#${item.id}`}
+                          data-id={item.id}
+                          className={cn(
+                            "toc-item",
+                            "hover:text-primary block truncate py-1 transition-colors",
+                            tocItemId === item.id
+                              ? "text-primary font-medium"
+                              : "text-muted-foreground",
+                          )}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setTocItemId(item.id);
+                            // 使用 scrollIntoView 替代 hash 导航,避免 url 拼接#
+                            document
+                              .getElementById(item.id)
+                              ?.scrollIntoView({ behavior: "smooth" });
+                          }}
+                          title={item.text}
+                        >
+                          {item.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </aside>
+            )}
           </div>
         </div>
-      )}
-
-      <BytemdViewer body={blog.content || ""} />
-
-      <div className="pt-14 pb-14">
-        {blog.tags && blog.tags.length > 0 && (
-          <div className="flex flex-wrap gap-3">
-            {blog.tags.map((tag) => (
-              <div
-                className="flex items-center gap-1"
-                key={tag.id}
-                onClick={() => navigate(`/tag/${tag.id}`)}
-              >
-                {iconShow(tag)}
-                <span
-                  key={tag.id}
-                  className="cursor-pointer text-sm text-[#717171] hover:text-[#787878]"
-                >
-                  {tag.name}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
-    </div>
+    );
+  };
+
+  return (
+    <>
+      {/* 主题切换 */}
+      <CustomButton
+        className="bg-background hover:bg-accent/50 fixed top-6 right-6 rounded-full p-2"
+        onClick={changeThemeMode}
+      >
+        {themeMode === "light" ? <Sun size={16} /> : <Moon size={16} />}
+      </CustomButton>
+      {renderContent()}
+      <BackToTop />
+    </>
   );
 };
 
 export default BlogViewPage;
+
+const TocIndicator = styled.div`
+  position: absolute;
+  left: -2px;
+  width: 2px;
+  background: var(--primary);
+  border-radius: 1px;
+  transition:
+    transform 0.2s ease,
+    height 0.2s ease;
+`;
