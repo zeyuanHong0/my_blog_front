@@ -5,7 +5,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
 import CategoryList from "./list";
-import Skeleton from "./skeleton";
+import { CategoryListSkeleton } from "@/components/skeleton";
 import EmptyBox from "@/components/empty";
 
 type Category = {
@@ -27,7 +27,7 @@ const Categories = () => {
   }, [executeRequest]);
   const renderContent = () => {
     if (loading) {
-      return showSkeleton ? <Skeleton /> : null;
+      return showSkeleton ? <CategoryListSkeleton /> : null;
     }
     if (categories.length > 0) {
       return <CategoryList categoriesList={categories} />;

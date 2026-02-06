@@ -5,7 +5,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
 import TagsList from "./list";
-import Skeleton from "./skeleton";
+import { TagListSkeleton } from "@/components/skeleton";
 import EmptyBox from "@/components/empty";
 
 const Tags = () => {
@@ -22,7 +22,7 @@ const Tags = () => {
 
   const renderContent = () => {
     if (loading) {
-      return showSkeleton ? <Skeleton /> : null;
+      return showSkeleton ? <TagListSkeleton /> : null;
     }
     if (tags.length > 0) {
       return <TagsList tags={tags} />;

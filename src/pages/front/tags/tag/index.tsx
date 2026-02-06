@@ -7,7 +7,7 @@ import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
 import BlogList from "@/pages/front/blogs/list";
 import EmptyBox from "@/components/empty";
-import BlogListSkeleton from "@/pages/front/blogs/skeleton";
+import { BlogListSkeleton } from "@/components/skeleton";
 
 const Tag = () => {
   const { id } = useParams();
