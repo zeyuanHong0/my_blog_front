@@ -16,7 +16,13 @@ const Category = () => {
   useEffect(() => {
     executeRequest(async () => {
       const res: any = await fetchFrontCategoryDetail(id!);
-      setCategoryInfo(res.data);
+      const blogs = res.data.blogs.map((blog: any) => {
+        return {
+          ...blog,
+          category: { name: res.data.name },
+        };
+      });
+      setCategoryInfo({ ...res.data, blogs });
     });
   }, [executeRequest, id]);
   const renderContent = () => {
