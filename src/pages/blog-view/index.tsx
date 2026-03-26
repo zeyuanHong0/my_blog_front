@@ -319,17 +319,17 @@ const BlogViewPage = () => {
   };
 
   return (
-    <>
+    <div className="releative">
       {/* 主题切换 */}
       <CustomButton
-        className="bg-background hover:bg-accent/50 fixed top-6 right-6 rounded-full p-2"
+        className="bg-background hover:bg-accent/50 absolute top-6 right-6 rounded-full p-2"
         onClick={changeThemeMode}
       >
         {themeMode === "light" ? <Sun size={16} /> : <Moon size={16} />}
       </CustomButton>
       {renderContent()}
       <BackToTop />
-    </>
+    </div>
   );
 };
 

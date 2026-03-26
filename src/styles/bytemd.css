@@ -111,7 +111,7 @@
   left: 0;
   width: 100%;
   font-size: 1em;
-  background-color: rgb(248, 248, 248);
+  @apply bg-[#f8f8f8] dark:!bg-[#2d2d2d];
   box-shadow: 0px 4px 5px -6px #888888;
   padding: 0.5em 1em;
 }

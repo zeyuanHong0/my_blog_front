@@ -18,16 +18,20 @@ const BlogListItem = ({ blog }: { blog: any }) => {
         {blog.description}
       </p>
       {/* 日期 */}
-      <div className="text-muted-foreground flex items-center gap-1 text-xs">
+      <div className="text-muted-foreground flex items-center gap-1 overflow-hidden text-xs whitespace-nowrap">
         {/* 分类 */}
-        <span className="mr-1">#{blog.category?.name || "未分类"}</span>
+        <span className="mr-1 shrink-0">
+          #{blog.category?.name || "未分类"}
+        </span>
         {/* 图标 */}
         <Calendar className="h-4 w-4" />
-        {dayjs(blog.createTime).format("MM月DD，YYYY")}
+        <span className="shrink-0">
+          {dayjs(blog.createTime).format("MM月DD，YYYY")}
+        </span>
         {/* 标签 */}
         <ul className="ml-2 flex items-center space-x-1 text-xs font-medium">
           {blog.tags.map((tag) => (
-            <li key={tag.id} className="flex items-center gap-1">
+            <li key={tag.id} className="flex shrink-0 items-center gap-1">
               <Tag size={14} />
               <span className="mr-1">{tag.name}</span>
             </li>
