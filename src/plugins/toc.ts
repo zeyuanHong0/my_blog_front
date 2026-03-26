@@ -48,7 +48,7 @@ export function tocPlugin(options: TocPluginOptions = {}): BytemdPlugin {
     },
     viewerEffect: ({ markdownBody }) => {
       const headings = markdownBody.querySelectorAll("h1, h2, h3, h4, h5, h6");
-      console.log("Table of Contents:", headings);
+      // console.log("Table of Contents:", headings);
       const toc: TocItem[] = Array.from(headings)
         .map((h) => {
           return {
