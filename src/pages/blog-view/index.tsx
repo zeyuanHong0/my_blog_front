@@ -10,6 +10,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import useSettingStore from "@/store/settingStore";
 import ScrollToTop from "@/components/ScrollToTop";
 import { tocPlugin, type TocItem } from "@/plugins/toc";
+import { codeCopyPlugin } from "@/plugins/code-copy";
 import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
 import { SvgIcon } from "@/components/Icon";
@@ -145,6 +146,9 @@ const BlogViewPage = () => {
     [setToc],
   );
 
+  // 缓存codeCopyPlugin,避免无限渲染
+  const codeCopyPluginInstance = useMemo(() => codeCopyPlugin(), []);
+
   useEffect(() => {
     const activeEl = document.querySelector(
       `.toc-item[data-id="${tocItemId}"]`,
@@ -173,7 +177,7 @@ const BlogViewPage = () => {
 
   const isShowToc = useMemo(() => toc.length > 1, [toc]);
 
-   const renderContent = () => {
+  const renderContent = () => {
     if (loading) {
       return showSkeleton ? <BlogViewSkeleton /> : null;
     }
@@ -241,7 +245,7 @@ const BlogViewPage = () => {
 
               <BytemdViewer
                 body={blog.content || ""}
-                otherPlugins={[tocPluginInstance]}
+                otherPlugins={[tocPluginInstance, codeCopyPluginInstance]}
               />
 
               <div className="pt-6 pb-10">
