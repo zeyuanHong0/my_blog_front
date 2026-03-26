@@ -24,7 +24,7 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => {
     // 处理业务状态码
-    console.log("response", response);
+    // console.log("response", response);
     const res = response.data;
     if (res.code !== 200) {
       showErrorToast(res.message || "请求出错");
