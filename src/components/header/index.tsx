@@ -56,7 +56,7 @@ const Header: React.FC = () => {
     <>
       <header
         className={cn(
-          "sticky top-0 z-10 w-full backdrop-blur transition-all",
+          "sticky top-0 z-50 w-full backdrop-blur transition-all",
           "bg-background/50 border-border border-b",
         )}
       >

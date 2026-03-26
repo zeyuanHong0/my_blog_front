@@ -14,6 +14,10 @@ export const SOURCE_CODE_GITHUB_PAGE =
 /** Slogan */
 export const SLOGAN = "记录成长，追寻理想";
 
+/** home Slogan */
+export const HOME_SLOGAN =
+  "我在这里记录我的学习轨迹与思考，慢慢打磨自己，成为理想中的那位工程师。";
+
 /** 网站ICP备案号 */
 export const BEI_AN_NUMBER = "浙ICP备2026003425号-1";
 
@@ -24,4 +28,5 @@ export const BEI_AN_LINK = "https://beian.miit.gov.cn";
 export const GONG_AN_NUMBER = "浙公网安备33020302002038号";
 
 /** 公安网站链接 */
-export const GONG_AN_LINK = "https://beian.mps.gov.cn/#/query/webSearch?code=33020302002038";
+export const GONG_AN_LINK =
+  "https://beian.mps.gov.cn/#/query/webSearch?code=33020302002038";
