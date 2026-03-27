@@ -18,6 +18,9 @@ export const SLOGAN = "记录成长，追寻理想";
 export const HOME_SLOGAN =
   "我在这里记录我的学习轨迹与思考，慢慢打磨自己，成为理想中的那位工程师。";
 
+/* tech stack */
+export const TECH_STACK = ["React", "Vue", "TypeScript", "Tailwind CSS", "Node.js", "Nest.js"];
+
 /** 网站ICP备案号 */
 export const BEI_AN_NUMBER = "浙ICP备2026003425号-1";
 
