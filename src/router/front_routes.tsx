@@ -4,7 +4,8 @@ import React, { lazy } from "react";
 import Layout from "@/pages/front/layout";
 import SuspenseWrapper from "@/components/SuspenseWrapper";
 
-const Home = lazy(() => import("@/pages/front/home"));
+// const Home = lazy(() => import("@/pages/front/home"));
+const HomeV2 = lazy(() => import("@/pages/front/home-v2"));
 const Blog = lazy(() => import("@/pages/front/blogs"));
 const BlogViewPage = lazy(() => import("@/pages/blog-view"));
 const Tags = lazy(() => import("@/pages/front/tags"));
@@ -21,7 +22,7 @@ const frontRoutes = [
       {
         path: "/",
         index: true,
-        element: SuspenseWrapper(Home),
+        element: SuspenseWrapper(HomeV2),
       },
       {
         path: "/blogs",
