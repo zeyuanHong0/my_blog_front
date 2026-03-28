@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Github } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import useSettingStore from "@/store/settingStore";
 
 const card = {
   hidden: { opacity: 0, y: 24 },
@@ -15,7 +16,7 @@ const smoothTransition = {
 } as const;
 
 const GitHubCard = () => {
-  //   const { themeMode } = useSettingStore(); // 主题
+  const { themeMode } = useSettingStore(); // 主题
   return (
     <motion.div
       variants={card}
@@ -55,12 +56,18 @@ const GitHubCard = () => {
       </div>
 
       {/* 贡献热力图（直接用 ghchart.rshah.org 的公开 SVG API，无需 token） */}
-      {/*  TODO https://ghchart.rshah.org/40c463/zeyuanHong0 dark 模式 */}
       <div className="z-10 w-full overflow-hidden rounded-xl">
         <img
-          src="https://ghchart.rshah.org/zeyuanHong0"
+          src={
+            themeMode === "dark"
+              ? "https://ghchart.rshah.org/4AE168/zeyuanHong0"
+              : "https://ghchart.rshah.org/30a14e/zeyuanHong0"
+          }
           alt="GitHub 贡献热力图"
-          className="w-full object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+          className={cn(
+            "w-full object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100",
+            "dark:brightness-90 dark:hue-rotate-180 dark:invert",
+          )}
           style={{ imageRendering: "crisp-edges" }}
         />
       </div>
