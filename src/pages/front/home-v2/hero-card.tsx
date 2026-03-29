@@ -9,9 +9,8 @@ const heroCard = {
 };
 
 const smoothTransition = {
-  type: "spring",
-  stiffness: 260,
-  damping: 24,
+  duration: 0.8,
+  ease: [0.16, 1, 0.3, 1],
 } as const;
 
 const HeroCard = () => {
@@ -23,7 +22,7 @@ const HeroCard = () => {
         "bg-card border-border/50 group relative",
         "flex min-h-[320px] flex-col justify-between overflow-hidden",
         "rounded-[2rem] border p-8 shadow-sm",
-        "transition-shadow duration-300 hover:shadow-md",
+        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
         "lg:col-span-2 lg:min-h-[400px]",
       )}
     >

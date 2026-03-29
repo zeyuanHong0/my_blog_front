@@ -9,9 +9,8 @@ const cardVariants = {
 };
 
 const smoothTransition = {
-  type: "spring",
-  stiffness: 260,
-  damping: 24,
+  duration: 0.8,
+  ease: [0.16, 1, 0.3, 1],
 } as const;
 
 const TechCard = () => {
@@ -22,7 +21,7 @@ const TechCard = () => {
       className={cn(
         "bg-card border-border/50 flex flex-1 flex-col",
         "rounded-[2rem] border p-6 shadow-sm",
-        "transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
       )}
     >
       <h3 className="mb-3 text-base font-bold tracking-wide">技能 / 技术栈</h3>

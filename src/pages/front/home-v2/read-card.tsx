@@ -10,9 +10,8 @@ const cardVariants = {
 };
 
 const smoothTransition = {
-  type: "spring",
-  stiffness: 260,
-  damping: 24,
+  duration: 0.8,
+  ease: [0.16, 1, 0.3, 1],
 } as const;
 
 const ReadCard = () => {
@@ -30,7 +29,7 @@ const ReadCard = () => {
         "bg-primary/5 border-primary/10 group",
         "flex flex-1 cursor-pointer flex-col items-start justify-between",
         "rounded-[2rem] border p-6 shadow-sm",
-        "transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
       )}
     >
       <p className="text-primary text-xs font-semibold tracking-widest uppercase">

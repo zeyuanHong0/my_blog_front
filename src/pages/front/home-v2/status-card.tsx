@@ -8,9 +8,8 @@ const cardVariants = {
 };
 
 const smoothTransition = {
-  type: "spring",
-  stiffness: 260,
-  damping: 24,
+  duration: 0.8,
+  ease: [0.16, 1, 0.3, 1],
 } as const;
 
 const StatusCard = () => {
@@ -21,7 +20,7 @@ const StatusCard = () => {
       className={cn(
         "bg-card border-border/50 flex flex-1 cursor-pointer flex-col justify-between",
         "rounded-[2rem] border p-6 shadow-sm",
-        "transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
       )}
     >
       <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">

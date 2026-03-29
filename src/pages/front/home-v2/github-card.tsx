@@ -10,9 +10,8 @@ const card = {
 };
 
 const smoothTransition = {
-  type: "spring",
-  stiffness: 260,
-  damping: 24,
+  duration: 0.8,
+  ease: [0.16, 1, 0.3, 1],
 } as const;
 
 const GitHubCard = () => {
@@ -27,7 +26,7 @@ const GitHubCard = () => {
         "bg-card border-border/50 group relative z-10",
         "mx-auto mt-4 flex w-full max-w-5xl cursor-pointer flex-col overflow-hidden",
         "rounded-[2rem] border p-6 shadow-sm",
-        "transition-all duration-300 hover:-translate-y-1 hover:shadow-md",
+        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
         "md:p-8",
       )}
     >
