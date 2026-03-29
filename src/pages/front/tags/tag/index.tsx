@@ -30,17 +30,22 @@ const Tag = () => {
     return <EmptyBox iconSize={300} />;
   };
   return (
-    <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-8 pb-24">
-      <div className="flex items-center">
-        <h2 className={`pb-8 text-3xl font-bold md:text-4xl`}>
-          标签 <span className="mx-3">|</span>
-          {tagInfo.name}
+    <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16">
+      <div className="mb-10 space-y-4">
+        <h2 className="text-foreground text-3xl font-extrabold tracking-tight md:text-5xl lg:text-5xl">
+          {tagInfo.name || "..."}
+          <span className="text-muted-foreground ml-4 text-xl font-normal md:text-2xl">
+            标签
+          </span>
         </h2>
+        <div className="bg-primary/80 mt-4 h-1 w-20 rounded-full"></div>
+        <div className="text-muted-foreground pt-2 text-sm md:text-base">
+          共计 {tagInfo.blogs?.length ?? 0} 篇博客
+        </div>
       </div>
-      <div className="text-muted-foreground pb-8 text-sm">
-        共计{tagInfo.blogs?.length ?? 0}篇博客
+      <div className="animate-in fade-in slide-in-from-bottom-4 mt-3 flex-1 duration-700 ease-in-out">
+        {renderContent()}
       </div>
-      <div className="mt-3">{renderContent()}</div>
     </div>
   );
 };
