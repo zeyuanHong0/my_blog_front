@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
+import useStatus from "@/hooks/useStatus";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -13,6 +14,7 @@ const smoothTransition = {
 } as const;
 
 const StatusCard = () => {
+  const status = useStatus();
   return (
     <motion.div
       variants={cardVariants}
@@ -20,22 +22,33 @@ const StatusCard = () => {
       className={cn(
         "bg-card border-border/50 flex flex-1 cursor-pointer flex-col justify-between",
         "rounded-[2rem] border p-6 shadow-sm",
-        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
+        "hover:shadow-primary/5 transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg",
       )}
     >
       <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
         <span className="relative flex h-2.5 w-2.5">
-          <span className={cn(
-            "absolute inline-flex h-full w-full",
-            "animate-ping rounded-full bg-green-400 opacity-75"
-          )}></span>
-          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500"></span>
+          <span
+            className={cn(
+              "absolute inline-flex h-full w-full",
+              "rounded-full opacity-75",
+              status?.is_online ? "bg-green-400" : "bg-gray-400",
+              status?.is_online ? "animate-ping" : "",
+            )}
+          ></span>
+          <span
+            className={cn(
+              "relative inline-flex h-2.5 w-2.5 rounded-full",
+              status?.is_online ? "bg-green-500" : "bg-gray-500",
+            )}
+          ></span>
         </span>
         当前状态
       </div>
       <div>
-        <h3 className="text-foreground mb-1 text-xl font-bold">活跃中</h3>
-        <p className="text-muted-foreground text-sm">正在努力敲代码中...</p>
+        <h3 className="text-foreground mb-1 text-xl font-bold">
+          {status?.status_text}
+        </h3>
+        <p className="text-muted-foreground text-sm">{status?.status_desc}</p>
       </div>
     </motion.div>
   );
