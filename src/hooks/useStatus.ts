@@ -20,7 +20,7 @@ const useStatus = () => {
         });
       });
   }, []);
-  return status;
+  return { status, setStatus };
 };
 
 export default useStatus;

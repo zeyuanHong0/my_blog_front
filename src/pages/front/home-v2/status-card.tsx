@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import useStatus from "@/hooks/useStatus";
+import { wsService } from "@/utils/websocket";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -14,7 +16,21 @@ const smoothTransition = {
 } as const;
 
 const StatusCard = () => {
-  const status = useStatus();
+  const { status, setStatus } = useStatus();
+  useEffect(() => {
+    wsService.connect((message) => {
+      // console.log(message);
+      if (message.event !== "status_update") return;
+      setStatus({
+        is_online: message.data.is_online === 1 ? true : false,
+        status_text: message.data.status_text,
+        status_desc: message.data.status_desc,
+      });
+    });
+    return () => {
+      wsService.close();
+    };
+  }, []);
   return (
     <motion.div
       variants={cardVariants}
