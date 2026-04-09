@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { NICKNAME, HOME_SLOGAN } from "@/constants";
 import { cn } from "@/lib/utils";
 
+import SocialMediaList from "./social-media";
+
 const heroCard = {
   hidden: { opacity: 0, y: 40, scale: 0.98 },
   show: { opacity: 1, y: 0, scale: 1 },
@@ -22,7 +24,7 @@ const HeroCard = () => {
         "bg-card border-border/50 group relative",
         "flex min-h-[320px] flex-col justify-between overflow-hidden",
         "rounded-[2rem] border p-8 shadow-sm",
-        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
+        "hover:shadow-primary/5 transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg",
         "lg:col-span-2 lg:min-h-[400px]",
       )}
     >
@@ -49,6 +51,11 @@ const HeroCard = () => {
         <p className="text-muted-foreground max-w-[90%] text-base leading-relaxed md:text-lg">
           {HOME_SLOGAN}
         </p>
+
+        {/* 社交/联系方式按钮区 */}
+        <div className="mt-4 flex items-center gap-3">
+          <SocialMediaList />
+        </div>
       </div>
 
       <div
