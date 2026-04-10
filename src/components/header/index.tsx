@@ -16,6 +16,7 @@ import { useActiveNav } from "@/hooks/useActiveNav";
 import useSettingStore from "@/store/settingStore";
 
 import { Iconify, SvgIcon } from "@/components/Icon";
+import ThemeModeSwitcher from "@/components/ThemeModeSwitcher";
 import Button from "@/components/button";
 import LogoIcon from "/blog.svg?raw";
 
@@ -98,18 +99,20 @@ const Header: React.FC = () => {
             </div>
           </div>
           {/* 右侧按钮 */}
-          <div className="flex items-center gap-3">
-            <Button
+          <div className="flex items-center gap-6">
+            {/* <Button
               className="bg-background hover:bg-accent/50 rounded-full p-2"
               onClick={changeThemeMode}
             >
               {themeMode === "light" ? <Sun size={16} /> : <Moon size={16} />}
-            </Button>
+            </Button> */}
             <Link to={"/admin"} target="_blank" rel="noopener noreferrer">
               <Button className="bg-background hover:bg-accent rounded-full p-2">
                 <Iconify icon="tdesign:user-setting" size={16} />
               </Button>
             </Link>
+            {/* 主题切换 */}
+            <ThemeModeSwitcher />
           </div>
         </div>
       </header>
