@@ -49,30 +49,35 @@ const SocialMediaList = () => {
       </Tooltip>
 
       {/* 小程序二维码 */}
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className="hover:text-primary hover:border-primary/50 rounded-full shadow-sm transition-colors"
-          >
-            <Smartphone className="h-4 w-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="flex w-56 flex-col items-center gap-3 rounded-xl p-4 shadow-xl">
-          <span className="text-muted-foreground text-sm font-medium">
-            扫码体验小程序版
-          </span>
-          {/* 小程序二维码图片*/}
-          <div className="bg-muted/30 border-border/50 flex h-40 w-40 items-center justify-center rounded-lg border">
-            <img
-              className="h-full w-full object-contain"
-              src={wechatQr}
-              alt="小程序二维码"
-            />
-          </div>
-        </PopoverContent>
-      </Popover>
+      <Tooltip>
+        <Popover>
+          <TooltipTrigger asChild>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="hover:text-primary hover:border-primary/50 rounded-full shadow-sm transition-colors"
+              >
+                <Smartphone className="h-4 w-4" />
+              </Button>
+            </PopoverTrigger>
+          </TooltipTrigger>
+          <TooltipContent>点击查看小程序二维码</TooltipContent>
+          <PopoverContent className="flex w-56 flex-col items-center gap-3 rounded-xl p-4 shadow-xl">
+            <span className="text-muted-foreground text-sm font-medium">
+              扫码体验小程序版
+            </span>
+            {/* 小程序二维码图片*/}
+            <div className="bg-muted/30 border-border/50 flex h-40 w-40 items-center justify-center rounded-lg border">
+              <img
+                className="h-full w-full object-contain"
+                src={wechatQr}
+                alt="小程序二维码"
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+      </Tooltip>
     </>
   );
 };

@@ -4,7 +4,7 @@ import useUserStore from "@/store/userStore";
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API as string,
-  timeout: 10000 * 3,
+  timeout: 10000 * 6,
   withCredentials: true, // 允许携带 cookie
 });
 
