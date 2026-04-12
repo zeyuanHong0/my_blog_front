@@ -8,7 +8,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import classNames from "classnames";
-import { Sun, Moon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { NICKNAME, SLOGAN } from "@/constants";
@@ -22,7 +21,6 @@ import LogoIcon from "/blog.svg?raw";
 
 const Header: React.FC = () => {
   const [showLeftSheet, setShowLeftSheet] = useState(false);
-  const { themeMode, changeThemeMode } = useSettingStore();
 
   const navList = [
     { label: "首页", path: "/" },
