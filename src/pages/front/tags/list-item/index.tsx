@@ -10,7 +10,7 @@ interface TagItemProps {
 }
 
 const TagItem = ({ tag }: TagItemProps) => {
-  const { themeMode } = useSettingStore();
+  const { isDark } = useSettingStore();
   return (
     <div
       className={cn(
@@ -24,7 +24,9 @@ const TagItem = ({ tag }: TagItemProps) => {
       {tag.icon && (
         <SvgIcon
           icon={
-            themeMode === "dark" && tag.icon_dark ? tag.icon_dark : tag.icon
+            isDark && tag.icon_dark
+              ? tag.icon_dark
+              : tag.icon
           }
           size={18}
         />

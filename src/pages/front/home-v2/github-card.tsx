@@ -15,7 +15,7 @@ const smoothTransition = {
 } as const;
 
 const GitHubCard = () => {
-  const { themeMode } = useSettingStore(); // 主题
+  const { isDark } = useSettingStore(); // 主题
   return (
     <motion.div
       variants={card}
@@ -26,7 +26,7 @@ const GitHubCard = () => {
         "bg-card border-border/50 group relative z-10",
         "mx-auto mt-4 flex w-full max-w-5xl cursor-pointer flex-col overflow-hidden",
         "rounded-[2rem] border p-6 shadow-sm",
-        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
+        "hover:shadow-primary/5 transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg",
         "md:p-8",
       )}
     >
@@ -58,7 +58,7 @@ const GitHubCard = () => {
       <div className="z-10 w-full overflow-hidden rounded-xl">
         <img
           src={
-            themeMode === "dark"
+            isDark
               ? "https://ghchart.rshah.org/4AE168/zeyuanHong0"
               : "https://ghchart.rshah.org/30a14e/zeyuanHong0"
           }

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import styled from "styled-components";
-import { ChevronLeft, Sun, Moon } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fetchFrontBlogDetail } from "@/api/blog";
@@ -17,7 +17,7 @@ import { SvgIcon } from "@/components/Icon";
 import { BytemdViewer } from "@/components/bytemd/viewer";
 import BackToTop from "@/components/back-to-top";
 import { Button } from "@/components/ui/button";
-import CustomButton from "@/components/button";
+import ThemeModeSwitcher from "@/components/ThemeModeSwitcher";
 import BlogViewSkeleton from "./skeleton";
 
 type Tag = {
@@ -46,7 +46,7 @@ type BlogType = {
 const BlogViewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { themeMode, changeThemeMode } = useSettingStore();
+  const { isDark } = useSettingStore();
   const { loading, showSkeleton, executeRequest } = useDelayedSkeleton();
   const [toc, setToc] = useState<TocItem[]>([]); // 目录
 
@@ -169,7 +169,7 @@ const BlogViewPage = () => {
       return <span className="text-sm text-[#717171]">#</span>;
     return (
       <SvgIcon
-        icon={themeMode === "dark" && tag.icon_dark ? tag.icon_dark : tag.icon}
+        icon={isDark && tag.icon_dark ? tag.icon_dark : tag.icon}
         size={14}
       />
     );
@@ -321,12 +321,9 @@ const BlogViewPage = () => {
   return (
     <div className="releative">
       {/* 主题切换 */}
-      <CustomButton
-        className="bg-background hover:bg-accent/50 absolute top-6 right-6 rounded-full p-2"
-        onClick={changeThemeMode}
-      >
-        {themeMode === "light" ? <Sun size={16} /> : <Moon size={16} />}
-      </CustomButton>
+      <div className="absolute top-6 right-6">
+        <ThemeModeSwitcher />
+      </div>
       {renderContent()}
       <BackToTop />
     </div>
