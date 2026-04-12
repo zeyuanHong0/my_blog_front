@@ -2,52 +2,54 @@ import { create } from "zustand";
 
 import { setLocalStorage, getLocalStorage } from "@/utils/storage";
 
+export type ThemeMode = "light" | "dark" | "system";
+
 type settingState = {
-  themeMode: "light" | "dark";
-  changeThemeMode: (event?: React.MouseEvent) => void;
+  themeMode: ThemeMode;
+  isDark: boolean;
+  changeThemeMode: (themeMode: ThemeMode) => void;
 };
 
 const useSettingStore = create((set: any): settingState => {
   const initialThemeMode =
-    (getLocalStorage("themeMode") as "light" | "dark") || "light";
-  document.documentElement.classList.toggle(
-    "dark",
-    initialThemeMode === "dark",
-  );
+    (getLocalStorage("themeMode") as ThemeMode) || "light";
+
+  const isSystemModeDark = window.matchMedia(
+    "(prefers-color-scheme: dark)",
+  ).matches;
+
+  const initialIsDark =
+    initialThemeMode === "dark" ||
+    (initialThemeMode === "system" && isSystemModeDark);
+
+  // 初始化主题
+  document.documentElement.classList.toggle("dark", initialIsDark);
+
   return {
     themeMode: initialThemeMode,
-
-    changeThemeMode: (event?: React.MouseEvent) => {
-      const newMode =
-        useSettingStore.getState().themeMode === "light" ? "dark" : "light";
-
-      // 判断浏览器是否支持 api
-      if (!document.startViewTransition) {
-        document.documentElement.classList.toggle("dark", newMode === "dark");
-        setLocalStorage("themeMode", newMode);
-        set({ themeMode: newMode });
-        return;
-      }
-
-      console.log("🚀 ~ event?.clientX:", event?.clientX);
-      console.log("🚀 ~ event?.clientY:", event?.clientY);
-
-      // 获取点击位置
-      const x = event?.clientX ?? window.innerWidth / 2;
-      const y = event?.clientY ?? window.innerHeight / 2;
-
-      // 设置起点
-      document.documentElement.style.setProperty("--x", `${x}px`);
-      document.documentElement.style.setProperty("--y", `${y}px`);
-      
-      // 执行过渡动画
-      const transition = document.startViewTransition(() => {
-        document.documentElement.classList.toggle("dark", newMode === "dark");
-        setLocalStorage("themeMode", newMode);
-        set({ themeMode: newMode });
-      });
+    isDark: initialIsDark,
+    changeThemeMode: (themeMode: ThemeMode) => {
+      const isSysDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      const newIsDark =
+        themeMode === "dark" || (themeMode === "system" && isSysDark);
+      document.documentElement.classList.toggle("dark", newIsDark);
+      setLocalStorage("themeMode", themeMode);
+      set({ themeMode, isDark: newIsDark });
     },
   };
 });
+
+// 监听操作系统主题变化
+window
+  .matchMedia("(prefers-color-scheme: dark)")
+  .addEventListener("change", (e) => {
+    const currentMode = useSettingStore.getState().themeMode;
+    if (currentMode === "system") {
+      document.documentElement.classList.toggle("dark", e.matches);
+      useSettingStore.setState({ isDark: e.matches });
+    }
+  });
 
 export default useSettingStore;
