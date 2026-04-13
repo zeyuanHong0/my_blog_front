@@ -12,7 +12,9 @@ const BlogListItem = ({ blog }: { blog: any }) => {
       )}
     >
       {/* 标题 */}
-      <h4 className="mb-2 line-clamp-1 text-xl font-medium">{blog.title}</h4>
+      <h4 className="text-foreground mb-2 line-clamp-1 text-xl font-medium">
+        {blog.title}
+      </h4>
       {/* 描述 */}
       <p className="text-muted-foreground mb-3 line-clamp-2 text-sm">
         {blog.description}
