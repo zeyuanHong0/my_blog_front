@@ -25,15 +25,6 @@ export default defineConfig(({ mode }) => {
         "#": path.resolve(__dirname, "./types"),
       },
     },
-    css: {
-      preprocessorOptions: {
-        // 全局引入变量
-        scss: {
-          javascriptEnabled: true,
-          additionalData: '@import "./src/styles/variable.scss";',
-        },
-      },
-    },
     server: {
       proxy: {
         [env.VITE_APP_BASE_API]: {
