@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { LogOut, User, Sun, Moon } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import useUserStore from "@/store/userStore";
 import ScrollToTop from "@/components/ScrollToTop";
-import useSettingStore from "@/store/settingStore";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -25,6 +24,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import ConfirmDialog from "@/components/confirm-dialog";
+import ThemeModeSwitcher from "@/components/ThemeModeSwitcher";
 import { AppSidebar } from "./app-sidebar";
 
 const AdminLayout = () => {
@@ -32,7 +32,7 @@ const AdminLayout = () => {
   const { userInfo, userLogout, isLoginExpired, setLoginExpired } =
     useUserStore();
 
-  const { themeMode, changeThemeMode } = useSettingStore();
+
 
   // 退出登录相关
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -72,17 +72,7 @@ const AdminLayout = () => {
               />
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={(e) => changeThemeMode(e)}
-              >
-                {themeMode === "light" ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
-                )}
-              </Button>
+              <ThemeModeSwitcher />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <div>

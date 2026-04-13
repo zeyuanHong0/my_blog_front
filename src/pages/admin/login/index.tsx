@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Loader2, Sun, Moon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fetchGitHubAuthUrl } from "@/api/user";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import useSettingStore from "@/store/settingStore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +21,6 @@ const Login = () => {
   useDocumentTitle("登录");
   const navigate = useNavigate();
   const [isGithubLogin, setIsGithubLogin] = useState(false);
-  const { changeThemeMode } = useSettingStore();
   // 回首页
   const handleGoHome = () => {
     navigate("/");
@@ -42,16 +40,6 @@ const Login = () => {
           "sm:w-full sm:max-w-none sm:min-w-[360px]",
         )}
       >
-        <div className="absolute top-4 right-4 flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={(e) => changeThemeMode(e)}
-          >
-            <Sun className="h-5 w-5 dark:hidden" />
-            <Moon className="hidden h-5 w-5 dark:block" />
-          </Button>
-        </div>
         <CardHeader>
           <CardTitle>登录到您的帐户</CardTitle>
         </CardHeader>
