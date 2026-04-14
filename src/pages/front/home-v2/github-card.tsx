@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Github } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import useSettingStore from "@/store/settingStore";
 
 const card = {
@@ -16,6 +18,8 @@ const smoothTransition = {
 
 const GitHubCard = () => {
   const { isDark } = useSettingStore(); // 主题
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
   return (
     <motion.div
       variants={card}
@@ -55,21 +59,27 @@ const GitHubCard = () => {
       </div>
 
       {/* 贡献热力图（直接用 ghchart.rshah.org 的公开 SVG API，无需 token） */}
-      <div className="z-10 w-full overflow-hidden rounded-xl">
-        <img
-          src={
-            isDark
-              ? "https://ghchart.rshah.org/4AE168/zeyuanHong0"
-              : "https://ghchart.rshah.org/30a14e/zeyuanHong0"
-          }
-          alt="GitHub 贡献热力图"
-          className={cn(
-            "w-full object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100",
-            "dark:brightness-90 dark:hue-rotate-180 dark:invert",
-          )}
-          style={{ imageRendering: "crisp-edges" }}
-        />
-      </div>
+      {!imgError && (
+        <div className="z-10 w-full overflow-hidden rounded-xl">
+          {!imgLoaded && <Skeleton className="h-[128px] w-full" />}
+          <img
+            src={
+              isDark
+                ? "https://ghchart.rshah.org/4AE168/zeyuanHong0"
+                : "https://ghchart.rshah.org/30a14e/zeyuanHong0"
+            }
+            alt="GitHub 贡献热力图"
+            onLoad={() => setImgLoaded(true)}
+            onError={() => setImgError(true)}
+            className={cn(
+              "w-full object-contain transition-opacity duration-500 group-hover:opacity-100",
+              "dark:brightness-90 dark:hue-rotate-180 dark:invert",
+              imgLoaded ? "opacity-90" : "hidden",
+            )}
+            style={{ imageRendering: "crisp-edges" }}
+          />
+        </div>
+      )}
     </motion.div>
   );
 };
