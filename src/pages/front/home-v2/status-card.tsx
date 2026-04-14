@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
-import useStatus from "@/hooks/useStatus";
+import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
+import { fetchStatus, type Status } from "@/api/status";
 import { wsService } from "@/utils/websocket";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -16,21 +18,58 @@ const smoothTransition = {
 } as const;
 
 const StatusCard = () => {
-  const { status, setStatus } = useStatus();
+  const [status, setStatus] = useState<Status | null>(null);
+  const { showSkeleton, executeRequest } = useDelayedSkeleton(300);
+
   useEffect(() => {
+    executeRequest(async () => {
+      try {
+        const res = await fetchStatus();
+        setStatus({
+          ...res.data,
+          is_online: res.data.is_online === 1,
+        });
+      } catch {
+        setStatus({
+          is_online: false,
+          status_text: "离线",
+          status_desc: "服务已离线",
+        });
+      }
+    });
+
     wsService.connect((message) => {
-      // console.log(message);
       if (message.event !== "status_update") return;
       setStatus({
-        is_online: message.data.is_online === 1 ? true : false,
+        is_online: message.data.is_online === 1,
         status_text: message.data.status_text,
         status_desc: message.data.status_desc,
       });
     });
+
     return () => {
       wsService.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (showSkeleton) {
+    return (
+      <div
+        className={cn(
+          "bg-card border-border/50 flex flex-1 flex-col justify-between",
+          "rounded-[2rem] border p-6 shadow-sm",
+        )}
+      >
+        <Skeleton className="h-4 w-20 mb-2" />
+        <div className="space-y-2">
+          <Skeleton className="h-6 w-32" />
+          <Skeleton className="h-4 w-48" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       variants={cardVariants}
