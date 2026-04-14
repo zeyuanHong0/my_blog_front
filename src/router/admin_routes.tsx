@@ -19,6 +19,7 @@ const AdminTagList = lazy(() => import("@/pages/admin/tag/list/index"));
 const AdminCategoryList = lazy(
   () => import("@/pages/admin/category/list/index"),
 );
+const AdminUser = lazy(() => import("@/pages/admin/user/index"));
 
 const adminRoutes = [
   {
@@ -60,6 +61,10 @@ const adminRoutes = [
       {
         path: "category",
         element: SuspenseWrapper(AdminCategoryList),
+      },
+      {
+        path: "user",
+        element: SuspenseWrapper(AdminUser),
       },
     ],
   },

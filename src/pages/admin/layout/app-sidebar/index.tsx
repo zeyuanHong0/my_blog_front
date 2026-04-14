@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Book, Home, Tag, ChevronRight, Shapes } from "lucide-react";
+import { Book, Home, Tag, ChevronRight, Shapes, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useActiveNav } from "@/hooks/useActiveNav";
@@ -49,6 +49,11 @@ const items = [
     label: "标签",
     path: "/admin/tag",
     icon: Tag,
+  },
+  {
+    label: "用户",
+    path: "/admin/user",
+    icon: User,
   },
 ];
 
