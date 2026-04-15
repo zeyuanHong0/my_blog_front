@@ -1,11 +1,14 @@
+import { useEffect, useState } from "react";
+import { Delete } from "lucide-react";
+import { useDebounce } from "ahooks";
+
+import { fetchAdminUserList } from "@/api/user";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { usePagination } from "@/hooks/usePagination";
+
 import BreadCrumb from "@/components/base/bread-crumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { Delete } from "lucide-react";
-import { useState } from "react";
-import { useDebounce } from "ahooks";
-import { usePagination } from "@/hooks/usePagination";
 import UserTable from "./list";
 
 const User = () => {
@@ -26,6 +29,27 @@ const User = () => {
   // 查询参数
   const [searchName, setSearchName] = useState<string>("");
   const debouncedSearchName = useDebounce(searchName, { wait: 300 });
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const res: any = await fetchAdminUserList({
+          name: debouncedSearchName,
+          pageNum,
+          pageSize,
+        });
+        setUserList(res.data?.list);
+        setTotal(res.data?.total);
+      } catch (error) {
+        console.error("列表获取失败:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [debouncedSearchName, pageNum, pageSize, setTotal]);
+
   return (
     <>
       <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">

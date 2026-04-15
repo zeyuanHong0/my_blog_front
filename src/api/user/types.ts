@@ -8,3 +8,9 @@ export interface SignInData {
   username: string;
   password: string;
 }
+
+export interface ListParams {
+  name?: string;
+  pageNum: number;
+  pageSize: number;
+}

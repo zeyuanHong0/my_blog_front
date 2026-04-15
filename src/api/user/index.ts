@@ -1,5 +1,5 @@
 import request from "@/utils/axios";
-import type { SignUpData, SignInData } from "./types";
+import type { SignUpData, SignInData, ListParams } from "./types";
 
 export * from "./types";
 
@@ -10,6 +10,9 @@ enum API {
   USER_PROFILE = "/user/profile",
   SEND_EMAIL_CODE = "/auth/sendCode",
   GITHUB_URL = "/auth/github/url",
+
+  // 管理端
+  USER_LIST = "/admin/user/list",
 }
 
 /**
@@ -61,4 +64,12 @@ export const fetchSendEmailCode = (email: string) => {
  */
 export const fetchGitHubAuthUrl = () => {
   return request.get<any>(API.GITHUB_URL);
+};
+
+/**
+ * 获取用户列表（管理端）
+ * @returns 用户列表
+ */
+export const fetchAdminUserList = (params: ListParams) => {
+  return request.get<any>(API.USER_LIST, { params });
 };

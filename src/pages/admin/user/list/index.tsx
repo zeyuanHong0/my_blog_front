@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Trash } from "lucide-react";
+import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -75,7 +76,7 @@ const createColumns = (
     header: () => <DataTableColumnHeader title="创建时间" />,
     cell: ({ row }) => (
       <div className="min-w-[120px] whitespace-nowrap">
-        {row.getValue("createTime")}
+        {dayjs(row.getValue("createTime")).format("YYYY-MM-DD HH:mm:ss")}
       </div>
     ),
   },
@@ -84,7 +85,16 @@ const createColumns = (
     header: () => <DataTableColumnHeader title="更新时间" />,
     cell: ({ row }) => (
       <div className="min-w-[120px] whitespace-nowrap">
-        {row.getValue("updateTime")}
+        {dayjs(row.getValue("updateTime")).format("YYYY-MM-DD HH:mm:ss")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "is_delete",
+    header: () => <DataTableColumnHeader title="账号状态" />,
+    cell: ({ row }) => (
+      <div className="min-w-[120px] whitespace-nowrap">
+        {row.getValue("is_delete") ? "已禁用" : "正常"}
       </div>
     ),
   },
