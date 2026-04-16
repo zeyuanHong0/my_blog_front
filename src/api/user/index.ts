@@ -1,5 +1,5 @@
 import request from "@/utils/axios";
-import type { SignUpData, SignInData, ListParams } from "./types";
+import type { SignUpData, SignInData, ListParams, UserStatus } from "./types";
 
 export * from "./types";
 
@@ -13,6 +13,8 @@ enum API {
 
   // 管理端
   USER_LIST = "/admin/user/list",
+  USER_STATUS_CHANGE = "/admin/user/changeUserStatus",
+  ISUSER_ADMIN = "/user/isAdmin",
 }
 
 /**
@@ -72,4 +74,18 @@ export const fetchGitHubAuthUrl = () => {
  */
 export const fetchAdminUserList = (params: ListParams) => {
   return request.get<any>(API.USER_LIST, { params });
+};
+
+/**
+ * 改变用户状态（启用/禁用）
+ */
+export const fetchChangeUserStatus = (data: UserStatus) => {
+  return request.post<any>(API.USER_STATUS_CHANGE, data);
+};
+
+/**
+ * 判断当前用户是否是管理员
+ */
+export const fetchIsAdmin = () => {
+  return request.get<any>(API.ISUSER_ADMIN);
 };

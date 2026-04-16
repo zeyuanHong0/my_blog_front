@@ -14,3 +14,8 @@ export interface ListParams {
   pageNum: number;
   pageSize: number;
 }
+
+export interface UserStatus {
+  id: string;
+  status: 0 | 1;
+}
