@@ -3,6 +3,7 @@ import { Book, Home, Tag, ChevronRight, Shapes, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useActiveNav } from "@/hooks/useActiveNav";
+import { fetchIsAdmin } from "@/api/user";
 
 import {
   Sidebar,
@@ -63,9 +64,20 @@ export function AppSidebar() {
   const { isActive } = useActiveNav(items);
 
   const handleChangeRoute = (path: string) => {
-    // 判断当前路由是否与目标路由相同
     if (location.pathname !== path) {
-      navigate(path);
+      // 如果是用户管理需要判断是否有权限
+      if (path === "/admin/user") {
+        fetchIsAdmin().then((res) => {
+          if (res.data?.isAdmin) {
+            navigate(path);
+          } else {
+            navigate("/no-permission");
+          }
+          return;
+        });
+      } else {
+        navigate(path);
+      }
     }
   };
   return (

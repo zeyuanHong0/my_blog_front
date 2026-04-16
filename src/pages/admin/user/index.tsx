@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Delete } from "lucide-react";
 import { useDebounce } from "ahooks";
 
-import { fetchAdminUserList } from "@/api/user";
+import { fetchAdminUserList, fetchChangeUserStatus } from "@/api/user";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { usePagination } from "@/hooks/usePagination";
 
@@ -10,6 +10,8 @@ import BreadCrumb from "@/components/base/bread-crumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UserTable from "./list";
+import ConfirmDialog from "@/components/confirm-dialog";
+import { showErrorToast, showSuccessToast } from "@/components/toast";
 
 const User = () => {
   useDocumentTitle("用户管理");
@@ -29,26 +31,47 @@ const User = () => {
   // 查询参数
   const [searchName, setSearchName] = useState<string>("");
   const debouncedSearchName = useDebounce(searchName, { wait: 300 });
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res: any = await fetchAdminUserList({
-          name: debouncedSearchName,
-          pageNum,
-          pageSize,
-        });
-        setUserList(res.data?.list);
-        setTotal(res.data?.total);
-      } catch (error) {
-        console.error("列表获取失败:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+  const handleGetUserList = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res: any = await fetchAdminUserList({
+        name: debouncedSearchName,
+        pageNum,
+        pageSize,
+      });
+      setUserList(res.data?.list);
+      setTotal(res.data?.total);
+    } catch (error) {
+      console.error("列表获取失败:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [debouncedSearchName, pageNum, pageSize, setTotal]);
+  useEffect(() => {
+    handleGetUserList();
+  }, [handleGetUserList]);
+
+  const [isStatusChangeConfirmOpen, setIsStatusChangeConfirmOpen] =
+    useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [currentUserStatus, setCurrentUserStatus] = useState<0 | 1>(0);
+  const onChangeUserStatus = (id: string, status: 0 | 1) => {
+    setCurrentUserId(id);
+    setCurrentUserStatus(status);
+    setIsStatusChangeConfirmOpen(true);
+  };
+  const handleChangeStatus = async () => {
+    try {
+      await fetchChangeUserStatus({
+        id: currentUserId,
+        status: currentUserStatus === 0 ? 1 : 0,
+      });
+      showSuccessToast(`用户已${currentUserStatus === 0 ? "禁用" : "启用"}`);
+      handleGetUserList();
+    } catch {
+      showErrorToast("改变用户状态失败");
+    }
+  };
 
   return (
     <>
@@ -88,10 +111,22 @@ const User = () => {
             list={userList}
             loading={loading}
             paginationProps={paginationProps}
-            onDeleteUser={(id, username) => {}}
+            onChangeUserStatus={onChangeUserStatus}
           />
         </div>
       </div>
+
+      {/* 改变用户状态确认对话框 */}
+      <ConfirmDialog
+        cancelBtnText="取消"
+        confirmBtnText="确认"
+        title="改变用户状态"
+        description={`确定要${currentUserStatus === 0 ? "禁用" : "启用"}该用户吗？`}
+        onCancel={() => setIsStatusChangeConfirmOpen(false)}
+        onConfirm={handleChangeStatus}
+        isOpen={isStatusChangeConfirmOpen}
+        onOpenChange={setIsStatusChangeConfirmOpen}
+      />
     </>
   );
 };

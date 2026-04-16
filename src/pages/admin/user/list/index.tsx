@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Trash } from "lucide-react";
+import { Ban, CircleCheck } from "lucide-react";
 import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ import {
 import DataTableColumnHeader from "@/components/data-table-column-header";
 import DataTablePagination from "@/components/Pagination";
 import EmptyBox from "@/components/empty";
+import { Badge } from "@/components/ui/badge";
 
 export type User = {
   id: string;
@@ -29,10 +30,11 @@ export type User = {
   email: string;
   createTime: string;
   updateTime: string;
+  is_delete: 0 | 1;
 };
 
 const createColumns = (
-  onDeleteUser: (id: string, username: string) => void,
+  onChangeUserStatus: (id: string, status: 0 | 1) => void,
 ): ColumnDef<User>[] => [
   {
     id: "select",
@@ -94,7 +96,15 @@ const createColumns = (
     header: () => <DataTableColumnHeader title="账号状态" />,
     cell: ({ row }) => (
       <div className="min-w-[120px] whitespace-nowrap">
-        {row.getValue("is_delete") ? "已禁用" : "正常"}
+        {row.getValue("is_delete") ? (
+          <Badge variant="destructive" className="text-destructive-foreground">
+            已禁用
+          </Badge>
+        ) : (
+          <Badge variant="secondary" className="text-secondary-foreground">
+            正常
+          </Badge>
+        )}
       </div>
     ),
   },
@@ -107,10 +117,17 @@ const createColumns = (
           <Button
             size={"icon"}
             variant="outline"
-            className="text-destructive hover:text-destructive/90"
-            onClick={() => onDeleteUser(row.original.id, row.original.username)}
+            className={
+              row.original.is_delete
+                ? "text-green-600 hover:text-green-500"
+                : "text-yellow-600 hover:text-yellow-500"
+            }
+            onClick={() =>
+              onChangeUserStatus(row.original.id, row.original.is_delete)
+            }
+            title={row.original.is_delete ? "启用账号" : "禁用账号"}
           >
-            <Trash />
+            {row.original.is_delete ? <CircleCheck /> : <Ban />}
           </Button>
         </div>
       );
@@ -238,17 +255,17 @@ function DataTable<TData, TValue>({
 interface UserTableProps {
   list: User[];
   paginationProps: PaginationProps;
-  onDeleteUser?: (id: string, username: string) => void;
+  onChangeUserStatus?: (id: string, status: 0 | 1) => void;
   loading?: boolean;
 }
 
 export default function UserTable({
   list,
   paginationProps,
-  onDeleteUser = () => {},
+  onChangeUserStatus = () => {},
   loading = false,
 }: UserTableProps) {
-  const columns = createColumns(onDeleteUser);
+  const columns = createColumns(onChangeUserStatus);
 
   return (
     <DataTable
