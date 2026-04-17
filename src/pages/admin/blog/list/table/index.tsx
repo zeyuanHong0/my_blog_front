@@ -93,7 +93,7 @@ const createColumns = (
           {tags.map((tag) => (
             <span
               key={tag.id}
-              className="rounded-md bg-black px-2 py-1 text-xs text-white"
+              className="bg-foreground text-background rounded-md px-2 py-1 text-xs"
             >
               {tag.name}
             </span>
