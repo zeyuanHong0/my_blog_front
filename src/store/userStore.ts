@@ -16,7 +16,9 @@ import { User } from "#/user.types";
 export type UserState = {
   isLoginExpired: boolean;
   userInfo: User;
+  isAdmin: boolean | null;
   setLoginExpired: (expired: boolean) => void;
+  setIsAdmin: (isAdmin: boolean) => void;
   userLogin: (data: SignInData) => Promise<any>;
   getUserInfo: () => Promise<any>;
   userLogout: () => Promise<string>;
@@ -26,6 +28,10 @@ const useUserStore = create((set: any): UserState => {
   return {
     isLoginExpired: false, // 登录是否过期
     userInfo: JSON.parse(getLocalStorage("userInfo") || "{}"),
+    isAdmin: null,
+    setIsAdmin: (isAdmin: boolean) => {
+      set({ isAdmin });
+    },
     setLoginExpired: (expired: boolean) => {
       set({ isLoginExpired: expired });
     },
@@ -41,7 +47,7 @@ const useUserStore = create((set: any): UserState => {
     },
     userLogout: async () => {
       await fetchLogout();
-      set({ userInfo: {} });
+      set({ userInfo: {}, isAdmin: null });
       removeLocalStorage("userInfo");
       return "success";
     },

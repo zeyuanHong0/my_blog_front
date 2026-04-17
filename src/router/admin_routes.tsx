@@ -5,6 +5,7 @@ import Login from "@/pages/admin/login";
 import Register from "@/pages/admin/register";
 import AdminLayout from "@/pages/admin/layout";
 import Authorization from "@/components/Authorization";
+import AdminGuard from "@/components/Authorization/AdminGuard";
 import SuspenseWrapper from "@/components/SuspenseWrapper";
 
 const AdminHome = lazy(() => import("@/pages/admin/home"));
@@ -64,7 +65,11 @@ const adminRoutes = [
       },
       {
         path: "user",
-        element: SuspenseWrapper(AdminUser),
+        element: (
+          <AdminGuard>
+            {SuspenseWrapper(AdminUser)}
+          </AdminGuard>
+        ),
       },
     ],
   },
