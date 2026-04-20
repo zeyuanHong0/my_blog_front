@@ -10,6 +10,7 @@ enum API {
   USER_PROFILE = "/user/profile",
   SEND_EMAIL_CODE = "/auth/sendCode",
   GITHUB_URL = "/auth/github/url",
+  CHECK_EMAIL = "/auth/checkEmail",
 
   // 管理端
   USER_LIST = "/admin/user/list",
@@ -49,6 +50,15 @@ export const fetchUserInfo = () => {
  */
 export const fetchLogout = () => {
   return request.post<any>(API.LOGOUT);
+};
+
+/**
+ * 校验邮箱是否可用
+ * @param email 邮箱地址
+ * @returns 是否可用
+ */
+export const fetchCheckEmail = (email: string) => {
+  return request.post<any>(API.CHECK_EMAIL, { email });
 };
 
 /**
