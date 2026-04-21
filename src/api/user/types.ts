@@ -19,3 +19,9 @@ export interface UserStatus {
   id: string;
   status: 0 | 1;
 }
+
+export interface UpdateProfile {
+  username?: string;
+  password?: string;
+  confirmPassword?: string;
+}

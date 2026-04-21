@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, UserCog } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import useUserStore from "@/store/userStore";
@@ -17,7 +17,6 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
@@ -26,13 +25,14 @@ import {
 import ConfirmDialog from "@/components/confirm-dialog";
 import ThemeModeSwitcher from "@/components/ThemeModeSwitcher";
 import { AppSidebar } from "./app-sidebar";
+import ProfileSettingsDialog, {
+  type ProfileSettingsDialogRef,
+} from "./profile-settings-dialog";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
   const { userInfo, userLogout, isLoginExpired, setLoginExpired } =
     useUserStore();
-
-
 
   // 退出登录相关
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -51,6 +51,9 @@ const AdminLayout = () => {
       setIsExpiredConfirmOpen(true);
     }
   }, [isLoginExpired]);
+
+  // 信息设置相关
+  const profileSettingsDialogRef = useRef<ProfileSettingsDialogRef>(null);
 
   return (
     <>
@@ -86,7 +89,7 @@ const AdminLayout = () => {
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-60 rounded-lg"
                   side="bottom"
                   align="end"
                   sideOffset={4}
@@ -102,15 +105,24 @@ const AdminLayout = () => {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
+                  <div className="flex flex-row gap-1 p-1">
                     <DropdownMenuItem
-                      className="cursor-pointer"
+                      className="flex-1 cursor-pointer justify-center"
+                      onClick={() => {
+                        profileSettingsDialogRef.current?.handleShowDialog();
+                      }}
+                    >
+                      <UserCog className="mr-2 h-4 w-4" />
+                      <span>账号设置</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex-1 cursor-pointer justify-center text-red-600 focus:bg-red-100 focus:text-red-700 dark:focus:bg-red-950 dark:focus:text-red-500"
                       onClick={() => setIsDeleteConfirmOpen(true)}
                     >
-                      <LogOut />
-                      <span>退出登录</span>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>退出</span>
                     </DropdownMenuItem>
-                  </DropdownMenuGroup>
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -151,6 +163,8 @@ const AdminLayout = () => {
           if (!open) setLoginExpired(false);
         }}
       />
+      {/* 个人信息设置弹窗 */}
+      <ProfileSettingsDialog ref={profileSettingsDialogRef} />
     </>
   );
 };

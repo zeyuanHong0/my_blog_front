@@ -1,5 +1,11 @@
 import request from "@/utils/axios";
-import type { SignUpData, SignInData, ListParams, UserStatus } from "./types";
+import type {
+  SignUpData,
+  SignInData,
+  ListParams,
+  UserStatus,
+  UpdateProfile,
+} from "./types";
 
 export * from "./types";
 
@@ -11,6 +17,7 @@ enum API {
   SEND_EMAIL_CODE = "/auth/sendCode",
   GITHUB_URL = "/auth/github/url",
   CHECK_EMAIL = "/auth/checkEmail",
+  UPDATE_PROFILE = "/user/update/profile",
 
   // 管理端
   USER_LIST = "/admin/user/list",
@@ -98,4 +105,12 @@ export const fetchChangeUserStatus = (data: UserStatus) => {
  */
 export const fetchIsAdmin = () => {
   return request.get<any>(API.ISUSER_ADMIN);
+};
+
+/**
+ * 修改用户信息
+ * @param data 用户信息
+ */
+export const fetchUpdateProfile = (data: UpdateProfile) => {
+  return request.put<any>(API.UPDATE_PROFILE, data);
 };
