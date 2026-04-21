@@ -52,22 +52,13 @@ interface TagFormProps {
 
 const TagForm = forwardRef<TagFormRef, TagFormProps>(
   ({ formType, tagId, refreshList }, ref) => {
-    const [dialogTitle, setDialogTitle] = useState("创建标签");
-    const [confirmBtnText, setConfirmBtnText] = useState("创建");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [previewSvg, setPreviewSvg] = useState<string>("");
     const [previewDarkSvg, setPreviewDarkSvg] = useState<string>("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    useEffect(() => {
-      if (formType === "create") {
-        setDialogTitle("创建标签");
-        setConfirmBtnText("创建");
-      } else if (formType === "edit") {
-        setDialogTitle("编辑标签");
-        setConfirmBtnText("保存");
-      }
-    }, [formType]);
+    const dialogTitle = formType === "create" ? "创建标签" : "编辑标签";
+    const confirmBtnText = formType === "create" ? "创建" : "保存";
 
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),

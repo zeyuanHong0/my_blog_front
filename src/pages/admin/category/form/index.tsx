@@ -53,20 +53,11 @@ interface CategoryFormProps {
 
 const CategoryForm = forwardRef<CategoryFormRef, CategoryFormProps>(
   ({ formType, categoryId, refreshList }, ref) => {
-    const [dialogTitle, setDialogTitle] = useState("创建分类");
-    const [confirmBtnText, setConfirmBtnText] = useState("创建");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    useEffect(() => {
-      if (formType === "create") {
-        setDialogTitle("创建分类");
-        setConfirmBtnText("创建");
-      } else if (formType === "edit") {
-        setDialogTitle("编辑分类");
-        setConfirmBtnText("保存");
-      }
-    }, [formType]);
+    const dialogTitle = formType === "create" ? "创建分类" : "编辑分类";
+    const confirmBtnText = formType === "create" ? "创建" : "保存";
 
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
