@@ -64,7 +64,7 @@ const createColumns = (
     accessorKey: "title",
     header: () => <DataTableColumnHeader title="标题" />,
     cell: ({ row }) => (
-      <div className="min-w-[120px] whitespace-nowrap">
+      <div className="max-w-[200px] min-w-[150px] truncate sm:max-w-[250px] lg:max-w-[400px]">
         {row.getValue("title")}
       </div>
     ),
@@ -227,7 +227,7 @@ function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={`h-20 transition-opacity ${loading ? "opacity-50 pointer-events-none" : "opacity-100"}`}
+                  className={`h-20 transition-opacity ${loading ? "pointer-events-none opacity-50" : "opacity-100"}`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="p-4">
