@@ -53,7 +53,7 @@ const AdminBlogList = () => {
   };
   // 列表数据
   const [blogList, setBlogList] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // 查询参数
   const [searchName, setSearchName] = useState<string>("");

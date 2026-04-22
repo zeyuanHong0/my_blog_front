@@ -21,7 +21,7 @@ const User = () => {
   ];
   // 列表数据
   const [userList, setUserList] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { pageNum, pageSize, setTotal, resetPage, paginationProps } =
     usePagination({

@@ -24,6 +24,7 @@ import {
 import DataTableColumnHeader from "@/components/data-table-column-header";
 import DataTablePagination from "@/components/Pagination";
 import EmptyBox from "@/components/empty";
+import Loading from "@/components/loading";
 
 export type Blog = {
   id: string;
@@ -212,13 +213,13 @@ function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {loading ? (
+            {loading && data.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  加载中...
+                  <Loading />
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
@@ -226,7 +227,7 @@ function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="h-20"
+                  className={`h-20 transition-opacity ${loading ? "opacity-50 pointer-events-none" : "opacity-100"}`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="p-4">

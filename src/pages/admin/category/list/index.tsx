@@ -36,7 +36,7 @@ const AdminBlogList = () => {
 
   // 列表数据
   const [categoryList, setCategoryList] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   // const [total, setTotal] = useState(0);
 
   const { pageNum, pageSize, setTotal, resetPage, paginationProps } =
