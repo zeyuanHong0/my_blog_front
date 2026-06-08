@@ -76,7 +76,7 @@
 
 ```bash
 # 克隆项目
-git clone <repository-url>
+git clone https://github.com/zeyuanHong0/my_blog_front.git
 cd blog-front
 
 # 使用项目指定的 Node 版本
