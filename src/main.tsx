@@ -4,8 +4,8 @@ import "nprogress/nprogress.css";
 import App from "./App.tsx";
 import "@/styles/index.css";
 
-import { WebMonitor } from "@web-monitor/sdk";
-import { MonitorErrorBoundary } from "@web-monitor/react-sdk";
+import { WebMonitor } from "web-observer-sdk";
+import { MonitorErrorBoundary } from "web-observer-react-sdk";
 
 // 初始化监控 SDK
 WebMonitor.init({
