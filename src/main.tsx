@@ -4,4 +4,21 @@ import "nprogress/nprogress.css";
 import App from "./App.tsx";
 import "@/styles/index.css";
 
-createRoot(document.getElementById("root")!).render(<App />);
+import { WebMonitor } from "@web-monitor/sdk";
+import { MonitorErrorBoundary } from "@web-monitor/react-sdk";
+
+// 初始化监控 SDK
+WebMonitor.init({
+  appId: "zheliyuan",
+  reportUrl: import.meta.env.VITE_REPORT_URL,
+  enablePerformance: true,
+  enableError: true,
+  sampleRate: 1.0,
+  enableSoftNavigation: true,
+});
+
+createRoot(document.getElementById("root")!).render(
+  <MonitorErrorBoundary>
+    <App />
+  </MonitorErrorBoundary>,
+);
