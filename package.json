@@ -71,7 +71,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-debug-screens": "^3.0.1",
     "tw-animate-css": "^1.3.8",
-    "web-observer-react-sdk": "^1.0.2",
+    "web-observer-react-sdk": "^1.0.3",
     "web-observer-sdk": "^1.0.2",
     "zod": "^4.1.11",
     "zukeeper": "^1.0.2",
