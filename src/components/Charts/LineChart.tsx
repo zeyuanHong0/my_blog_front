@@ -4,7 +4,7 @@ export const LineChart = () => {
   const series = [
     {
       name: "发布文章数",
-      data: [2, 0, 1, 3, 0, 2, 5],
+      data: [2, 0, 0, 3, 6, 2, 5],
     },
   ];
   const categories = [
@@ -27,8 +27,8 @@ export const LineChart = () => {
           },
         },
         stroke: {
-          curve: "smooth",
-          width: 4,
+          curve: "straight",
+          width: 6,
         },
         colors: ["#000000"],
         xaxis: {
@@ -49,12 +49,10 @@ export const LineChart = () => {
           },
         },
         yaxis: {
-          min: 0,
-          tickAmount: 5,
+          min: -0.5,
           labels: {
-            formatter: (val) => Math.floor(val).toString(),
-            style: {
-              colors: "#637381",
+            formatter: (val) => {
+              return val < 0 ? "" : Math.round(val).toString(); // 隐藏负数标签
             },
           },
         },
