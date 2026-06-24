@@ -16,8 +16,7 @@ export const LineChart = ({ series, categories }: LineChartProps) => {
           zoom: { enabled: false },
         },
         stroke: {
-          curve: "smooth",
-          width: 4,
+          curve: "straight",
         },
         colors: ["#000000"],
         xaxis: {
@@ -27,19 +26,17 @@ export const LineChart = ({ series, categories }: LineChartProps) => {
           },
           axisBorder: { show: false },
           axisTicks: { show: false },
+          tooltip: { enabled: false },
         },
         yaxis: {
           min: 0,
-          tickAmount: 4,
           labels: {
             style: { colors: "#637381" },
           },
         },
-        grid: {
-          show: false,
-        },
         tooltip: {
           theme: "light",
+          marker: { show: false },
         },
       }}
     />
