@@ -1,75 +1,45 @@
 import BaseChart from "./BaseChart";
 
-export const LineChart = () => {
-  const series = [
-    {
-      name: "发布文章数",
-      data: [2, 0, 0, 3, 6, 2, 5],
-    },
-  ];
-  const categories = [
-    "06-16",
-    "06-17",
-    "06-18",
-    "06-19",
-    "06-20",
-    "06-21",
-    "06-22",
-  ];
+interface LineChartProps {
+  series: { name: string; data: number[] }[];
+  categories: string[];
+}
+
+export const LineChart = ({ series, categories }: LineChartProps) => {
   return (
     <BaseChart
       type="line"
       series={series}
       options={{
         chart: {
-          toolbar: {
-            show: false,
-          },
+          toolbar: { show: false },
+          zoom: { enabled: false },
         },
         stroke: {
-          curve: "straight",
-          width: 6,
+          curve: "smooth",
+          width: 4,
         },
         colors: ["#000000"],
         xaxis: {
           categories,
-          tooltip: {
-            enabled: false,
-          },
           labels: {
-            style: {
-              colors: "#637381",
-            },
+            style: { colors: "#637381" },
           },
-          axisBorder: {
-            show: false,
-          },
-          axisTicks: {
-            show: false,
-          },
+          axisBorder: { show: false },
+          axisTicks: { show: false },
         },
         yaxis: {
-          min: -0.5,
+          min: 0,
+          tickAmount: 4,
           labels: {
-            formatter: (val) => {
-              return val < 0 ? "" : Math.round(val).toString(); // 隐藏负数标签
-            },
+            style: { colors: "#637381" },
           },
         },
         grid: {
-          borderColor: "#DFE3E8",
-          strokeDashArray: 4,
-          xaxis: {
-            lines: {
-              show: false,
-            },
-          },
+          show: false,
         },
         tooltip: {
           theme: "light",
-          marker: {
-            show: false,
-          },
         },
       }}
     />
