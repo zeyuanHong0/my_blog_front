@@ -1,3 +1,4 @@
+import useSettingStore from "@/store/settingStore";
 import BaseChart from "./BaseChart";
 
 interface LineChartProps {
@@ -6,6 +7,7 @@ interface LineChartProps {
 }
 
 export const LineChart = ({ series, categories }: LineChartProps) => {
+  const { isDark } = useSettingStore();
   return (
     <BaseChart
       type="line"
@@ -17,8 +19,9 @@ export const LineChart = ({ series, categories }: LineChartProps) => {
         },
         stroke: {
           curve: "straight",
+          width: 5,
         },
-        colors: ["#000000"],
+        colors: [isDark ? "#FFFFFF" : "#000000"],
         xaxis: {
           categories,
           labels: {
@@ -35,7 +38,7 @@ export const LineChart = ({ series, categories }: LineChartProps) => {
           },
         },
         tooltip: {
-          theme: "light",
+          theme: isDark ? "dark" : "light",
           marker: { show: false },
         },
       }}

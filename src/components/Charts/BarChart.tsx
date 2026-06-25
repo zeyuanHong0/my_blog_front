@@ -1,3 +1,4 @@
+import useSettingStore from "@/store/settingStore";
 import BaseChart from "./BaseChart";
 import { ApexOptions } from "apexcharts";
 
@@ -16,6 +17,7 @@ export const BarChart = ({
   options,
   colors = ["#2563eb"],
 }: BarChartProps) => {
+  const { isDark } = useSettingStore();
   const defaultOptions: ApexOptions = {
     chart: {
       toolbar: {
@@ -80,7 +82,7 @@ export const BarChart = ({
       },
     },
     tooltip: {
-      theme: "light",
+      theme: isDark ? "dark" : "light",
     },
     ...options,
   };

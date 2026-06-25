@@ -1,3 +1,4 @@
+import useSettingStore from "@/store/settingStore";
 import BaseChart from "./BaseChart";
 import { ApexOptions } from "apexcharts";
 
@@ -18,6 +19,7 @@ export const PieChart = ({
   colors,
   donut = false,
 }: PieChartProps) => {
+  const { isDark } = useSettingStore();
   const defaultOptions: ApexOptions = {
     chart: {
       toolbar: {
@@ -47,7 +49,7 @@ export const PieChart = ({
       horizontalAlign: "center",
     },
     tooltip: {
-      theme: "light",
+      theme: isDark ? "dark" : "light",
       fillSeriesColor: false,
     },
     plotOptions: {

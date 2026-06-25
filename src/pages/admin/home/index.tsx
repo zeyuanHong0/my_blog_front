@@ -101,7 +101,7 @@ const AdminHome = () => {
               categories={blogPublishTrend.dateList}
             />
           ) : (
-            <div className="flex h-[200px] items-center justify-center text-muted-foreground text-sm">
+            <div className="text-muted-foreground flex h-[200px] items-center justify-center text-sm">
               暂无数据
             </div>
           )}
@@ -142,13 +142,15 @@ const AdminHome = () => {
         <CustomCard title="文章分类占比">
           {categoryDistribution.length > 0 ? (
             <PieChart
-              key={categoryDistribution.map((d) => `${d.name}:${d.value}`).join(",")}
+              key={categoryDistribution
+                .map((d) => `${d.name}:${d.value}`)
+                .join(",")}
               labels={categoryDistribution.map((d) => d.name)}
               series={categoryDistribution.map((d) => d.value)}
               donut={true}
             />
           ) : (
-            <div className="flex h-[300px] items-center justify-center text-muted-foreground text-sm">
+            <div className="text-muted-foreground flex h-[300px] items-center justify-center text-sm">
               暂无数据
             </div>
           )}
@@ -164,7 +166,7 @@ const AdminHome = () => {
               ]}
             />
           ) : (
-            <div className="flex h-[300px] items-center justify-center text-muted-foreground text-sm">
+            <div className="text-muted-foreground flex h-[300px] items-center justify-center text-sm">
               暂无数据
             </div>
           )}
