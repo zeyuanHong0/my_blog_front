@@ -1,0 +1,90 @@
+/* 中心竖线 */
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    transform: translateX(-50%);
+    background-color: var(--secondary);
+}
+
+.card {
+    opacity: 0;
+    transition:
+        opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card.visible {
+    opacity: 1;
+    transform: translateX(0) !important;
+}
+
+.card.left {
+    transform: translateX(-3rem);
+}
+
+.card.right {
+    transform: translateX(3rem);
+}
+
+.card .connector {
+    background: var(--border);
+}
+.card.left .connector {
+    right: 0;
+    transform: translateX(100%);
+}
+
+.card.right .connector {
+    left: 0;
+    transform: translateX(-100%);
+}
+
+.card:hover .connector {
+    background: var(--accent);
+}
+
+.card.left .dot {
+    right: 0;
+    transform: translateX(calc(100% + 2.5rem - 3px));
+}
+
+.card.right .dot {
+    left: 0;
+    transform: translateX(calc(-100% - 2.5rem + 3px));
+}
+
+.card:hover .dot {
+    transform: translateX(calc(100% + 2.5rem - 3px));
+}
+
+.card.right:hover .dot {
+    transform: translateX(calc(-100% - 2.5rem + 3px));
+}
+
+.cardInner {
+    transition:
+        all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        background-color 0s,
+        color 0s,
+        border-color 0s;
+}
+
+.cardInner:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .timeline::before {
+        left: 1.5rem;
+    }
+
+    .card.left,
+    .card.right {
+        transform: translateX(2rem);
+    }
+}

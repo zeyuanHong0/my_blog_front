@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import { BookText } from "lucide-react";
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { fetchBlogArchives } from "@/api/blog";
+import styles from "./index.module.scss";
+import { cn } from "@/lib/utils";
 
 type Blog = {
   id: string;
@@ -15,10 +16,7 @@ type Blog = {
 type YearArchive = {
   year: number;
   total: number;
-  months: {
-    month: number;
-    blogs: Blog[];
-  }[];
+  blogs: Blog[];
 };
 
 type ArchivesMap = Record<number, YearArchive>;
@@ -34,22 +32,15 @@ const Archives = () => {
     const archivesMap: ArchivesMap = {};
     list.forEach((item: Blog) => {
       const year = dayjs(item.createTime).year();
-      const month = dayjs(item.createTime).month() + 1;
       if (!archivesMap[year]) {
         archivesMap[year] = {
           year,
           total: 0,
-          months: [],
-        };
-      }
-      archivesMap[year].total++;
-      if (!archivesMap[year].months[month]) {
-        archivesMap[year].months[month] = {
-          month,
           blogs: [],
         };
       }
-      archivesMap[year].months[month].blogs.push(item);
+      archivesMap[year].total++;
+      archivesMap[year].blogs.push(item);
     });
     // console.log(Object.values(archivesMap));
     // =>数组，排序
@@ -58,7 +49,11 @@ const Archives = () => {
       .map((item) => {
         return {
           ...item,
-          months: Object.values(item.months).sort((a, b) => b.month - a.month),
+          blogs: item.blogs.sort((a, b) => {
+            return (
+              dayjs(b.createTime).valueOf() - dayjs(a.createTime).valueOf()
+            );
+          }),
         };
       });
     setGroupedArchivesList(groupedList);
@@ -71,6 +66,33 @@ const Archives = () => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            if (el.classList.contains(styles.card)) {
+              const idx = [
+                ...document.querySelectorAll(`.${styles.card}`),
+              ].indexOf(el);
+              const delay = (idx % 6) * 80;
+              setTimeout(() => {
+                el.classList.add(styles.visible);
+              }, delay);
+            } else {
+              el.classList.add(styles.visible);
+            }
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+    );
+    const cards = document.querySelectorAll(`.${styles.card}`);
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [groupedArchivesList]);
 
   return (
     <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16">
@@ -86,56 +108,79 @@ const Archives = () => {
         <div className="bg-primary/80 mt-4 h-1 w-20 rounded-full"></div>
       </div>
 
-      <div className="animate-in fade-in slide-in-from-bottom-4 flex-1 duration-700 ease-in-out">
-        <div className="border-muted relative mt-8 ml-3 border-l-2 md:ml-4">
-          {groupedArchivesList.map((yearArchive) => (
-            <div key={yearArchive.year} className="mb-12">
-              <div className="relative">
-                <div className="bg-background border-primary absolute top-2 -left-[9px] h-4 w-4 rounded-full border-[3px] md:-left-[9px]"></div>
-                <h2 className="text-foreground ml-8 text-3xl font-bold tracking-tight">
+      {/* 时间轴 */}
+      <div className={cn(`${styles.timeline}`, "relative")}>
+        {groupedArchivesList.map((yearArchive) => (
+          <React.Fragment key={yearArchive.year}>
+            {/* 年份 */}
+            <div
+              className={cn(
+                `${styles.year}`,
+                "relative z-10 flex items-center gap-4 py-8 pl-2 md:justify-center md:pl-0",
+              )}
+            >
+              <div
+                className={cn(
+                  `${styles.leftLine}`,
+                  "hidden h-px flex-1 md:block",
+                )}
+              ></div>
+              <div
+                className={cn(
+                  "bg-card border-line flex items-center gap-3 rounded-full",
+                  "border px-4 py-2 text-sm shadow-[0_2px_8px_rgba(0,0,0,0.2)] md:px-6 md:py-3 md:text-base",
+                )}
+              >
+                <div className="bg-foreground h-1.5 w-1.5 rounded-full"></div>
+                <span className="text-2xl font-bold tracking-[-0.01em]">
                   {yearArchive.year}
-                  <span className="text-muted-foreground ml-3 text-sm font-normal">
-                    共 {yearArchive.total} 篇
-                  </span>
-                </h2>
+                </span>
+                <span className="text-muted-foreground text-sm">
+                  共 {yearArchive.total} 篇
+                </span>
               </div>
-
-              <div className="mt-6 ml-8 space-y-8">
-                {yearArchive.months.map((monthArchive) => (
-                  <div key={monthArchive.month}>
-                    <h3 className="text-muted-foreground mb-4 flex items-center gap-2 text-xl font-semibold">
-                      <span className="bg-muted rounded-md px-2 py-1 text-sm">
-                        {monthArchive.month} 月
-                      </span>
-                    </h3>
-                    <ul className="space-y-2">
-                      {monthArchive.blogs.map((blog) => (
-                        <li key={blog.id}>
-                          <Link
-                            className="group hover:bg-muted/50 hover:border-border flex flex-col justify-between rounded-lg border border-transparent p-3 transition-colors md:flex-row md:items-center"
-                            to={`/blog/${blog.id}`}
-                          >
-                            <div className="flex flex-1 items-center gap-3 overflow-hidden">
-                              <BookText
-                                size={18}
-                                className="text-muted-foreground group-hover:text-primary flex-shrink-0 transition-colors"
-                              />
-                              <span className="group-hover:text-primary text-foreground truncate text-base transition-colors">
-                                {blog.title}
-                              </span>
-                            </div>
-                            <div className="text-muted-foreground mt-2 ml-8 flex-shrink-0 font-mono text-sm md:mt-0 md:ml-4">
-                              {dayjs(blog.createTime).format("MM-DD")}
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
+              <div className={cn(`${styles.rightLine}`, "h-px flex-1")}></div>
             </div>
-          ))}
+            {/* 卡片容器 */}
+            <div className="relative flex flex-col items-center gap-6 py-4">
+              {yearArchive.blogs.map((blog, index) => (
+                <div
+                  key={blog.id}
+                  className={cn(
+                    `${styles.card} ${(index + 1) % 2 === 0 ? styles.right : styles.left}`,
+                    "relative ml-12 w-[calc(100%-4rem)] self-start md:ml-0 md:w-[calc(50%-2.5rem)]",
+                    (index + 1) % 2 === 0 ? "md:self-end" : "md:self-start",
+                  )}
+                >
+                  <div
+                    className={`${styles.connector} absolute top-6 hidden h-0.5 w-10 md:block`}
+                  ></div>
+                  <div
+                    className={`${styles.dot} bg-sidebar-accent-foreground absolute top-[calc(1.5rem-2px)] z-[2] hidden h-1.5 w-1.5 rounded-full md:block`}
+                  ></div>
+                  <Link to={`/blog/${blog.id}`}>
+                    <div
+                      className={`${styles.cardInner} border-line bg-card relative cursor-pointer overflow-hidden rounded-xl border p-5`}
+                    >
+                      <h4 className="text-foreground line-clamp-2 text-[0.95rem] leading-normal font-medium">
+                        {blog.title}
+                      </h4>
+                      <time className="text-muted-foreground mt-2 block text-right text-[0.8rem]">
+                        {dayjs(blog.createTime).format("YYYY-MM-DD")}
+                      </time>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </React.Fragment>
+        ))}
+
+        <div className="bg-background relative z-10 flex justify-center pt-12 pb-16">
+          <div className="bg-card border-line text-muted-foreground flex items-center gap-2 rounded-full border px-4 py-2 text-sm">
+            <span className="bg-muted-foreground h-1.5 w-1.5 rounded-full"></span>
+            已经到底啦 ~
+          </div>
         </div>
       </div>
     </div>

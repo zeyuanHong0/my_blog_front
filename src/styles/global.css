@@ -140,6 +140,7 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
   --color-theme-hover-1: var(--theme-hover-1);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-line: var(--line);
 }
 
 :root {
@@ -178,6 +179,7 @@ body {
   --sidebar-ring: oklch(0.705 0.015 286.067);
   --theme-hover-1: oklch(0.93 0.003 285.8);
   --destructive-foreground: oklch(1 0 0); /* white */
+  --line: oklch(0.95 0.002 286.32 / 0.5);
 }
 
 .dark {
@@ -213,6 +215,7 @@ body {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
   --theme-hover-1: oklch(0.36 0.004 286);
+  --line: oklch(0.274 0.006 286.033 / 0.5);
 }
 
 @layer base {
