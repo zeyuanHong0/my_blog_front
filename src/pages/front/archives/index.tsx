@@ -24,6 +24,7 @@ type ArchivesMap = Record<number, YearArchive>;
 const Archives = () => {
   useDocumentTitle("归档");
   const [total, setTotal] = useState(0);
+  const [activeYear, setActiveYear] = useState<number | null>(null);
   const [groupedArchivesList, setGroupedArchivesList] = useState<YearArchive[]>(
     [],
   );
@@ -67,6 +68,7 @@ const Archives = () => {
     fetchData();
   }, []);
 
+  // 卡片滚动入场动画
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -94,8 +96,32 @@ const Archives = () => {
     return () => observer.disconnect();
   }, [groupedArchivesList]);
 
+  // 监听当前年份
+  useEffect(() => {
+    const yearEls = document.querySelectorAll(`.${styles.yearAnchor}`);
+    if (!yearEls.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const year = Number(entry.target.getAttribute("data-year"));
+            if (year) setActiveYear(year);
+          }
+        });
+      },
+      { rootMargin: "-20% 0px -50% 0px" },
+    );
+    yearEls.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [groupedArchivesList]);
+
+  const scrollToYear = (year: number) => {
+    const el = document.querySelector(`.${styles.yearAnchor}[data-year="${year}"]`);
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16">
+    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16 relative">
       <div className="mb-10 space-y-4">
         <h2 className="text-foreground text-3xl font-extrabold tracking-tight md:text-5xl lg:text-5xl">
           归档
@@ -114,8 +140,9 @@ const Archives = () => {
           <React.Fragment key={yearArchive.year}>
             {/* 年份 */}
             <div
+              data-year={yearArchive.year}
               className={cn(
-                `${styles.year}`,
+                `${styles.year} ${styles.yearAnchor}`,
                 "relative z-10 flex items-center gap-4 py-8 pl-2 md:justify-center md:pl-0",
               )}
             >
@@ -183,6 +210,24 @@ const Archives = () => {
           </div>
         </div>
       </div>
+
+      {/* 右侧年份锚点 */}
+      {groupedArchivesList.length > 1 && (
+        <nav className={styles.yearNav}>
+          {groupedArchivesList.map((item) => (
+            <button
+              key={item.year}
+              className={cn(
+                styles.yearNavItem,
+                activeYear === item.year && styles.yearNavActive,
+              )}
+              onClick={() => scrollToYear(item.year)}
+            >
+              {item.year}
+            </button>
+          ))}
+        </nav>
+      )}
     </div>
   );
 };
