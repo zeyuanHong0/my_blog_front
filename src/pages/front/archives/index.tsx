@@ -98,7 +98,7 @@ const Archives = () => {
 
   // 监听当前年份
   useEffect(() => {
-    const yearEls = document.querySelectorAll(`.${styles.yearAnchor}`);
+    const yearEls = document.querySelectorAll("[data-year]");
     if (!yearEls.length) return;
     const observer = new IntersectionObserver(
       (entries) => {
@@ -109,19 +109,19 @@ const Archives = () => {
           }
         });
       },
-      { rootMargin: "-20% 0px -50% 0px" },
+      { rootMargin: "-10% 0px -50% 0px" },
     );
     yearEls.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, [groupedArchivesList]);
 
   const scrollToYear = (year: number) => {
-    const el = document.querySelector(`.${styles.yearAnchor}[data-year="${year}"]`);
+    const el = document.querySelector(`[data-year="${year}"]`);
     el?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16 relative">
+    <div className="relative mx-auto flex min-h-screen max-w-4xl flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16">
       <div className="mb-10 space-y-4">
         <h2 className="text-foreground text-3xl font-extrabold tracking-tight md:text-5xl lg:text-5xl">
           归档
@@ -135,27 +135,22 @@ const Archives = () => {
       </div>
 
       {/* 时间轴 */}
-      <div className={cn(`${styles.timeline}`, "relative")}>
+      <div className={cn(styles.timeline, "relative")}>
         {groupedArchivesList.map((yearArchive) => (
           <React.Fragment key={yearArchive.year}>
             {/* 年份 */}
             <div
               data-year={yearArchive.year}
-              className={cn(
-                `${styles.year} ${styles.yearAnchor}`,
-                "relative z-10 flex items-center gap-4 py-8 pl-2 md:justify-center md:pl-0",
-              )}
+              className="relative z-10 flex scroll-mt-8 items-center gap-4 py-8 pl-2 md:justify-center md:pl-0"
             >
               <div
-                className={cn(
-                  `${styles.leftLine}`,
-                  "hidden h-px flex-1 md:block",
-                )}
+                className={cn(styles.leftLine, "hidden h-px flex-1 md:block")}
               ></div>
               <div
                 className={cn(
-                  "bg-card border-line flex items-center gap-3 rounded-full",
-                  "border px-4 py-2 text-sm shadow-[0_2px_8px_rgba(0,0,0,0.2)] md:px-6 md:py-3 md:text-base",
+                  "bg-card border-line rounded-full border",
+                  "flex items-center gap-3 px-4 py-2 text-sm",
+                  "shadow-[0_2px_8px_rgba(0,0,0,0.2)] md:px-6 md:py-3 md:text-base",
                 )}
               >
                 <div className="bg-foreground h-1.5 w-1.5 rounded-full"></div>
@@ -166,7 +161,7 @@ const Archives = () => {
                   共 {yearArchive.total} 篇
                 </span>
               </div>
-              <div className={cn(`${styles.rightLine}`, "h-px flex-1")}></div>
+              <div className={cn(styles.rightLine, "h-px flex-1")}></div>
             </div>
             {/* 卡片容器 */}
             <div className="relative flex flex-col items-center gap-6 py-4">
@@ -174,8 +169,10 @@ const Archives = () => {
                 <div
                   key={blog.id}
                   className={cn(
-                    `${styles.card} ${(index + 1) % 2 === 0 ? styles.right : styles.left}`,
-                    "relative ml-12 w-[calc(100%-4rem)] self-start md:ml-0 md:w-[calc(50%-2.5rem)]",
+                    styles.card,
+                    (index + 1) % 2 === 0 ? styles.right : styles.left,
+                    "relative ml-12 w-[calc(100%-4rem)] self-start",
+                    "md:ml-0 md:w-[calc(50%-2.5rem)]",
                     (index + 1) % 2 === 0 ? "md:self-end" : "md:self-start",
                   )}
                 >
@@ -213,13 +210,16 @@ const Archives = () => {
 
       {/* 右侧年份锚点 */}
       {groupedArchivesList.length > 1 && (
-        <nav className={styles.yearNav}>
+        <nav className="fixed top-1/2 right-8 z-20 hidden -translate-y-1/2 flex-col gap-2 md:flex">
           {groupedArchivesList.map((item) => (
             <button
               key={item.year}
               className={cn(
-                styles.yearNavItem,
-                activeYear === item.year && styles.yearNavActive,
+                "cursor-pointer rounded-md border-none bg-transparent",
+                "text-muted-foreground px-3 py-1 text-right text-sm",
+                "hover:bg-accent hover:text-foreground transition-colors duration-200",
+                activeYear === item.year &&
+                  "bg-foreground text-background hover:bg-foreground hover:text-background font-semibold",
               )}
               onClick={() => scrollToYear(item.year)}
             >
