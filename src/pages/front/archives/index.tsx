@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 import { fetchBlogArchives } from "@/api/blog";
 import styles from "./index.module.scss";
 import { cn } from "@/lib/utils";
+
+import ArchivesSkeleton from "@/components/skeleton/archives-skeleton";
 
 type Blog = {
   id: string;
@@ -23,6 +26,7 @@ type ArchivesMap = Record<number, YearArchive>;
 
 const Archives = () => {
   useDocumentTitle("归档");
+  const { showSkeleton, executeRequest } = useDelayedSkeleton();
   const [total, setTotal] = useState(0);
   const [activeYear, setActiveYear] = useState<number | null>(null);
   const [groupedArchivesList, setGroupedArchivesList] = useState<YearArchive[]>(
@@ -43,8 +47,6 @@ const Archives = () => {
       archivesMap[year].total++;
       archivesMap[year].blogs.push(item);
     });
-    // console.log(Object.values(archivesMap));
-    // =>数组，排序
     const groupedList = Object.values(archivesMap)
       .sort((a, b) => b.year - a.year)
       .map((item) => {
@@ -60,12 +62,11 @@ const Archives = () => {
     setGroupedArchivesList(groupedList);
   };
   useEffect(() => {
-    const fetchData = async () => {
+    executeRequest(async () => {
       const res: any = await fetchBlogArchives();
       setTotal(res.data?.length ?? 0);
       groupArchives(res.data || []);
-    };
-    fetchData();
+    });
   }, []);
 
   // 卡片滚动入场动画
@@ -119,6 +120,8 @@ const Archives = () => {
     const el = document.querySelector(`[data-year="${year}"]`);
     el?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  if (showSkeleton) return <ArchivesSkeleton />;
 
   return (
     <div className="relative mx-auto flex min-h-screen max-w-4xl flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16">
