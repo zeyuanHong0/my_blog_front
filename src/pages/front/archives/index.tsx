@@ -14,6 +14,7 @@ type Blog = {
   id: string;
   title: string;
   createTime: string;
+  globalIndex?: number;
 };
 
 type YearArchive = {
@@ -47,16 +48,19 @@ const Archives = () => {
       archivesMap[year].total++;
       archivesMap[year].blogs.push(item);
     });
+    let globalIndex = 0;
     const groupedList = Object.values(archivesMap)
       .sort((a, b) => b.year - a.year)
       .map((item) => {
         return {
           ...item,
-          blogs: item.blogs.sort((a, b) => {
-            return (
-              dayjs(b.createTime).valueOf() - dayjs(a.createTime).valueOf()
-            );
-          }),
+          blogs: item.blogs
+            .sort((a, b) => {
+              return (
+                dayjs(b.createTime).valueOf() - dayjs(a.createTime).valueOf()
+              );
+            })
+            .map((blog) => ({ ...blog, globalIndex: globalIndex++ })),
         };
       });
     setGroupedArchivesList(groupedList);
@@ -168,15 +172,19 @@ const Archives = () => {
             </div>
             {/* 卡片容器 */}
             <div className="relative flex flex-col items-center gap-6 py-4">
-              {yearArchive.blogs.map((blog, index) => (
+              {yearArchive.blogs.map((blog) => (
                 <div
                   key={blog.id}
                   className={cn(
                     styles.card,
-                    (index + 1) % 2 === 0 ? styles.right : styles.left,
+                    (blog.globalIndex! + 1) % 2 === 0
+                      ? styles.right
+                      : styles.left,
                     "relative ml-12 w-[calc(100%-4rem)] self-start",
                     "md:ml-0 md:w-[calc(50%-2.5rem)]",
-                    (index + 1) % 2 === 0 ? "md:self-end" : "md:self-start",
+                    (blog.globalIndex! + 1) % 2 === 0
+                      ? "md:self-end"
+                      : "md:self-start",
                   )}
                 >
                   <div
