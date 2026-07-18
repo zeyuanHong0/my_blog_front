@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const isProd = process.env.NODE_ENV === "production";
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -38,22 +40,7 @@ export default {
       "gray-800": "#212B36",
       "gray-900": "#161C24",
     },
-    extend: {
-      width: {
-        "base-menu-width": "260px",
-        "base-menu-min-width": "81px",
-      },
-      height: {
-        "base-menu-logo-height": "50px",
-        "base-tabbar-height": "50px",
-      },
-      backgroundColor: {
-        "base-menu-background": "#fff",
-      },
-      fontSize: {
-        "base-logo-title-fontSize": "18px",
-      },
-    },
+    extend: {},
   },
-  plugins: [require("tailwindcss-debug-screens")],
+  plugins: isProd ? [] : [require("tailwindcss-debug-screens")],
 };

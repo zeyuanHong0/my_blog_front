@@ -7,6 +7,10 @@ import "@/styles/index.css";
 import { WebMonitor } from "web-observer-sdk";
 import { MonitorErrorBoundary } from "web-observer-react-sdk";
 
+if (import.meta.env.DEV) {
+  document.body.classList.add("debug-screens");
+}
+
 // 初始化监控 SDK
 // WebMonitor.init({
 //   appId: "zheliyuan",
