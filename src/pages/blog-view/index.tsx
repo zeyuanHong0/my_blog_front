@@ -19,6 +19,12 @@ import BackToTop from "@/components/back-to-top";
 import { Button } from "@/components/ui/button";
 import ThemeModeSwitcher from "@/components/ThemeModeSwitcher";
 import BlogViewSkeleton from "./skeleton";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 type Tag = {
   id: string;
@@ -233,14 +239,21 @@ const BlogViewPage = () => {
           <div className="flex items-start gap-8">
             <div className="min-w-0 flex-1">
               {blog.aiSummary && (
-                <div className="border-l-primary mb-6 border-l-4 px-6 py-2 italic">
-                  <div className="text-primary mb-4 flex items-center gap-2 font-semibold">
-                    <span className="text-xl">✨</span> AI 总结
-                  </div>
-                  <div className="text-muted-foreground text-base leading-7">
-                    {blog.aiSummary}
-                  </div>
-                </div>
+                <Accordion type="single" collapsible className="mb-8 w-full">
+                  <AccordionItem
+                    value="ai-summary"
+                    className="border-l-primary bg-primary/5 rounded-r-lg border-b-0 border-l-4 px-6 italic"
+                  >
+                    <AccordionTrigger className="py-3 hover:no-underline">
+                      <div className="text-primary flex items-center gap-2 text-base font-semibold">
+                        <span className="text-xl">✨</span> AI 总结
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground pb-4 text-base leading-7">
+                      {blog.aiSummary}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               )}
 
               <BytemdViewer
