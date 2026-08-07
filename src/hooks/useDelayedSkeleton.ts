@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import NProgress from "nprogress";
+
+NProgress.configure({
+  showSpinner: false,
+  minimum: 0.3,
+  easing: "ease",
+  speed: 200,
+});
+
 const useDelayedSkeleton = (delay: number = 300) => {
   const [loading, setLoading] = useState(true);
   const [showSkeleton, setShowSkeleton] = useState(false);
@@ -18,6 +27,7 @@ const useDelayedSkeleton = (delay: number = 300) => {
     async (requestFn: () => Promise<void>) => {
       try {
         setLoading(true);
+        NProgress.start();
         delayTimer.current = setTimeout(() => {
           setShowSkeleton(true);
         }, delay);
@@ -25,6 +35,7 @@ const useDelayedSkeleton = (delay: number = 300) => {
       } finally {
         setLoading(false);
         setShowSkeleton(false);
+        NProgress.done();
         if (delayTimer.current) {
           clearTimeout(delayTimer.current);
           delayTimer.current = null;
