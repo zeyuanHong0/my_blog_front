@@ -18,10 +18,11 @@ const TechCard = () => {
     <motion.div
       variants={cardVariants}
       transition={smoothTransition}
+      whileHover={{ y: -2 }}
       className={cn(
         "bg-card border-border/50 flex flex-1 flex-col",
         "rounded-[2rem] border p-6 shadow-sm",
-        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
+        "hover:shadow-primary/5 transition-[box-shadow] duration-500 ease-out hover:shadow-lg",
       )}
     >
       <h3 className="mb-3 text-base font-bold tracking-wide">技能 / 技术栈</h3>
@@ -32,7 +33,7 @@ const TechCard = () => {
             className={cn(
               "bg-secondary text-secondary-foreground rounded-lg",
               "px-3 py-1.5 text-xs font-medium",
-              "hover:bg-primary/10 hover:text-primary transition-colors"
+              "hover:bg-primary/10 hover:text-primary",
             )}
           >
             {tech}

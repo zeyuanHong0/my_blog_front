@@ -17,17 +17,13 @@ const TagItem = ({ tag }: TagItemProps) => {
         "inline-flex h-9 shrink-0 items-center justify-center gap-2",
         "px-4 py-2 text-sm font-medium whitespace-nowrap",
         "bg-background text-foreground border border-transparent shadow-xs",
-        "hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all outline-none",
+        "hover:bg-accent hover:text-accent-foreground cursor-pointer outline-none",
         "aria-invalid:border-destructive aria-invalid:ring-destructive/20",
       )}
     >
       {tag.icon && (
         <SvgIcon
-          icon={
-            isDark && tag.icon_dark
-              ? tag.icon_dark
-              : tag.icon
-          }
+          icon={isDark && tag.icon_dark ? tag.icon_dark : tag.icon}
           size={18}
         />
       )}

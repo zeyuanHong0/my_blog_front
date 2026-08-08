@@ -25,11 +25,12 @@ const ReadCard = () => {
     <motion.div
       variants={cardVariants}
       transition={smoothTransition}
+      whileHover={{ y: -2 }}
       className={cn(
         "bg-primary/5 border-primary/10 group",
         "flex flex-1 cursor-pointer flex-col items-start justify-between",
         "rounded-[2rem] border p-6 shadow-sm",
-        "transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg hover:shadow-primary/5",
+        "transition-[box-shadow] duration-500 ease-out hover:shadow-lg hover:shadow-primary/5",
       )}
     >
       <p className="text-primary text-xs font-semibold tracking-widest uppercase">

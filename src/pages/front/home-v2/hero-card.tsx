@@ -20,11 +20,12 @@ const HeroCard = () => {
     <motion.div
       variants={heroCard}
       transition={smoothTransition}
+      whileHover={{ y: -2 }}
       className={cn(
         "bg-card border-border/50 group relative",
         "flex min-h-[320px] flex-col justify-between overflow-hidden",
         "rounded-[2rem] border p-8 shadow-sm",
-        "hover:shadow-primary/5 transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg",
+        "hover:shadow-primary/5 transition-[box-shadow] duration-500 ease-out hover:shadow-lg",
         "lg:col-span-2 lg:min-h-[400px]",
       )}
     >

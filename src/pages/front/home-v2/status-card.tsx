@@ -74,10 +74,11 @@ const StatusCard = () => {
     <motion.div
       variants={cardVariants}
       transition={smoothTransition}
+      whileHover={{ y: -2 }}
       className={cn(
         "bg-card border-border/50 flex flex-1 cursor-pointer flex-col justify-between",
         "rounded-[2rem] border p-6 shadow-sm",
-        "hover:shadow-primary/5 transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg",
+        "hover:shadow-primary/5 transition-[box-shadow] duration-500 ease-out hover:shadow-lg",
       )}
     >
       <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">

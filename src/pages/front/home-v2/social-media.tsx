@@ -22,7 +22,7 @@ const SocialMediaList = () => {
           <Button
             variant="outline"
             size="icon"
-            className="hover:text-primary hover:border-primary/50 rounded-full shadow-sm transition-colors"
+            className="hover:text-primary hover:border-primary/50 rounded-full shadow-sm transition-none"
             onClick={() => window.open(SOURCE_CODE_GITHUB_PAGE, "_blank")}
           >
             <Github className="h-4 w-4" />
@@ -37,7 +37,7 @@ const SocialMediaList = () => {
           <Button
             variant="outline"
             size="icon"
-            className="hover:text-primary hover:border-primary/50 rounded-full shadow-sm transition-colors"
+            className="hover:text-primary hover:border-primary/50 rounded-full shadow-sm transition-none"
             onClick={() => {
               window.location.href = `mailto:${EMAIL}`;
             }}
@@ -56,7 +56,7 @@ const SocialMediaList = () => {
               <Button
                 variant="outline"
                 size="icon"
-                className="hover:text-primary hover:border-primary/50 rounded-full shadow-sm transition-colors"
+                className="hover:text-primary hover:border-primary/50 rounded-full shadow-sm transition-none"
               >
                 <Smartphone className="h-4 w-4" />
               </Button>

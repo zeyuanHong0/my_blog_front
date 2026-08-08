@@ -26,11 +26,12 @@ const GitHubCard = () => {
       initial="hidden"
       animate="show"
       transition={{ ...smoothTransition, delay: 0.4 }}
+      whileHover={{ y: -2 }}
       className={cn(
         "bg-card border-border/50 group relative z-10",
         "mx-auto mt-4 flex w-full max-w-5xl cursor-pointer flex-col overflow-hidden",
         "rounded-[2rem] border p-6 shadow-sm",
-        "hover:shadow-primary/5 transition-all duration-500 ease-out hover:-translate-y-[2px] hover:shadow-lg",
+        "hover:shadow-primary/5 transition-[box-shadow] duration-500 ease-out hover:shadow-lg",
         "md:p-8",
       )}
     >
