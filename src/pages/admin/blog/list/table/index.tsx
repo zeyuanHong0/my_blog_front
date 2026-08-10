@@ -119,6 +119,21 @@ const createColumns = (
     },
   },
   {
+    accessorKey: "author",
+    header: () => <DataTableColumnHeader title="作者" />,
+    cell: ({ row }) => {
+      const author = row.getValue("author") as {
+        id: string;
+        name: string;
+      } | null;
+      return (
+        <div className="min-w-[100px] whitespace-nowrap">
+          {author ? author.name : "未知作者"}
+        </div>
+      );
+    },
+  },
+  {
     id: "actions",
     header: () => <DataTableColumnHeader title="操作" />,
     cell: ({ row }) => {
