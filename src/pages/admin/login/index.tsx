@@ -45,11 +45,18 @@ const Login = () => {
         </CardHeader>
         <CardContent>
           <LoginForm />
-          <div className="text-muted-foreground mt-4 text-center text-sm">
-            还没有账号？
-            <Link to="/auth/register" className="underline">
-              去注册
-            </Link>
+          <div className="flex items-center justify-between gap-4">
+            <div className="text-muted-foreground mt-4 text-center text-sm">
+              还没有账号？{" "}
+              <Link to="/auth/register" className="text-primary hover:underline">
+                去注册
+              </Link>
+            </div>
+            <div className="text-muted-foreground mt-4 text-center text-sm">
+              <Link to="/auth/forget-password" className="text-primary hover:underline">
+                忘记密码？
+              </Link>
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex-col gap-3">

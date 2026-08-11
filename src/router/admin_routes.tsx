@@ -3,6 +3,7 @@ import React, { lazy } from "react";
 
 import Login from "@/pages/admin/login";
 import Register from "@/pages/admin/register";
+import ForgetPassword from "@/pages/admin/forget-password";
 import AdminLayout from "@/pages/admin/layout";
 import Authorization from "@/components/Authorization";
 import AdminGuard from "@/components/Authorization/AdminGuard";
@@ -30,6 +31,10 @@ const adminRoutes = [
   {
     path: "/auth/register",
     element: <Register />,
+  },
+  {
+    path: "/auth/forget-password",
+    element: <ForgetPassword />,
   },
   {
     path: "/admin",
@@ -65,11 +70,7 @@ const adminRoutes = [
       },
       {
         path: "user",
-        element: (
-          <AdminGuard>
-            {SuspenseWrapper(AdminUser)}
-          </AdminGuard>
-        ),
+        element: <AdminGuard>{SuspenseWrapper(AdminUser)}</AdminGuard>,
       },
     ],
   },

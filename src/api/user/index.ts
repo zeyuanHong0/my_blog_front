@@ -19,6 +19,10 @@ enum API {
   CHECK_EMAIL = "/auth/checkEmail",
   UPDATE_PROFILE = "/user/update/profile",
 
+  FORGET_PASSWORD_CHECK_EMAIL = "/auth/forgotPassword/checkEmail",
+  FORGET_PASSWORD_VERIFY_CODE = "/auth/forgotPassword/verifyCode",
+  FORGET_PASSWORD_RESET = "/auth/forgotPassword/resetPassword",
+
   // 管理端
   USER_LIST = "/admin/user/list",
   USER_STATUS_CHANGE = "/admin/user/changeUserStatus",
@@ -113,4 +117,39 @@ export const fetchIsAdmin = () => {
  */
 export const fetchUpdateProfile = (data: UpdateProfile) => {
   return request.put<any>(API.UPDATE_PROFILE, data);
+};
+
+/**
+ * 忘记密码 - 校验邮箱是否存在
+ * @param email 邮箱地址
+ * @returns checkEmail boolean 是否存在
+ */
+export const fetchForgetPasswordCheckEmail = (email: string) => {
+  return request.post<any>(API.FORGET_PASSWORD_CHECK_EMAIL, { email });
+};
+
+/**
+ * 忘记密码 - 验证邮箱验证码
+ * @param email 邮箱地址
+ * @param code 验证码
+ * @returns boolean 是否验证成功
+ */
+export const fetchForgetPasswordVerifyCode = (email: string, code: string) => {
+  return request.post<any>(API.FORGET_PASSWORD_VERIFY_CODE, { email, code });
+};
+
+/**
+ * 忘记密码 - 重置密码
+ * @param resetToken 重置密码的令牌
+ * @param newPassword 新密码
+ * @returns boolean 是否重置成功
+ */
+export const fetchForgetPasswordReset = (
+  resetToken: string,
+  newPassword: string,
+) => {
+  return request.post<any>(API.FORGET_PASSWORD_RESET, {
+    resetToken,
+    newPassword,
+  });
 };
