@@ -16,6 +16,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 import {
   Collapsible,
@@ -24,6 +25,7 @@ import {
 } from "@/components/ui/collapsible";
 import { SvgIcon } from "@/components/Icon";
 import LogoIcon from "/blog.svg?raw";
+import NavUser from "../nav-user";
 
 const items = [
   {
@@ -143,6 +145,15 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <NavUser
+          user={{
+            name: "zly",
+            email: "zly@example.com",
+            avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=random",
+          }}
+        />
+      </SidebarFooter>
     </Sidebar>
   );
 }
