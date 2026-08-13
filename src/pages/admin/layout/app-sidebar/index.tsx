@@ -146,13 +146,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser
-          user={{
-            name: "zly",
-            email: "zly@example.com",
-            avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=random",
-          }}
-        />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
