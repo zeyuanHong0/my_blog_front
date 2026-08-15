@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import styled from "styled-components";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fetchFrontBlogDetail } from "@/api/blog";
@@ -47,6 +47,10 @@ type BlogType = {
   updateTime: string;
   tags: Tag[];
   category: Category;
+  author: {
+    id: string;
+    name: string;
+  };
 };
 
 const BlogViewPage = () => {
@@ -116,6 +120,10 @@ const BlogViewPage = () => {
       id: "",
       name: "",
     },
+    author: {
+      id: "",
+      name: "",
+    },
   });
 
   // 获取博客详情
@@ -130,6 +138,7 @@ const BlogViewPage = () => {
         tags,
         createTime,
         updateTime,
+        author,
       } = res.data;
       setBlog({
         title,
@@ -140,6 +149,7 @@ const BlogViewPage = () => {
         updateTime,
         tags: tags || [],
         category: res.data.category || { id: "", name: "" },
+        author: author || { id: "", name: "" },
       });
     });
   }, [executeRequest, id]);
@@ -218,7 +228,11 @@ const BlogViewPage = () => {
             {blog.title}
           </h1>
           <p className="text-muted-foreground mb-6">{blog.description}</p>
-          <div className="text-muted-foreground mb-6 flex items-center space-x-4 text-sm">
+          <div className="text-muted-foreground mb-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div className="flex items-center gap-1.5 font-medium">
+              <User className="h-4 w-4" />
+              <span>{blog.author?.name || "无名侠"}</span>
+            </div>
             <p>
               {dayjs(blog.createTime).format("YYYY/MM/DD")}
               （更新于{dayjs(blog.updateTime).format("YYYY/MM/DD")}）

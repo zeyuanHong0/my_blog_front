@@ -1,4 +1,4 @@
-import { Calendar, Tag } from "lucide-react";
+import { Calendar, Tag, User } from "lucide-react";
 import dayjs from "dayjs";
 
 import { cn } from "@/lib/utils";
@@ -11,31 +11,43 @@ const BlogListItem = ({ blog }: { blog: any }) => {
         "hover:bg-accent hover:text-accent-foreground",
       )}
     >
-      {/* 标题 */}
-      <h4 className="text-foreground mb-2 line-clamp-1 text-xl font-medium">
-        {blog.title}
-      </h4>
-      {/* 描述 */}
-      <p className="text-muted-foreground mb-3 line-clamp-2 text-sm">
-        {blog.description}
-      </p>
-      {/* 日期 */}
-      <div className="text-muted-foreground flex items-center gap-1 overflow-hidden text-xs whitespace-nowrap">
+      <div>
+        {/* 标题 */}
+        <h4 className="text-foreground mb-2 line-clamp-1 text-xl font-medium">
+          {blog.title}
+        </h4>
+
+        {/* 作者与时间  */}
+        <div className="text-muted-foreground mb-3 flex items-center gap-3 text-xs">
+          <div className="flex items-center gap-1">
+            <User className="h-3.5 w-3.5" />
+            <span>{blog.author?.name || "无名侠"}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Calendar className="h-3.5 w-3.5" />
+            <span>{dayjs(blog.createTime).format("MM月DD日, YYYY")}</span>
+          </div>
+        </div>
+
+        {/* 描述 */}
+        <p className="text-muted-foreground mb-4 line-clamp-2 text-sm">
+          {blog.description}
+        </p>
+      </div>
+
+      {/* 分类和标签 */}
+      <div className="text-muted-foreground flex flex-wrap items-center gap-2 overflow-hidden text-xs">
         {/* 分类 */}
-        <span className="mr-1 shrink-0">
-          #{blog.category?.name || "未分类"}
+        <span className="bg-muted shrink-0 rounded-md px-2 py-1 font-medium">
+          {blog.category?.name || "未分类"}
         </span>
-        {/* 图标 */}
-        <Calendar className="h-4 w-4" />
-        <span className="shrink-0">
-          {dayjs(blog.createTime).format("MM月DD，YYYY")}
-        </span>
+
         {/* 标签 */}
-        <ul className="ml-2 flex items-center space-x-1 text-xs font-medium">
+        <ul className="flex flex-wrap items-center gap-2 font-medium">
           {blog.tags.map((tag) => (
             <li key={tag.id} className="flex shrink-0 items-center gap-1">
-              <Tag size={14} />
-              <span className="mr-1">{tag.name}</span>
+              <Tag size={12} className="opacity-70" />
+              <span>{tag.name}</span>
             </li>
           ))}
         </ul>
