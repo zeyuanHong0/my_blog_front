@@ -10,6 +10,7 @@ import {
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { fetchStatsDashboard } from "@/api/dashboard";
 import type { DashboardStats } from "@/api/dashboard/types";
+import useUserStore from "@/store/userStore";
 
 import { LineChart, PieChart, BarChart } from "@/components/Charts";
 import CustomCard from "@/components/base/custom-card";
@@ -34,6 +35,12 @@ const INIT_DASHBOARD: DashboardStats = {
 
 const AdminHome = () => {
   useDocumentTitle("后台首页");
+
+  const {
+    userInfo: { accountType },
+  } = useUserStore();
+
+  const isCommonUser = accountType === "test";
 
   const [dashboardData, setDashboardData] =
     useState<DashboardStats>(INIT_DASHBOARD);
@@ -70,19 +77,31 @@ const AdminHome = () => {
 
       {/* 顶部四卡片 */}
       <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <CustomCard title="文章总数" icon={<FileText className="h-4 w-4" />}>
+        <CustomCard
+          title={isCommonUser ? "我的文章总数" : "文章总数"}
+          icon={<FileText className="h-4 w-4" />}
+        >
           <div className="text-3xl font-bold">{allBlogCount}</div>
         </CustomCard>
 
-        <CustomCard title="已发布" icon={<CheckCircle2 className="h-4 w-4" />}>
+        <CustomCard
+          title={isCommonUser ? "我已发布" : "已发布"}
+          icon={<CheckCircle2 className="h-4 w-4" />}
+        >
           <div className="text-3xl font-bold">{publishedBlogCount}</div>
         </CustomCard>
 
-        <CustomCard title="分类数" icon={<LayoutGrid className="h-4 w-4" />}>
+        <CustomCard
+          title={isCommonUser ? "站内分类数" : "分类数"}
+          icon={<LayoutGrid className="h-4 w-4" />}
+        >
           <div className="text-3xl font-bold">{categoryCount}</div>
         </CustomCard>
 
-        <CustomCard title="标签数" icon={<Tags className="h-4 w-4" />}>
+        <CustomCard
+          title={isCommonUser ? "站内标签数" : "标签数"}
+          icon={<Tags className="h-4 w-4" />}
+        >
           <div className="text-3xl font-bold">{tagCount}</div>
         </CustomCard>
       </div>
@@ -90,7 +109,7 @@ const AdminHome = () => {
       {/* 第二排：趋势图 + 本周概览 */}
       <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <CustomCard
-          title="文章发布趋势"
+          title={isCommonUser ? "我的发布趋势" : "文章发布趋势"}
           className="col-span-4 lg:col-span-5"
           contentClassName="pl-2"
         >
@@ -139,7 +158,7 @@ const AdminHome = () => {
 
       {/* 第三排：分类占比 + 标签分布 */}
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <CustomCard title="文章分类占比">
+        <CustomCard title={isCommonUser ? "我的文章分类占比" : "文章分类占比"}>
           {categoryDistribution.length > 0 ? (
             <PieChart
               key={categoryDistribution
@@ -156,7 +175,7 @@ const AdminHome = () => {
           )}
         </CustomCard>
 
-        <CustomCard title="标签分布 Top 5">
+        <CustomCard title={isCommonUser ? "我常用标签 Top 5" : "标签分布 Top 5"}>
           {tagDistribution.length > 0 ? (
             <BarChart
               key={tagDistribution.map((d) => `${d.name}:${d.value}`).join(",")}
