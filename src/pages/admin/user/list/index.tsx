@@ -31,7 +31,7 @@ export type User = {
   email: string;
   createTime: string;
   updateTime: string;
-  is_delete: 0 | 1;
+  isDelete: 0 | 1;
 };
 
 const createColumns = (
@@ -93,11 +93,11 @@ const createColumns = (
     ),
   },
   {
-    accessorKey: "is_delete",
+    accessorKey: "isDelete",
     header: () => <DataTableColumnHeader title="账号状态" />,
     cell: ({ row }) => (
       <div className="min-w-[120px] whitespace-nowrap">
-        {row.getValue("is_delete") ? (
+        {row.getValue("isDelete") ? (
           <Badge variant="destructive" className="text-destructive-foreground">
             已禁用
           </Badge>
@@ -119,16 +119,16 @@ const createColumns = (
             size={"icon"}
             variant="outline"
             className={
-              row.original.is_delete
+              row.original.isDelete
                 ? "text-green-600 hover:text-green-500"
                 : "text-yellow-600 hover:text-yellow-500"
             }
             onClick={() =>
-              onChangeUserStatus(row.original.id, row.original.is_delete)
+              onChangeUserStatus(row.original.id, row.original.isDelete)
             }
-            title={row.original.is_delete ? "启用账号" : "禁用账号"}
+            title={row.original.isDelete ? "启用账号" : "禁用账号"}
           >
-            {row.original.is_delete ? <CircleCheck /> : <Ban />}
+            {row.original.isDelete ? <CircleCheck /> : <Ban />}
           </Button>
         </div>
       );
