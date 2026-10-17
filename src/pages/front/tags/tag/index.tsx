@@ -5,7 +5,7 @@ import { fetchFrontTagDetail } from "@/api/tag";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
-import BlogList from "@/pages/front/blogs/list";
+import BlogList from "@/components/SearchableBlogList";
 import EmptyBox from "@/components/empty";
 import { BlogListSkeleton } from "@/components/skeleton";
 

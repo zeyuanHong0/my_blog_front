@@ -4,7 +4,7 @@ import { fetchAllBlogs } from "@/api/blog";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
-import BlogList from "./list";
+import BlogList from "@/components/SearchableBlogList";
 import { BlogListSkeleton } from "@/components/skeleton";
 import EmptyBox from "@/components/empty";
 
