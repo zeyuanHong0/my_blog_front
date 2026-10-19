@@ -13,6 +13,7 @@ enum API {
   TAG_INFO = "/tag/getTagInfo",
   TAG_FRONT_INFO = "/front/tag/getTagInfo",
   TAG_DELETE = "/tag/deleteTag",
+  TAG_SELECT_LIST = "/front/tag/getTagSelectList",
 }
 
 /**
@@ -82,4 +83,12 @@ export const fetchFrontTagDetail = (id: string) => {
  */
 export const fetchDeleteTag = (id: string) => {
   return axios.delete(`${API.TAG_DELETE}/${id}`);
+};
+
+/**
+ * 获取标签下拉列表
+ * @returns 标签下拉列表
+ */
+export const fetchTagSelectList = () => {
+  return axios.get(API.TAG_SELECT_LIST);
 };

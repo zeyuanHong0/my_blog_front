@@ -1,4 +1,6 @@
-import { useImperativeHandle, useState, forwardRef } from "react";
+import { useEffect, useImperativeHandle, useState, forwardRef } from "react";
+
+import useCategoryTagStore from "@/store/categoryTagStore";
 
 import {
   Dialog,
@@ -37,6 +39,17 @@ const FilterDialog = forwardRef<FilterDialogRef, Props>(
     const [categoryId, setCategoryId] = useState("0");
     const [tagId, setTagId] = useState("0");
 
+    const { categorySelectList, tagSelectList, isLoading, init } =
+      useCategoryTagStore();
+
+    useEffect(() => {
+      if (!isDialogOpen) return;
+
+      void init().catch((error) => {
+        console.error("加载分类和标签失败:", error);
+      });
+    }, [init, isDialogOpen]);
+
     // 计算当前的筛选数量
     const filterNum = (categoryId !== "0" ? 1 : 0) + (tagId !== "0" ? 1 : 0);
 
@@ -64,30 +77,46 @@ const FilterDialog = forwardRef<FilterDialogRef, Props>(
           <FieldGroup className="mt-4">
             <Field>
               <Label htmlFor="name-1">分类</Label>
-              <Select value={categoryId} onValueChange={setCategoryId}>
+              <Select
+                value={categoryId}
+                onValueChange={setCategoryId}
+                disabled={isLoading}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="选择分类" />
+                  <SelectValue
+                    placeholder={isLoading ? "正在加载分类..." : "选择分类"}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="0">全部分类</SelectItem>
-                    <SelectItem value="1">前端开发</SelectItem>
-                    <SelectItem value="2">后端开发</SelectItem>
+                    {categorySelectList.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </Field>
             <Field>
               <Label htmlFor="username-1">标签</Label>
-              <Select value={tagId} onValueChange={setTagId}>
+              <Select
+                value={tagId}
+                onValueChange={setTagId}
+                disabled={isLoading}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="选择标签" />
+                  <SelectValue
+                    placeholder={isLoading ? "正在加载标签..." : "选择标签"}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="0">全部标签</SelectItem>
-                    <SelectItem value="1">#react</SelectItem>
-                    <SelectItem value="2">#vue</SelectItem>
+                    {tagSelectList.map((tag) => (
+                      <SelectItem key={tag.id} value={tag.id}>
+                        {tag.name}
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>

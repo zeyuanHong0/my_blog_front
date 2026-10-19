@@ -17,6 +17,7 @@ enum API {
   CATEGORY_DELETE = "/category/deleteCategory",
   CATEGORY_FRONT_ALL_LIST = "/front/category/getAllCategoryList",
   CATEGORY_FRONT_INFO = "/front/category/getCategoryInfo",
+  CATEGORY_SELECT_LIST = "/front/category/getCategorySelectList",
 }
 
 /**
@@ -86,4 +87,12 @@ export const fetchFrontCategoryDetail = (id: string) => {
  */
 export const fetchDeleteCategory = (id: string) => {
   return axios.delete(`${API.CATEGORY_DELETE}/${id}`);
+};
+
+/**
+ * 获取分类下拉列表
+ * @returns 分类下拉列表
+ */
+export const fetchCategorySelectList = () => {
+  return axios.get(API.CATEGORY_SELECT_LIST);
 };
