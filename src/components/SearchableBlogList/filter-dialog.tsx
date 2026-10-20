@@ -26,12 +26,18 @@ export interface FilterDialogRef {
   handleShowDialog: () => void;
 }
 
+interface SimpleItem {
+  id: string;
+  name: string;
+}
+
 interface Props {
   changeFilterNum: (num: number) => void;
+  changeFilterItem: (category: SimpleItem | null, tag: SimpleItem | null) => void;
 }
 
 const FilterDialog = forwardRef<FilterDialogRef, Props>(
-  ({ changeFilterNum }, ref) => {
+  ({ changeFilterNum, changeFilterItem }, ref) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const confirmBtnText = "应用筛选";
@@ -57,6 +63,14 @@ const FilterDialog = forwardRef<FilterDialogRef, Props>(
       setIsDialogOpen(true);
     };
     const handleCancel = () => {
+      setIsDialogOpen(false);
+    };
+
+    const handleConfirm = () => {
+      const category = categoryId !== "0" ? categorySelectList.find((c) => c.id === categoryId) || null : null;
+      const tag = tagId !== "0" ? tagSelectList.find((t) => t.id === tagId) || null : null;
+      changeFilterItem(category, tag);
+      changeFilterNum(filterNum);
       setIsDialogOpen(false);
     };
 
@@ -134,12 +148,7 @@ const FilterDialog = forwardRef<FilterDialogRef, Props>(
             <Button
               className="bg-primary text-background hover:bg-primary/90"
               disabled={isSubmitting}
-              onClick={() => {
-                setIsSubmitting(true);
-                changeFilterNum(filterNum);
-                setIsDialogOpen(false);
-                setIsSubmitting(false);
-              }}
+              onClick={handleConfirm}
             >
               {confirmBtnText}
             </Button>

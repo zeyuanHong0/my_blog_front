@@ -15,3 +15,9 @@ export interface BlogPageListParams {
   pageNum: number;
   pageSize: number;
 }
+
+export interface SearchBlogParams {
+  keyword: string;
+  categoryId?: string;
+  tagId?: string;
+}

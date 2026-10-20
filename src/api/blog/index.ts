@@ -1,6 +1,11 @@
 import axios from "@/utils/axios";
 
-import type { CreateBlog, UpdateBlog, BlogPageListParams } from "./types";
+import type {
+  CreateBlog,
+  UpdateBlog,
+  BlogPageListParams,
+  SearchBlogParams,
+} from "./types";
 
 export * from "./types";
 
@@ -14,6 +19,8 @@ enum API {
   BLOG_CHANGE_STATUS = "/blog/changeBlogStatus",
   BLOG_DELETE = "/blog/deleteBlog",
   BLOG_ARCHIVE = "/front/blog/getArchives",
+
+  BLOG_SEARCH = "/front/blog/search",
 }
 
 /**
@@ -94,4 +101,13 @@ export const fetchChangeBlogStatus = (id: string, published: number) => {
  */
 export const fetchDeleteBlog = (id: string) => {
   return axios.delete(`${API.BLOG_DELETE}/${id}`);
+};
+
+/**
+ * 搜索博客
+ * @param keyword 搜索关键词
+ * @returns 搜索结果
+ */
+export const fetchSearchBlogs = (params: SearchBlogParams) => {
+  return axios.get(API.BLOG_SEARCH, { params });
 };
