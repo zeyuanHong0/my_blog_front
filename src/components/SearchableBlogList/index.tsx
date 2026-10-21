@@ -23,42 +23,56 @@ interface SimpleItem {
   name: string;
 }
 
+interface AppliedSearch {
+  keyword: string;
+  category: SimpleItem | null;
+  tag: SimpleItem | null;
+}
+
 const SearchBlogList = ({ blogs }: Props) => {
   const formRef = useRef<FilterDialogRef>(null);
   const navigate = useNavigate();
 
-  const [filterNum, setFilterNum] = useState(0); // 当前的筛选数量
+  const [inputValue, setInputValue] = useState(""); // 输入中的关键词
+  const [appliedSearch, setAppliedSearch] = useState<AppliedSearch>({
+    keyword: "",
+    category: null,
+    tag: null,
+  });
 
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [isShowKeyword, setIsShowKeyword] = useState(false);
-  const [searchCategory, setSearchCategory] = useState<SimpleItem | null>(null);
-  const [searchTag, setSearchTag] = useState<SimpleItem | null>(null);
+  // 已应用的筛选条件数量
+  const filterNum =
+    Number(appliedSearch.category !== null) +
+    Number(appliedSearch.tag !== null);
 
   const handleShowFilterDialog = () => {
     formRef.current?.handleShowDialog();
   };
 
-  const changeFilterNum = (num: number) => {
-    // 更新筛选数量
-    setFilterNum(num);
+  const handleSearch = ({ keyword, category, tag }: AppliedSearch) => {
+    setAppliedSearch({ keyword, category, tag });
+    fetchSearchBlogs({
+      keyword,
+      categoryId: category?.id ?? "",
+      tagId: tag?.id ?? "",
+    });
   };
 
-  const showSearchKeyword = () => {
-    setIsShowKeyword(searchKeyword.trim() !== "");
-  };
-
-  const changeFilterItem = (
+  const handleFilterChange = (
     category: SimpleItem | null,
     tag: SimpleItem | null,
   ) => {
-    setSearchCategory(category);
-    setSearchTag(tag);
-    showSearchKeyword();
-    handleSearch();
+    handleSearch({ keyword: inputValue, category, tag });
   };
 
-  const handleSearch = () => {
-    // TODO :执行搜索
+  const handleClearFilter = () => {
+    formRef.current?.handleClear();
+    setInputValue("");
+    handleSearch({
+      keyword: "",
+      category: null,
+      tag: null,
+    });
   };
   return (
     <>
@@ -71,15 +85,18 @@ const SearchBlogList = ({ blogs }: Props) => {
               <InputGroupInput
                 placeholder="搜索文章、分类或标签"
                 className="placeholder:text-muted-foreground/70 h-full px-4 text-sm"
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
               />
               <InputGroupAddon align="inline-end" className="pr-2">
                 <Button
                   className="bg-background/30 hover:bg-accent/30 rounded-full border-0 p-3"
                   onClick={() => {
-                    showSearchKeyword();
-                    handleSearch();
+                    handleSearch({
+                      keyword: inputValue,
+                      category: appliedSearch.category,
+                      tag: appliedSearch.tag,
+                    });
                   }}
                 >
                   <SearchIcon className="text-muted-foreground size-4" />
@@ -107,29 +124,29 @@ const SearchBlogList = ({ blogs }: Props) => {
         <div className="mb-5 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
           <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1">
             {/* 输入文字 */}
-            {isShowKeyword && (
+            {appliedSearch.keyword.trim() !== "" && (
               <span>
                 搜索{" "}
                 <span className="text-foreground font-medium">
-                  “{searchKeyword}”
+                  “{appliedSearch.keyword}”
                 </span>
                 <span className="text-border px-1"></span>
               </span>
             )}
             {/* 分类 */}
-            {searchCategory && (
+            {appliedSearch.category && (
               <span>
                 <span className="text-foreground font-medium">
-                  {searchCategory?.name}
+                  {appliedSearch.category.name}
                 </span>
                 <span className="text-muted-foreground px-1">·</span>
               </span>
             )}
             {/* 标签 */}
-            {searchTag && (
+            {appliedSearch.tag && (
               <span>
                 <span className="text-foreground font-medium">
-                  #{searchTag?.name}
+                  #{appliedSearch.tag.name}
                 </span>
                 <span className="text-muted-foreground px-1">·</span>
               </span>
@@ -140,6 +157,7 @@ const SearchBlogList = ({ blogs }: Props) => {
           <button
             type="button"
             className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 text-xs font-medium transition-colors focus-visible:rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+            onClick={handleClearFilter}
           >
             清除筛选
           </button>
@@ -158,8 +176,9 @@ const SearchBlogList = ({ blogs }: Props) => {
       {/* 筛选弹窗 */}
       <FilterDialog
         ref={formRef}
-        changeFilterNum={changeFilterNum}
-        changeFilterItem={changeFilterItem}
+        changeFilterItem={handleFilterChange}
+        category={appliedSearch.category}
+        tag={appliedSearch.tag}
       />
     </>
   );

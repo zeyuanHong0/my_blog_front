@@ -24,6 +24,7 @@ import {
 
 export interface FilterDialogRef {
   handleShowDialog: () => void;
+  handleClear: () => void;
 }
 
 interface SimpleItem {
@@ -32,14 +33,17 @@ interface SimpleItem {
 }
 
 interface Props {
-  changeFilterNum: (num: number) => void;
-  changeFilterItem: (category: SimpleItem | null, tag: SimpleItem | null) => void;
+  changeFilterItem: (
+    category: SimpleItem | null,
+    tag: SimpleItem | null,
+  ) => void;
+  category: SimpleItem | null;
+  tag: SimpleItem | null;
 }
 
 const FilterDialog = forwardRef<FilterDialogRef, Props>(
-  ({ changeFilterNum, changeFilterItem }, ref) => {
+  ({ changeFilterItem, category, tag }, ref) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const confirmBtnText = "应用筛选";
 
     const [categoryId, setCategoryId] = useState("0");
@@ -56,29 +60,52 @@ const FilterDialog = forwardRef<FilterDialogRef, Props>(
       });
     }, [init, isDialogOpen]);
 
-    // 计算当前的筛选数量
-    const filterNum = (categoryId !== "0" ? 1 : 0) + (tagId !== "0" ? 1 : 0);
-
     const handleShowDialog = () => {
       setIsDialogOpen(true);
     };
+
+    // 取消按钮处理
     const handleCancel = () => {
       setIsDialogOpen(false);
+      // 关闭对话框时恢复到已应用的筛选条件
+      setCategoryId(category?.id ?? "0");
+      setTagId(tag?.id ?? "0");
+    };
+
+    // dialog 关闭
+    const handleDialogOpenChange = (open: boolean) => {
+      if (open) {
+        setIsDialogOpen(true);
+        return;
+      }
+
+      handleCancel();
     };
 
     const handleConfirm = () => {
-      const category = categoryId !== "0" ? categorySelectList.find((c) => c.id === categoryId) || null : null;
-      const tag = tagId !== "0" ? tagSelectList.find((t) => t.id === tagId) || null : null;
+      const category =
+        categoryId !== "0"
+          ? categorySelectList.find((c) => c.id === categoryId) || null
+          : null;
+      const tag =
+        tagId !== "0"
+          ? tagSelectList.find((t) => t.id === tagId) || null
+          : null;
       changeFilterItem(category, tag);
-      changeFilterNum(filterNum);
       setIsDialogOpen(false);
+    };
+
+    const handleClear = () => {
+      setCategoryId("0");
+      setTagId("0");
     };
 
     useImperativeHandle(ref, () => ({
       handleShowDialog,
+      handleClear,
     }));
     return (
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
         <DialogContent
           aria-describedby={undefined}
           className="max-h-[90vh] max-w-[90%] overflow-y-auto sm:max-w-md"
@@ -138,16 +165,11 @@ const FilterDialog = forwardRef<FilterDialogRef, Props>(
           </FieldGroup>
 
           <DialogFooter className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleCancel}
-              disabled={isSubmitting}
-            >
+            <Button variant="outline" onClick={handleCancel}>
               取消
             </Button>
             <Button
               className="bg-primary text-background hover:bg-primary/90"
-              disabled={isSubmitting}
               onClick={handleConfirm}
             >
               {confirmBtnText}
