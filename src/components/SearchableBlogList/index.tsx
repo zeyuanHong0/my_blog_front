@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/input-group";
 import Button from "@/components/button";
 import FilterDialog, { FilterDialogRef } from "./filter-dialog";
+import EmptyBox from "@/components/empty";
 
 interface Props {
   blogs: any[];
+  changeBlogs: (newBlogs: any[]) => void;
 }
 
 interface SimpleItem {
@@ -29,7 +31,7 @@ interface AppliedSearch {
   tag: SimpleItem | null;
 }
 
-const SearchBlogList = ({ blogs }: Props) => {
+const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
   const formRef = useRef<FilterDialogRef>(null);
   const navigate = useNavigate();
 
@@ -45,17 +47,21 @@ const SearchBlogList = ({ blogs }: Props) => {
     Number(appliedSearch.category !== null) +
     Number(appliedSearch.tag !== null);
 
+  const isShowFilterCondition =
+    filterNum > 0 || appliedSearch.keyword.trim() !== "";
+
   const handleShowFilterDialog = () => {
     formRef.current?.handleShowDialog();
   };
 
-  const handleSearch = ({ keyword, category, tag }: AppliedSearch) => {
+  const handleSearch = async ({ keyword, category, tag }: AppliedSearch) => {
     setAppliedSearch({ keyword, category, tag });
-    fetchSearchBlogs({
+    const res: any = await fetchSearchBlogs({
       keyword,
       categoryId: category?.id ?? "",
       tagId: tag?.id ?? "",
     });
+    changeBlogs(res.data);
   };
 
   const handleFilterChange = (
@@ -121,56 +127,64 @@ const SearchBlogList = ({ blogs }: Props) => {
         </div>
 
         {/* 搜索的条件展示 */}
-        <div className="mb-5 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
-          <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1">
-            {/* 输入文字 */}
-            {appliedSearch.keyword.trim() !== "" && (
-              <span>
-                搜索{" "}
-                <span className="text-foreground font-medium">
-                  “{appliedSearch.keyword}”
+        {isShowFilterCondition && (
+          <div className="mb-5 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
+            <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1">
+              {/* 输入文字 */}
+              {appliedSearch.keyword.trim() !== "" && (
+                <span>
+                  搜索{" "}
+                  <span className="text-foreground font-medium">
+                    “{appliedSearch.keyword}”
+                  </span>
+                  <span className="text-border px-1"></span>
                 </span>
-                <span className="text-border px-1"></span>
-              </span>
-            )}
-            {/* 分类 */}
-            {appliedSearch.category && (
-              <span>
-                <span className="text-foreground font-medium">
-                  {appliedSearch.category.name}
+              )}
+              {/* 分类 */}
+              {appliedSearch.category && (
+                <span>
+                  <span className="text-foreground font-medium">
+                    {appliedSearch.category.name}
+                  </span>
+                  <span className="text-muted-foreground px-1">·</span>
                 </span>
-                <span className="text-muted-foreground px-1">·</span>
-              </span>
-            )}
-            {/* 标签 */}
-            {appliedSearch.tag && (
-              <span>
-                <span className="text-foreground font-medium">
-                  #{appliedSearch.tag.name}
+              )}
+              {/* 标签 */}
+              {appliedSearch.tag && (
+                <span>
+                  <span className="text-foreground font-medium">
+                    #{appliedSearch.tag.name}
+                  </span>
+                  <span className="text-muted-foreground px-1">·</span>
                 </span>
-                <span className="text-muted-foreground px-1">·</span>
-              </span>
-            )}
-            {/* 数量 */}
-            <span className="text-xs">{blogs.length} 篇匹配</span>
+              )}
+              {/* 数量 */}
+              <span className="text-xs">{blogs.length} 篇匹配</span>
+            </div>
+            <button
+              type="button"
+              className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 text-xs font-medium transition-colors focus-visible:rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+              onClick={handleClearFilter}
+            >
+              清除筛选
+            </button>
           </div>
-          <button
-            type="button"
-            className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 text-xs font-medium transition-colors focus-visible:rounded-sm focus-visible:ring-2 focus-visible:outline-none"
-            onClick={handleClearFilter}
-          >
-            清除筛选
-          </button>
-        </div>
+        )}
 
         {/* 文章列表 */}
-        <ul className={cn("grid grid-cols-1 gap-4 gap-y-8", "md:grid-cols-2")}>
-          {blogs.map((el) => (
-            <li key={el.id} onClick={() => navigate(`/blog/${el.id}`)}>
-              <BlogListItem blog={el} />
-            </li>
-          ))}
-        </ul>
+        {blogs.length > 0 ? (
+          <ul
+            className={cn("grid grid-cols-1 gap-4 gap-y-8", "md:grid-cols-2")}
+          >
+            {blogs.map((el) => (
+              <li key={el.id} onClick={() => navigate(`/blog/${el.id}`)}>
+                <BlogListItem blog={el} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <EmptyBox iconSize={300} />
+        )}
       </div>
 
       {/* 筛选弹窗 */}

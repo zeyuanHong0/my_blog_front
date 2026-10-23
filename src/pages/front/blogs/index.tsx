@@ -6,12 +6,15 @@ import useDelayedSkeleton from "@/hooks/useDelayedSkeleton";
 
 import BlogList from "@/components/SearchableBlogList";
 import { BlogListSkeleton } from "@/components/skeleton";
-import EmptyBox from "@/components/empty";
 
 const Blog = () => {
   useDocumentTitle("博客");
   const [blogs, setBlogs] = useState<any[]>([]);
   const { loading, showSkeleton, executeRequest } = useDelayedSkeleton();
+
+  const handleChangeBlogs = (newBlogs: any[]) => {
+    setBlogs(newBlogs);
+  };
 
   useEffect(() => {
     executeRequest(async () => {
@@ -23,24 +26,21 @@ const Blog = () => {
     if (loading) {
       return showSkeleton ? <BlogListSkeleton /> : null;
     }
-    if (blogs.length > 0) {
-      return <BlogList blogs={blogs} />;
-    }
-    return <EmptyBox iconSize={300} />;
+    return <BlogList blogs={blogs} changeBlogs={handleChangeBlogs} />;
   };
   return (
-    <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-12 pb-24 md:pt-16 md:px-8">
+    <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16">
       <div className="mb-10 space-y-4">
-        <h2 className="text-3xl font-extrabold tracking-tight md:text-5xl lg:text-5xl text-foreground">
+        <h2 className="text-foreground text-3xl font-extrabold tracking-tight md:text-5xl lg:text-5xl">
           博客
         </h2>
-        <p className="text-muted-foreground text-base md:text-lg max-w-2xl">
+        <p className="text-muted-foreground max-w-2xl text-base md:text-lg">
           在这里分享我的技术心得、生活感悟以及一些有趣的想法。
         </p>
-        <div className="h-1 w-20 bg-primary/80 rounded-full mt-4"></div>
+        <div className="bg-primary/80 mt-4 h-1 w-20 rounded-full"></div>
       </div>
-      
-      <div className="flex-1 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-in-out">
+
+      <div className="animate-in fade-in slide-in-from-bottom-4 flex-1 duration-700 ease-in-out">
         {renderContent()}
       </div>
     </div>
