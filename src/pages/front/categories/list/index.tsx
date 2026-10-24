@@ -16,7 +16,7 @@ const CategoriesList = ({ categoriesList }: CategoriesListProps) => {
       <div className={cn("grid grid-cols-2 gap-8")}>
         {categoriesList.map((category) => (
           <div
-            onClick={() => navigate(`/category/${category.id}`)}
+            onClick={() => navigate(`/blogs?categoryId=${category.id}`)}
             key={category.id}
           >
             <CategoryItem category={category} />

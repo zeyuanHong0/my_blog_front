@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { fetchAllBlogs } from "@/api/blog";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
@@ -9,12 +9,13 @@ import { BlogListSkeleton } from "@/components/skeleton";
 
 const Blog = () => {
   useDocumentTitle("博客");
+
   const [blogs, setBlogs] = useState<any[]>([]);
   const { loading, showSkeleton, executeRequest } = useDelayedSkeleton();
 
-  const handleChangeBlogs = (newBlogs: any[]) => {
+  const handleChangeBlogs = useCallback((newBlogs: any[]) => {
     setBlogs(newBlogs);
-  };
+  }, []);
 
   useEffect(() => {
     executeRequest(async () => {
@@ -26,7 +27,12 @@ const Blog = () => {
     if (loading) {
       return showSkeleton ? <BlogListSkeleton /> : null;
     }
-    return <BlogList blogs={blogs} changeBlogs={handleChangeBlogs} />;
+    return (
+      <BlogList
+        blogs={blogs}
+        changeBlogs={handleChangeBlogs}
+      />
+    );
   };
   return (
     <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16">

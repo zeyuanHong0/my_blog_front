@@ -39,26 +39,20 @@ interface Props {
   ) => void;
   category: SimpleItem | null;
   tag: SimpleItem | null;
+  searchCategoryId?: string | null;
+  searchTagId?: string | null;
 }
 
 const FilterDialog = forwardRef<FilterDialogRef, Props>(
-  ({ changeFilterItem, category, tag }, ref) => {
+  ({ changeFilterItem, category, tag, searchCategoryId, searchTagId }, ref) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const confirmBtnText = "应用筛选";
 
     const [categoryId, setCategoryId] = useState("0");
     const [tagId, setTagId] = useState("0");
 
-    const { categorySelectList, tagSelectList, isLoading, init } =
+    const { categorySelectList, tagSelectList, isLoading } =
       useCategoryTagStore();
-
-    useEffect(() => {
-      if (!isDialogOpen) return;
-
-      void init().catch((error) => {
-        console.error("加载分类和标签失败:", error);
-      });
-    }, [init, isDialogOpen]);
 
     const handleShowDialog = () => {
       setIsDialogOpen(true);
@@ -99,6 +93,11 @@ const FilterDialog = forwardRef<FilterDialogRef, Props>(
       setCategoryId("0");
       setTagId("0");
     };
+
+    useEffect(() => {
+      setCategoryId(searchCategoryId ?? "0");
+      setTagId(searchTagId ?? "0");
+    }, [searchCategoryId, searchTagId]);
 
     useImperativeHandle(ref, () => ({
       handleShowDialog,

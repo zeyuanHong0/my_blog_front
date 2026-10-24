@@ -1,9 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { SearchIcon, SlidersHorizontal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fetchSearchBlogs } from "@/api/blog";
+import useCategoryTagStore from "@/store/categoryTagStore";
 
 import BlogListItem from "./list-item";
 import {
@@ -33,14 +34,24 @@ interface AppliedSearch {
 
 const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
   const formRef = useRef<FilterDialogRef>(null);
+  const latestSearchId = useRef(0); // 只处理最新的搜索请求
+  const hasProcessedInitialParams = useRef(false); // 是否已处理初始的搜索参数
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [inputValue, setInputValue] = useState(""); // 输入中的关键词
+  const keywordParam = searchParams.get("keyword") ?? "";
+  const searchCategoryId = searchParams.get("categoryId");
+  const searchTagId = searchParams.get("tagId");
+
+  const [inputValue, setInputValue] = useState(keywordParam); // 输入中的关键词
   const [appliedSearch, setAppliedSearch] = useState<AppliedSearch>({
-    keyword: "",
+    keyword: keywordParam,
     category: null,
     tag: null,
   });
+
+  const { categorySelectList, tagSelectList, isLoaded, init } =
+    useCategoryTagStore();
 
   // 已应用的筛选条件数量
   const filterNum =
@@ -54,32 +65,97 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
     formRef.current?.handleShowDialog();
   };
 
-  const handleSearch = async ({ keyword, category, tag }: AppliedSearch) => {
-    setAppliedSearch({ keyword, category, tag });
-    const res: any = await fetchSearchBlogs({
-      keyword,
+  const updateSearchParams = ({ keyword, category, tag }: AppliedSearch) => {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    const params = {
+      keyword: keyword.trim() ? keyword : "",
       categoryId: category?.id ?? "",
       tagId: tag?.id ?? "",
+    };
+
+    latestSearchId.current += 1;
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        nextSearchParams.set(key, value);
+      } else {
+        nextSearchParams.delete(key);
+      }
     });
-    changeBlogs(res.data);
+
+    setSearchParams(nextSearchParams);
   };
 
   const handleFilterChange = (
     category: SimpleItem | null,
     tag: SimpleItem | null,
   ) => {
-    handleSearch({ keyword: inputValue, category, tag });
+    updateSearchParams({ keyword: inputValue, category, tag });
   };
 
   const handleClearFilter = () => {
     formRef.current?.handleClear();
     setInputValue("");
-    handleSearch({
+    updateSearchParams({
       keyword: "",
       category: null,
       tag: null,
     });
   };
+
+  // 初始化分类和标签数据
+  useEffect(() => {
+    if (!isLoaded) {
+      void init().catch((error) => {
+        console.error("加载分类和标签失败:", error);
+      });
+    }
+  }, [isLoaded, init]);
+
+  useEffect(() => {
+    if (!isLoaded) {
+      return;
+    }
+
+    const category =
+      categorySelectList.find((c) => c.id === searchCategoryId) || null;
+    const tag = tagSelectList.find((t) => t.id === searchTagId) || null;
+    const appliedSearch = { keyword: keywordParam, category, tag };
+    setAppliedSearch(appliedSearch);
+    setInputValue(keywordParam);
+
+    const hasSearchParams = Boolean(
+      keywordParam || searchCategoryId || searchTagId,
+    );
+    if (!hasProcessedInitialParams.current && !hasSearchParams) {
+      hasProcessedInitialParams.current = true;
+      return;
+    }
+    hasProcessedInitialParams.current = true;
+
+    const searchId = ++latestSearchId.current;
+    void fetchSearchBlogs({
+      keyword: keywordParam,
+      categoryId: searchCategoryId ?? "",
+      tagId: searchTagId ?? "",
+    })
+      .then((res: any) => {
+        if (searchId === latestSearchId.current) {
+          changeBlogs(res.data);
+        }
+      })
+      .catch((error) => {
+        console.error("搜索文章失败:", error);
+      });
+  }, [
+    categorySelectList,
+    changeBlogs,
+    isLoaded,
+    keywordParam,
+    searchCategoryId,
+    searchTagId,
+    tagSelectList,
+  ]);
+
   return (
     <>
       <div>
@@ -97,13 +173,13 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
               <InputGroupAddon align="inline-end" className="pr-2">
                 <Button
                   className="bg-background/30 hover:bg-accent/30 rounded-full border-0 p-3"
-                  onClick={() => {
-                    handleSearch({
+                  onClick={() =>
+                    updateSearchParams({
                       keyword: inputValue,
                       category: appliedSearch.category,
                       tag: appliedSearch.tag,
-                    });
-                  }}
+                    })
+                  }
                 >
                   <SearchIcon className="text-muted-foreground size-4" />
                 </Button>
@@ -193,6 +269,8 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
         changeFilterItem={handleFilterChange}
         category={appliedSearch.category}
         tag={appliedSearch.tag}
+        searchCategoryId={searchCategoryId}
+        searchTagId={searchTagId}
       />
     </>
   );
