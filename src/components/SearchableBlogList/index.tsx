@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { SearchIcon, SlidersHorizontal } from "lucide-react";
+import { SearchIcon, SlidersHorizontal, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fetchSearchBlogs } from "@/api/blog";
@@ -160,7 +160,7 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
     <>
       <div>
         {/* 搜索区域 */}
-        <div className="mb-6 flex w-full items-center gap-3">
+        <div className="mb-6 flex w-full items-center gap-3 px-4">
           {/* 输入框 */}
           <div className="min-w-0 flex-1">
             <InputGroup className="bg-background hover:border-foreground/20 focus-within:border-ring focus-within:ring-ring/20 h-10 rounded-xl transition-colors focus-within:ring-2">
@@ -171,6 +171,12 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
                 onChange={(e) => setInputValue(e.target.value)}
               />
               <InputGroupAddon align="inline-end" className="pr-2">
+                {inputValue && (
+                  <X
+                    className="text-muted-foreground size-4 cursor-pointer"
+                    onClick={() => setInputValue("")}
+                  />
+                )}
                 <Button
                   className="bg-background/30 hover:bg-accent/30 rounded-full border-0 p-3"
                   onClick={() =>
@@ -249,9 +255,7 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
 
         {/* 文章列表 */}
         {blogs.length > 0 ? (
-          <ul
-            className={cn("grid grid-cols-1 gap-4 gap-y-8", "md:grid-cols-2")}
-          >
+          <ul className={cn("grid grid-cols-1 gap-4 gap-y-8")}>
             {blogs.map((el) => (
               <li key={el.id} onClick={() => navigate(`/blog/${el.id}`)}>
                 <BlogListItem blog={el} />

@@ -35,9 +35,9 @@ const Categories = () => {
     return <EmptyBox iconSize={300} />;
   };
   return (
-    <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16">
+    <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16 lg:px-20 xl:px-40">
       <div className="mb-10 space-y-4">
-        <h2 className="text-foreground text-3xl font-extrabold tracking-tight md:text-5xl lg:text-5xl">
+        <h2 className="text-foreground text-3xl font-extrabold tracking-tight md:text-4xl lg:text-4xl">
           分类
         </h2>
         <div className="bg-primary/80 mt-4 h-1 w-20 rounded-full"></div>
