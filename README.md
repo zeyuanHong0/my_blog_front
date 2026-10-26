@@ -25,7 +25,9 @@
 
 线上地址：[https://www.zlyhub.com](https://www.zlyhub.com)
 
-后端仓库：[my_blog_back](https://github.com/zeyuanHong0/my_blog_back)
+后端仓库（nestjs）：[my_blog_back](https://github.com/zeyuanHong0/my_blog_back)
+
+后端仓库 (spring-boot)：[zheliyuan-server-java](https://github.com/zeyuanHong0/zheliyuan-server-java)
 
 ## 🛠️ 技术栈
 
