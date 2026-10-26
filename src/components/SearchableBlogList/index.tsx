@@ -163,10 +163,10 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
         <div className="mb-6 flex w-full items-center gap-3 px-4">
           {/* 输入框 */}
           <div className="min-w-0 flex-1">
-            <InputGroup className="bg-background hover:border-foreground/20 focus-within:border-ring focus-within:ring-ring/20 h-10 rounded-xl transition-colors focus-within:ring-2">
+            <InputGroup className="bg-background hover:border-foreground/20 focus-within:border-ring focus-within:ring-ring/20 h-10 rounded-xl transition-none focus-within:ring-2">
               <InputGroupInput
                 placeholder="搜索文章、分类或标签"
-                className="placeholder:text-muted-foreground/70 h-full px-4 text-sm"
+                className="placeholder:text-muted-foreground h-full px-4 text-sm"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />
@@ -178,7 +178,7 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
                   />
                 )}
                 <Button
-                  className="bg-background/30 hover:bg-accent/30 rounded-full border-0 p-3"
+                  className="hover:bg-muted rounded-full border-0 bg-transparent p-3"
                   onClick={() =>
                     updateSearchParams({
                       keyword: inputValue,
@@ -195,7 +195,7 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
           {/* 筛选按钮 */}
           <Button
             type="button"
-            className="bg-background text-foreground hover:bg-accent h-10 shrink-0 gap-2 rounded-3xl border-0 px-5 text-sm font-medium transition"
+            className="bg-background text-foreground hover:bg-accent h-10 shrink-0 gap-2 rounded-3xl border-0 px-5 text-sm font-medium"
             onClick={handleShowFilterDialog}
           >
             <SlidersHorizontal className="text-muted-foreground size-4" />
@@ -210,7 +210,7 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
 
         {/* 搜索的条件展示 */}
         {isShowFilterCondition && (
-          <div className="mb-5 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
+          <div className="mb-5 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 pr-8 pl-4 text-sm">
             <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1">
               {/* 输入文字 */}
               {appliedSearch.keyword.trim() !== "" && (

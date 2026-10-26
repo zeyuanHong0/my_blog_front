@@ -17,7 +17,7 @@ const smoothTransition = {
 const ReadCard = () => {
   const navigate = useNavigate();
 
-  // 前往博客列表页
+  // 前往文章列表页
   const handleReadBlogs = () => {
     navigate("/blogs");
   };
@@ -44,7 +44,7 @@ const ReadCard = () => {
             "decoration-2 underline-offset-4 group-hover:underline"
           )}
         >
-          阅读博客
+          阅读文章
         </h3>
         <div
           onClick={handleReadBlogs}

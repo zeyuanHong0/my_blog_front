@@ -9,13 +9,13 @@ import { showInfoToast, showSuccessToast } from "@/components/toast";
 import BlogForm, { BlogFormRef } from "./blog-form";
 
 const AdminBlogCreateForm = () => {
-  useDocumentTitle("创建博客");
+  useDocumentTitle("创建文章");
   const formRef = useRef<BlogFormRef>(null);
   const [loading, setLoading] = useState(false);
 
   const navList = [
     { name: "首页", href: "/admin" },
-    { name: "博客", href: "/admin/blog" },
+    { name: "文章", href: "/admin/blog" },
     { name: "创建", href: "/admin/blog/create" },
   ];
 
@@ -33,7 +33,7 @@ const AdminBlogCreateForm = () => {
     setLoading(true);
     try {
       await fetchCreateBlog(values);
-      showSuccessToast("创建博客成功");
+      showSuccessToast("创建文章成功");
     } catch (error: any) {
       console.log("🚀 ~ handleCreateBlog ~ error:", error);
     } finally {
@@ -47,7 +47,7 @@ const AdminBlogCreateForm = () => {
   return (
     <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">创建博客</h2>
+        <h2 className="text-2xl font-bold">创建文章</h2>
       </div>
       {/* 面包屑导航 */}
       <BreadCrumb list={navList} />

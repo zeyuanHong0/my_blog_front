@@ -126,7 +126,7 @@ const BlogViewPage = () => {
     },
   });
 
-  // 获取博客详情
+  // 获取文章详情
   useEffect(() => {
     executeRequest(async () => {
       const res: any = await fetchFrontBlogDetail(id as string);
@@ -154,7 +154,7 @@ const BlogViewPage = () => {
     });
   }, [executeRequest, id]);
 
-  useDocumentTitle(blog.title || "博客详情");
+  useDocumentTitle(blog.title || "文章详情");
 
   // 缓存tocPlugin,避免无限渲染
   const tocPluginInstance = useMemo(

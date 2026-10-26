@@ -34,11 +34,11 @@ type TagOption = {
 };
 
 const AdminBlogList = () => {
-  useDocumentTitle("博客管理");
+  useDocumentTitle("文章管理");
   const navigate = useNavigate();
   const navList = [
     { name: "首页", href: "/admin" },
-    { name: "博客", href: "/admin/blog" },
+    { name: "文章", href: "/admin/blog" },
   ];
   const toBlogCreate = () => {
     navigate("/admin/blog/create");
@@ -47,7 +47,7 @@ const AdminBlogList = () => {
   const toEditForm = (id: string) => {
     navigate(`/admin/blog/edit/${id}`);
   };
-  // 前往博客详情页面
+  // 前往文章详情页面
   const toBlogInfo = (id: string) => {
     navigate(`/blog/${id}`);
   };
@@ -137,7 +137,7 @@ const AdminBlogList = () => {
     searchName || searchCategory || searchTags.length > 0,
   );
 
-  // 修改博客发布状态
+  // 修改文章发布状态
   const handleChangeBlogStatus = async (id: string, published: boolean) => {
     try {
       setBlogList((prevList) =>
@@ -146,7 +146,7 @@ const AdminBlogList = () => {
         ),
       );
       await fetchChangeBlogStatus(id, published ? 1 : 0);
-      showSuccessToast("修改博客发布状态成功");
+      showSuccessToast("修改文章发布状态成功");
     } catch (error: any) {
       // 回滚状态
       setBlogList((prevList) =>
@@ -158,7 +158,7 @@ const AdminBlogList = () => {
     }
   };
 
-  // 删除博客
+  // 删除文章
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [deleteBlogId, setDeleteBlogId] = useState<string>("");
   const [deleteBlogName, setDeleteBlogName] = useState<string>("");
@@ -188,13 +188,13 @@ const AdminBlogList = () => {
     <>
       <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">博客管理</h2>
+          <h2 className="text-2xl font-bold">文章管理</h2>
           <Button
             className="border-border bg-primary text-background hover:bg-primary/90"
             onClick={toBlogCreate}
           >
             <Plus className="h-4 w-4" />
-            创建博客
+            创建文章
           </Button>
         </div>
         {/* 面包屑导航 */}
@@ -251,8 +251,8 @@ const AdminBlogList = () => {
       <ConfirmDialog
         cancelBtnText="取消"
         confirmBtnText="确认"
-        title="删除博客"
-        description={`确定要删除这篇博客吗？(${truncateString(deleteBlogName, 50)})`}
+        title="删除文章"
+        description={`确定要删除这篇文章吗？(${truncateString(deleteBlogName, 50)})`}
         onCancel={() => setIsDeleteConfirmOpen(false)}
         onConfirm={handleDeleteBlog}
         isOpen={isDeleteConfirmOpen}

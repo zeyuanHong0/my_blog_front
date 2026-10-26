@@ -34,7 +34,7 @@ const items = [
     icon: Home,
   },
   {
-    label: "博客",
+    label: "文章",
     path: "/admin/blog",
     icon: Book,
     children: [

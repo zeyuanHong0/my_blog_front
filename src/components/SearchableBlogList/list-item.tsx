@@ -7,13 +7,13 @@ const BlogListItem = ({ blog }: { blog: any }) => {
   return (
     <div
       className={cn(
-        "flex h-full cursor-pointer flex-col justify-between rounded-lg px-6 py-4 transition-all",
-        "hover:bg-accent hover:text-accent-foreground",
+        "flex h-full cursor-pointer flex-col justify-between rounded-xl px-5 py-5 transition-colors sm:px-6",
+        "hover:bg-muted/60",
       )}
     >
       <div>
         {/* 标题 */}
-        <h4 className="text-foreground mb-2 line-clamp-1 text-xl font-medium">
+        <h4 className="text-foreground mb-2.5 line-clamp-1 text-xl font-semibold tracking-tight">
           {blog.title}
         </h4>
 
@@ -30,7 +30,7 @@ const BlogListItem = ({ blog }: { blog: any }) => {
         </div>
 
         {/* 描述 */}
-        <p className="text-muted-foreground mb-4 line-clamp-2 text-sm">
+        <p className="text-muted-foreground/90 mb-5 line-clamp-2 text-sm leading-6">
           {blog.description}
         </p>
       </div>
@@ -38,7 +38,7 @@ const BlogListItem = ({ blog }: { blog: any }) => {
       {/* 分类和标签 */}
       <div className="text-muted-foreground flex flex-wrap items-center gap-2 overflow-hidden text-xs">
         {/* 分类 */}
-        <span className="bg-muted shrink-0 rounded-md px-2 py-1 font-medium">
+        <span className="bg-muted/80 shrink-0 rounded-md px-2 py-1 font-medium">
           {blog.category?.name || "未分类"}
         </span>
 

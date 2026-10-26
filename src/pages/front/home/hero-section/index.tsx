@@ -55,7 +55,7 @@ const HeroSection = () => {
               "transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg active:scale-95",
             )}
           >
-            <span>我的博客</span>
+            <span>我的文章</span>
             <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
           </Button>
         </Link>

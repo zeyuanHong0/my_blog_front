@@ -136,7 +136,7 @@ const Archives = () => {
         <p className="text-muted-foreground max-w-2xl text-base md:text-lg">
           嗯... 目前共计{" "}
           <span className="text-primary font-semibold">{total}</span>{" "}
-          篇博客，继续努力！
+          篇文章，继续努力！
         </p>
         <div className="bg-primary/80 mt-4 h-1 w-20 rounded-full"></div>
       </div>

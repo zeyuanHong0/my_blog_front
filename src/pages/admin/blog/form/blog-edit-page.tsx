@@ -10,7 +10,7 @@ import { showInfoToast, showSuccessToast } from "@/components/toast";
 import BlogForm, { BlogFormRef } from "./blog-form";
 
 const AdminBlogEditForm = () => {
-  useDocumentTitle("编辑博客");
+  useDocumentTitle("编辑文章");
   const { id } = useParams();
   const navigate = useNavigate();
   const formRef = useRef<BlogFormRef>(null);
@@ -19,11 +19,11 @@ const AdminBlogEditForm = () => {
 
   const navList = [
     { name: "首页", href: "/admin" },
-    { name: "博客", href: "/admin/blog" },
+    { name: "文章", href: "/admin/blog" },
     { name: "编辑", href: `/admin/blog/edit/${id}` },
   ];
 
-  // 获取博客详情
+  // 获取文章详情
   const handleGetBlogDetail = useCallback(async () => {
     const res: any = await fetchBlogDetail(id as string);
     const {
@@ -67,7 +67,7 @@ const AdminBlogEditForm = () => {
     setLoading(true);
     try {
       await fetchUpdateBlog(values);
-      showSuccessToast("保存博客成功");
+      showSuccessToast("保存文章成功");
       navigate("/admin/blog");
     } catch (error: any) {
       console.log("🚀 ~ handleUpdateBlog ~ error:", error);
@@ -82,7 +82,7 @@ const AdminBlogEditForm = () => {
   return (
     <div className="max-w-wrapper mx-auto flex flex-col gap-y-6 p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">编辑博客</h2>
+        <h2 className="text-2xl font-bold">编辑文章</h2>
       </div>
       {/* 面包屑导航 */}
       <BreadCrumb list={navList} />
