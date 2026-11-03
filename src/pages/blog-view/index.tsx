@@ -242,7 +242,7 @@ const BlogViewPage = () => {
                 <span>/</span>
                 <span
                   className="cursor-pointer underline-offset-4 hover:underline"
-                  onClick={() => navigate(`/category/${blog.category.id}`)}
+                  onClick={() => navigate(`/blogs?categoryId=${blog.category.id}`)}
                 >
                   {blog.category.name}
                 </span>
@@ -282,7 +282,7 @@ const BlogViewPage = () => {
                       <div
                         className="flex items-center gap-1"
                         key={tag.id}
-                        onClick={() => navigate(`/tag/${tag.id}`)}
+                        onClick={() => navigate(`/blogs?tagId=${tag.id}`)}
                       >
                         {iconShow(tag)}
                         <span
