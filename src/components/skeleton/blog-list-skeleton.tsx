@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const BlogListSkeleton = () => {
   return (
-    <div className="grid grid-cols-1 gap-4 gap-y-8 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 gap-y-8">
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}
