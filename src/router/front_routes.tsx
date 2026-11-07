@@ -3,6 +3,7 @@ import React, { lazy } from "react";
 
 import Layout from "@/pages/front/layout";
 import SuspenseWrapper from "@/components/SuspenseWrapper";
+import BlogViewSkeleton from "@/pages/blog-view/skeleton";
 
 // const Home = lazy(() => import("@/pages/front/home"));
 const HomeV2 = lazy(() => import("@/pages/front/home-v2"));
@@ -42,7 +43,7 @@ const frontRoutes = [
   },
   {
     path: "/blog/:id",
-    element: SuspenseWrapper(BlogViewPage),
+    element: SuspenseWrapper(BlogViewPage, <BlogViewSkeleton />),
   },
 ];
 
