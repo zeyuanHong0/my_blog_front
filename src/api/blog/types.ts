@@ -21,3 +21,10 @@ export interface SearchBlogParams {
   categoryId?: string;
   tagId?: string;
 }
+
+export interface BlogFrontPageListParams {
+  pageNum: number;
+  keyword?: string;
+  categoryId?: string;
+  tagId?: string;
+}

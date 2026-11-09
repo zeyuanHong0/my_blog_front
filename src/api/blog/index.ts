@@ -5,6 +5,7 @@ import type {
   UpdateBlog,
   BlogPageListParams,
   SearchBlogParams,
+  BlogFrontPageListParams,
 } from "./types";
 
 export * from "./types";
@@ -21,6 +22,7 @@ enum API {
   BLOG_ARCHIVE = "/front/blog/getArchives",
 
   BLOG_SEARCH = "/front/blog/search",
+  BLOG_PAGE_LIST = "/front/blog/getBlogPageList",
 }
 
 /**
@@ -110,4 +112,13 @@ export const fetchDeleteBlog = (id: string) => {
  */
 export const fetchSearchBlogs = (params: SearchBlogParams) => {
   return axios.get(API.BLOG_SEARCH, { params });
+};
+
+/**
+ * 获取前台分页博客列表
+ * @param params 分页参数
+ * @returns 分页博客列表
+ */
+export const fetchFrontBlogsByPage = (params: BlogFrontPageListParams) => {
+  return axios.get(API.BLOG_PAGE_LIST, { params });
 };
