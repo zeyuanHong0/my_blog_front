@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { SearchIcon, SlidersHorizontal, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { fetchSearchBlogs } from "@/api/blog";
 import useCategoryTagStore from "@/store/categoryTagStore";
 
 import BlogListItem from "./list-item";
@@ -18,7 +17,7 @@ import EmptyBox from "@/components/empty";
 
 interface Props {
   blogs: any[];
-  changeBlogs: (newBlogs: any[]) => void;
+  total: number;
 }
 
 interface SimpleItem {
@@ -32,10 +31,8 @@ interface AppliedSearch {
   tag: SimpleItem | null;
 }
 
-const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
+const SearchBlogList = ({ blogs, total }: Props) => {
   const formRef = useRef<FilterDialogRef>(null);
-  const latestSearchId = useRef(0); // 只处理最新的搜索请求
-  const hasProcessedInitialParams = useRef(false); // 是否已处理初始的搜索参数
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -73,7 +70,7 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
       tagId: tag?.id ?? "",
     };
 
-    latestSearchId.current += 1;
+    nextSearchParams.delete("page");
     Object.entries(params).forEach(([key, value]) => {
       if (value) {
         nextSearchParams.set(key, value);
@@ -122,33 +119,8 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
     const appliedSearch = { keyword: keywordParam, category, tag };
     setAppliedSearch(appliedSearch);
     setInputValue(keywordParam);
-
-    const hasSearchParams = Boolean(
-      keywordParam || searchCategoryId || searchTagId,
-    );
-    if (!hasProcessedInitialParams.current && !hasSearchParams) {
-      hasProcessedInitialParams.current = true;
-      return;
-    }
-    hasProcessedInitialParams.current = true;
-
-    const searchId = ++latestSearchId.current;
-    void fetchSearchBlogs({
-      keyword: keywordParam,
-      categoryId: searchCategoryId ?? "",
-      tagId: searchTagId ?? "",
-    })
-      .then((res: any) => {
-        if (searchId === latestSearchId.current) {
-          changeBlogs(res.data);
-        }
-      })
-      .catch((error) => {
-        console.error("搜索文章失败:", error);
-      });
   }, [
     categorySelectList,
-    changeBlogs,
     isLoaded,
     keywordParam,
     searchCategoryId,
@@ -241,7 +213,7 @@ const SearchBlogList = ({ blogs, changeBlogs }: Props) => {
                 </span>
               )}
               {/* 数量 */}
-              <span className="text-xs">{blogs.length} 篇匹配</span>
+              <span className="text-xs">{total} 篇匹配</span>
             </div>
             <button
               type="button"
