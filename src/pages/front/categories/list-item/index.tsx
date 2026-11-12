@@ -1,16 +1,22 @@
+import { ArrowRight } from "lucide-react";
+
 interface CategoryItemProps {
   category: any;
 }
 
 const CategoryItem = ({ category }: CategoryItemProps) => {
   return (
-    <div className="border-border hover:bg-muted/60 flex cursor-pointer flex-col items-start gap-2 rounded-xl border p-5 transition-colors sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-7">
-      <span className="text-foreground text-xl font-medium sm:text-3xl">
+    <div className="flex min-h-24 items-center justify-between gap-4 py-7">
+      <span className="text-foreground group-hover:text-muted-foreground min-w-0 text-lg leading-snug font-semibold break-words transition-colors sm:text-xl">
         {category.name}
       </span>
-      <span className="text-muted-foreground text-sm">
-        共{category.blogCount}篇文章
-      </span>
+      <div className="text-muted-foreground flex shrink-0 items-center gap-3 text-xs">
+        <span>{category.blogCount} 篇文章</span>
+        <ArrowRight
+          aria-hidden="true"
+          className="size-4 transition-transform group-hover:translate-x-1"
+        />
+      </div>
     </div>
   );
 };

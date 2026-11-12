@@ -1,58 +1,35 @@
-import { Calendar, Tag, User } from "lucide-react";
 import dayjs from "dayjs";
-
-import { cn } from "@/lib/utils";
 
 const BlogListItem = ({ blog }: { blog: any }) => {
   return (
-    <div
-      className={cn(
-        "flex h-full cursor-pointer flex-col justify-between rounded-xl px-5 py-5 transition-colors sm:px-6",
-        "hover:bg-muted/60",
-      )}
-    >
-      <div>
-        {/* 标题 */}
-        <h4 className="text-foreground mb-2.5 line-clamp-1 text-xl font-semibold tracking-tight">
-          {blog.title}
-        </h4>
-
-        {/* 作者与时间  */}
-        <div className="text-muted-foreground mb-3 flex items-center gap-3 text-xs">
-          <div className="flex items-center gap-1">
-            <User className="h-3.5 w-3.5" />
-            <span>{blog.author?.name || "无名侠"}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3.5 w-3.5" />
-            <span>{dayjs(blog.createTime).format("MM月DD日, YYYY")}</span>
-          </div>
-        </div>
-
-        {/* 描述 */}
-        <p className="text-muted-foreground/90 mb-5 line-clamp-2 text-sm leading-6">
-          {blog.description}
-        </p>
+    <article>
+      <div className="text-muted-foreground mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+        <time>{dayjs(blog.createTime).format("MM月DD日, YYYY")}</time>
+        <span aria-hidden="true">·</span>
+        <span>{blog.author?.name || "无名侠"}</span>
       </div>
 
-      {/* 分类和标签 */}
-      <div className="text-muted-foreground flex flex-wrap items-center gap-2 overflow-hidden text-xs">
-        {/* 分类 */}
-        <span className="bg-muted/80 shrink-0 rounded-md px-2 py-1 font-medium">
-          {blog.category?.name || "未分类"}
-        </span>
+      <h4 className="text-foreground group-hover:text-muted-foreground mb-3 text-xl leading-snug font-semibold tracking-tight transition-colors sm:text-2xl">
+        {blog.title}
+      </h4>
+      {blog.description && (
+        <p className="text-muted-foreground line-clamp-2 max-w-3xl text-sm leading-7">
+          {blog.description}
+        </p>
+      )}
 
-        {/* 标签 */}
-        <ul className="flex flex-wrap items-center gap-2 font-medium">
+      <div className="text-muted-foreground mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+        <span>{blog.category?.name || "未分类"}</span>
+        {blog.tags.length > 0 && (
+          <span aria-hidden="true" className="text-border">/</span>
+        )}
+        <ul className="flex flex-wrap items-center gap-x-3 gap-y-1">
           {blog.tags.map((tag) => (
-            <li key={tag.id} className="flex shrink-0 items-center gap-1">
-              <Tag size={12} className="opacity-70" />
-              <span>{tag.name}</span>
-            </li>
+            <li key={tag.id}>#{tag.name}</li>
           ))}
         </ul>
       </div>
-    </div>
+    </article>
   );
 };
 

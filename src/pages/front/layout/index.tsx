@@ -8,7 +8,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 
 const Layout = () => {
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full pb-24 md:pb-0">
       <ScrollToTop />
       <Header />
       {/* 内容区域 */}

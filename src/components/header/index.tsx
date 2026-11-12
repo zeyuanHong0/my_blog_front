@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  CalendarDays,
+  FileText,
+  Hash,
+  House,
+  LayoutGrid,
+} from "lucide-react";
 import classNames from "classnames";
 
 import { cn } from "@/lib/utils";
-import { NICKNAME, SLOGAN } from "@/constants";
+import { NICKNAME } from "@/constants";
 import { useActiveNav } from "@/hooks/useActiveNav";
-import useSettingStore from "@/store/settingStore";
 
 import { Iconify, SvgIcon } from "@/components/Icon";
 import ThemeModeSwitcher from "@/components/ThemeModeSwitcher";
@@ -20,14 +19,16 @@ import Button from "@/components/button";
 import LogoIcon from "/blog.svg?raw";
 
 const Header: React.FC = () => {
-  const [showLeftSheet, setShowLeftSheet] = useState(false);
-
   const navList = [
-    { label: "首页", path: "/" },
-    { label: "文章", path: "/blogs" },
-    { label: "分类", path: "/categories" },
-    { label: "标签", path: "/tags" },
-    { label: "归档", path: "/archives" },
+    { label: "首页", path: "/", icon: House },
+    { label: "文章", path: "/blogs", icon: FileText },
+    { label: "分类", path: "/categories", icon: LayoutGrid },
+    { label: "标签", path: "/tags", icon: Hash },
+    {
+      label: "归档",
+      path: "/archives",
+      icon: CalendarDays,
+    },
     // { label: "关于", path: "/about" },
   ];
   const { isActive } = useActiveNav(navList);
@@ -38,16 +39,6 @@ const Header: React.FC = () => {
       {
         "text-foreground font-semibold": isActive(path),
         "text-muted-foreground": !isActive(path),
-      },
-    );
-  };
-  const drawerNavClass = (path: string) => {
-    return classNames(
-      "cursor-pointer rounded-xl px-4 py-2 text-sm transition-colors",
-      {
-        "bg-primary text-primary-foreground hover:bg-primary/90":
-          isActive(path),
-        "text-foreground hover:bg-accent": !isActive(path),
       },
     );
   };
@@ -62,27 +53,25 @@ const Header: React.FC = () => {
         <div className="mx-auto flex h-16 w-full items-center justify-between p-4 sm:p-8 md:max-w-screen-md 2xl:max-w-screen-xl">
           {/* logo */}
           <div className="flex items-center gap-4">
-            <Link to="/" className="mr-4 hidden sm:flex sm:items-center">
+            <Link to="/" className="flex items-center md:hidden">
+              <SvgIcon className="h-7 w-7" icon={LogoIcon} />
+              <span className="text-foreground ml-2 text-sm font-semibold">
+                {NICKNAME}
+              </span>
+            </Link>
+            <Link to="/" className="mr-4 hidden md:flex md:items-center">
               <SvgIcon className="h-8 w-8" icon={LogoIcon} />
               <span className="text-foreground ml-2 text-base font-semibold">
                 {NICKNAME}
               </span>
             </Link>
-            <div className="sm:hidden">
-              <Button
-                className="bg-background hover:bg-accent/50 rounded-full p-2"
-                onClick={() => setShowLeftSheet(true)}
-              >
-                <Iconify icon="flowbite:bars-outline" size={20} />
-              </Button>
-            </div>
           </div>
 
           {/* 导航 */}
           <div className="flex items-center">
             {/* nav */}
             <div
-              className="mr-8 hidden items-center gap-3 sm:flex"
+              className="mr-8 hidden items-center gap-3 md:flex"
               aria-label="主导航"
             >
               {navList.map((item) => (
@@ -97,7 +86,7 @@ const Header: React.FC = () => {
             </div>
           </div>
           {/* 右侧按钮 */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 md:gap-6">
             {/* <Button
               className="bg-background hover:bg-accent/50 rounded-full p-2"
               onClick={changeThemeMode}
@@ -114,31 +103,31 @@ const Header: React.FC = () => {
           </div>
         </div>
       </header>
-      {/* 侧边栏 */}
-      <Sheet open={showLeftSheet} onOpenChange={setShowLeftSheet}>
-        <SheetContent side="left" className="w-[80vw] p-0">
-          <SheetHeader className="px-4 py-4 text-left">
-            <SheetTitle className="text-foreground text-base font-semibold">
-              {NICKNAME}
-            </SheetTitle>
-            <SheetDescription className="text-muted-foreground mt-1 text-sm">
-              {SLOGAN}
-            </SheetDescription>
-          </SheetHeader>
-          <div className="mt-14 flex flex-col gap-4">
-            {navList.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={drawerNavClass(item.path)}
-                onClick={() => setShowLeftSheet(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </SheetContent>
-      </Sheet>
+      <nav
+        aria-label="移动端主导航"
+        className="border-border/70 bg-background/85 fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] z-50 mx-auto flex w-[calc(100%-1.5rem)] max-w-[420px] items-center gap-1 rounded-[1.4rem] border p-1.5 shadow-lg shadow-black/10 backdrop-blur-xl md:hidden"
+      >
+        {navList.map((item) => {
+          const active = isActive(item.path);
+
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[1rem] py-2 text-[10px] transition-all",
+                active
+                  ? "bg-primary/10 text-primary font-semibold"
+                  : "text-muted-foreground hover:bg-accent/70 hover:text-foreground",
+              )}
+            >
+              <item.icon size={19} strokeWidth={active ? 2.25 : 1.75} />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </>
   );
 };

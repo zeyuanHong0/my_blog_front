@@ -130,7 +130,7 @@ const Archives = () => {
   return (
     <div className="relative mx-auto flex min-h-screen max-w-4xl flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16">
       <div className="mb-10 space-y-4">
-        <h2 className="text-foreground text-3xl font-extrabold tracking-tight md:text-5xl lg:text-5xl">
+        <h2 className="text-foreground text-3xl font-semibold tracking-tight md:text-4xl lg:text-4xl">
           归档
         </h2>
         <p className="text-muted-foreground max-w-2xl text-base md:text-lg">

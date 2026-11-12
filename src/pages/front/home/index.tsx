@@ -8,7 +8,7 @@ const Home = () => {
     <div className="relative grid h-[calc(100vh-64px)] place-content-center">
       <HeroSection />
       <div
-        className={`absolute inset-x-0 bottom-8 grid place-content-center md:bottom-12`}
+        className={`absolute inset-x-0 bottom-24 grid place-content-center md:bottom-12`}
       >
         <IntroScrollMouse />
       </div>

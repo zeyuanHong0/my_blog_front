@@ -133,7 +133,7 @@ const Blog = () => {
   return (
     <div className="max-w-wrapper mx-auto flex min-h-screen flex-col px-6 pt-12 pb-24 md:px-8 md:pt-16 lg:px-20 xl:px-40">
       <div className="mb-10 space-y-4">
-        <h2 className="text-foreground text-3xl font-extrabold tracking-tight md:text-4xl lg:text-4xl">
+        <h2 className="text-foreground text-3xl font-semibold tracking-tight md:text-4xl lg:text-4xl">
           文章
         </h2>
         <p className="text-muted-foreground max-w-2xl text-base md:text-lg">

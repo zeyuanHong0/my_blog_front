@@ -1,8 +1,7 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { SearchIcon, SlidersHorizontal, X } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import useCategoryTagStore from "@/store/categoryTagStore";
 
 import BlogListItem from "./list-item";
@@ -33,7 +32,6 @@ interface AppliedSearch {
 
 const SearchBlogList = ({ blogs, total }: Props) => {
   const formRef = useRef<FilterDialogRef>(null);
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const keywordParam = searchParams.get("keyword") ?? "";
@@ -227,10 +225,15 @@ const SearchBlogList = ({ blogs, total }: Props) => {
 
         {/* 文章列表 */}
         {blogs.length > 0 ? (
-          <ul className={cn("grid grid-cols-1 gap-4 gap-y-8")}>
+          <ul className="flex flex-col gap-10 px-4 pt-4 sm:gap-14">
             {blogs.map((el) => (
-              <li key={el.id} onClick={() => navigate(`/blog/${el.id}`)}>
-                <BlogListItem blog={el} />
+              <li key={el.id}>
+                <Link
+                  to={`/blog/${el.id}`}
+                  className="group block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+                >
+                  <BlogListItem blog={el} />
+                </Link>
               </li>
             ))}
           </ul>
