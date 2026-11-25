@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "@/store/userStore";
+import { getSessionStorage, removeSessionStorage } from "@/utils/storage";
 
 const GitHubCallback = () => {
   const { getUserInfo } = useUserStore();
@@ -8,7 +9,15 @@ const GitHubCallback = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       await getUserInfo();
-      navigate("/", { replace: true });
+      const returnTo = getSessionStorage("githubLoginReturnTo") || "/";
+      removeSessionStorage("githubLoginReturnTo");
+      // 只允许站内路径
+      const isSafePath =
+        returnTo?.startsWith("/") &&
+        !returnTo.startsWith("//") &&
+        !returnTo.includes("\\");
+
+      navigate(isSafePath ? returnTo : "/", { replace: true });
     };
     fetchUserInfo();
   }, [getUserInfo, navigate]);

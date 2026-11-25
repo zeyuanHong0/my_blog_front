@@ -1,6 +1,7 @@
 import axios from "axios";
 import { showErrorToast, showInfoToast } from "@/components/toast";
 import useUserStore from "@/store/userStore";
+import { removeLocalStorage } from "@/utils/storage";
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API as string,
@@ -43,6 +44,7 @@ request.interceptors.response.use(
       if (status === 401) {
         showInfoToast("登录已过期，请重新登录");
         setLoginExpired(true);
+        removeLocalStorage("userInfo");
         return Promise.reject(error);
       }
 

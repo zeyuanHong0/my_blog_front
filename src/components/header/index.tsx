@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   CalendarDays,
@@ -6,19 +6,52 @@ import {
   Hash,
   House,
   LayoutGrid,
+  LogOut,
+  Pencil,
 } from "lucide-react";
 import classNames from "classnames";
 
 import { cn } from "@/lib/utils";
 import { NICKNAME } from "@/constants";
 import { useActiveNav } from "@/hooks/useActiveNav";
+import useAuthDialogStore from "@/store/authDialogStore";
+import useUserStore from "@/store/userStore";
 
 import { Iconify, SvgIcon } from "@/components/Icon";
 import ThemeModeSwitcher from "@/components/ThemeModeSwitcher";
-import Button from "@/components/button";
+import ConfirmDialog from "@/components/confirm-dialog";
+import { Button as UiButton } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import LogoIcon from "/blog.svg?raw";
 
 const Header: React.FC = () => {
+  const openAuthDialog = useAuthDialogStore((state) => state.openDialog);
+  const userId = useUserStore((state) => state.userInfo?.id);
+  const userLogout = useUserStore((state) => state.userLogout);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>();
+  const openedByHover = useRef(false);
+
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  const cancelMenuClose = () => clearTimeout(closeTimer.current);
+  const scheduleMenuClose = () => {
+    cancelMenuClose();
+    closeTimer.current = setTimeout(() => setMenuOpen(false), 200);
+  };
+  const handleLogout = async () => {
+    try {
+      await userLogout();
+    } catch (error) {
+      console.error("退出登录失败:", error);
+    }
+  };
   const navList = [
     { label: "首页", path: "/", icon: House },
     { label: "文章", path: "/blogs", icon: FileText },
@@ -87,17 +120,72 @@ const Header: React.FC = () => {
           </div>
           {/* 右侧按钮 */}
           <div className="flex items-center gap-3 md:gap-6">
-            {/* <Button
-              className="bg-background hover:bg-accent/50 rounded-full p-2"
-              onClick={changeThemeMode}
-            >
-              {themeMode === "light" ? <Sun size={16} /> : <Moon size={16} />}
-            </Button> */}
-            <Link to={"/admin"} target="_blank" rel="noopener noreferrer">
-              <Button className="bg-background hover:bg-accent rounded-full p-2">
-                <Iconify icon="tdesign:user-setting" size={16} />
-              </Button>
-            </Link>
+            {!userId ? (
+              <UiButton
+                type="button"
+                size="sm"
+                className="rounded-full"
+                onClick={() => openAuthDialog("login")}
+              >
+                登录
+              </UiButton>
+            ) : (
+              <DropdownMenu
+                modal={false}
+                open={menuOpen}
+                onOpenChange={(open) => {
+                  cancelMenuClose();
+                  openedByHover.current = false;
+                  setMenuOpen(open);
+                }}
+              >
+                <DropdownMenuTrigger asChild>
+                  <UiButton
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full"
+                    aria-label="用户菜单"
+                    onPointerEnter={(event) => {
+                      if (event.pointerType !== "mouse") return;
+                      cancelMenuClose();
+                      if (!menuOpen) {
+                        openedByHover.current = true;
+                        setMenuOpen(true);
+                      }
+                    }}
+                    onPointerLeave={(event) => {
+                      if (event.pointerType === "mouse") scheduleMenuClose();
+                    }}
+                  >
+                    <Iconify icon="tdesign:user-setting" size={16} />
+                  </UiButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  onOpenAutoFocus={(event) => {
+                    if (openedByHover.current) event.preventDefault();
+                  }}
+                  onPointerEnter={(event) => {
+                    if (event.pointerType === "mouse") cancelMenuClose();
+                  }}
+                  onPointerLeave={(event) => {
+                    if (event.pointerType === "mouse") scheduleMenuClose();
+                  }}
+                >
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" target="_blank" rel="noopener noreferrer">
+                      <Pencil />
+                      前往创作者中心
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => setLogoutConfirmOpen(true)}>
+                    <LogOut />
+                    退出登录
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
             {/* 主题切换 */}
             <ThemeModeSwitcher />
           </div>
@@ -128,6 +216,14 @@ const Header: React.FC = () => {
           );
         })}
       </nav>
+      <ConfirmDialog
+        title="退出登录"
+        description="确定要退出登录吗？"
+        isOpen={logoutConfirmOpen}
+        onOpenChange={setLogoutConfirmOpen}
+        onCancel={() => setLogoutConfirmOpen(false)}
+        onConfirm={handleLogout}
+      />
     </>
   );
 };
